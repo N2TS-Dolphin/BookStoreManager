@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using BookStoreManager.Database;
+using BookStoreManager.Support;
+
 namespace BookStoreManager
 {
     /// <summary>
@@ -19,9 +22,13 @@ namespace BookStoreManager
     /// </summary>
     public partial class Dashboard : Window
     {
+        readDB read = new readDB();
+        login accountLogged = new login();
         public Dashboard()
         {
             InitializeComponent();
+            read.accounts = read.LoadDataFromDatabase();
+            btnUser.Content = read.accounts[accountLogged.index].name;
         }
     }
 }

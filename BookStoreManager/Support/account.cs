@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 using MySql.Data.MySqlClient;
 
-namespace BookStoreManager
+namespace BookStoreManager.Support
 {
-    internal class accountInfo
+    public class accountInfo
     {
         public string username { get; set; }
         public string password { get; set; }
-        public string fullname { get; set; }
+        public string name { get; set; }
     }
 }
