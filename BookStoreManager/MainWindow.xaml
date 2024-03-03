@@ -5,24 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
+        Title="Login" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="33*"/>
-            <ColumnDefinition Width="34*"/>
-            <ColumnDefinition Width="33*"/>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="30*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="33*"/>
-            <RowDefinition Height="34*"/>
-            <RowDefinition Height="33*"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="30*"/>
         </Grid.RowDefinitions>
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
             <StackPanel Margin="10" VerticalAlignment="Center">
                 <TextBlock Text="Username:" Margin="0,0,0,5"/>
                 <TextBox x:Name="txtUsername" Margin="0,0,0,5"/>
                 <TextBlock Text="Password:" Margin="0,0,0,5"/>
-                <PasswordBox x:Name="txtPassword" Margin="0,0,0,10"/>
+                <PasswordBox x:Name="txtPassword" Margin="0,0,0,5"/>
+
+                <CheckBox x:Name="cbxRemember" Content="Remember me" Margin="0,0,0,5"/>
                 <Button x:Name="btnLogin" Content="Login" Click="btnLogin_Click"/>
             </StackPanel>
         </Border>

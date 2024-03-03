@@ -16,6 +16,8 @@ using System.Data;
 using MySqlX.XDevAPI.Common;
 using BookStoreManager.Database;
 using BookStoreManager.Support;
+using System.Security.Cryptography;
+using System.Configuration;
 
 namespace BookStoreManager
 {
@@ -25,7 +27,6 @@ namespace BookStoreManager
     public partial class MainWindow : Window
     {
         List<accountInfo> accounts = new List<accountInfo>();
-        login accountLogged = new login();
         readDB read = new readDB();
         public MainWindow()
         {
@@ -41,8 +42,12 @@ namespace BookStoreManager
             {
                 if (accounts[index].password == txtPassword.Password)
                 {
-                    accountLogged.index = index;
+                    Login.Instance.Set(index);
                     read.accounts = accounts;
+                    if(cbxRemember.IsChecked == true)
+                    {
+                        savetoConfig(txtUsername.Text, txtPassword.Password);
+                    }
                     Dashboard window = new Dashboard();
                     this.Close();
                     window.Show();
@@ -58,6 +63,65 @@ namespace BookStoreManager
             }
 
         }
-        
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var result = loadfromConfig();
+            txtUsername.Text = result.Item1;
+            txtPassword.Password = result.Item2;
+        }
+
+        /// <summary>
+        /// Lưu thông tin đăng nhập gần nhất vào App.config
+        /// </summary>
+        /// <param name="user">username người dùng nhập</param>
+        /// <param name="pass">password người dùng nhập</param>
+        public void savetoConfig(string user, string pass)
+        {
+            var password = pass;
+
+            var passwordInByte = Encoding.UTF8.GetBytes(password);
+            var entropy = new byte[32];
+
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(entropy);
+            }
+
+            var cypherText = ProtectedData.Protect(passwordInByte, entropy, DataProtectionScope.CurrentUser);
+
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            config.AppSettings.Settings["username"].Value = user;
+            config.AppSettings.Settings["password"].Value = Convert.ToBase64String(cypherText);
+            config.AppSettings.Settings["entropy"].Value = Convert.ToBase64String(entropy);
+
+            config.Save(ConfigurationSaveMode.Minimal);
+            ConfigurationManager.RefreshSection("appSettings");
+        }
+
+        /// <summary>
+        /// Tải thông tin đăng nhập gần nhất từ App.config
+        /// </summary>
+        /// <returns>Trả về username và password</returns>
+        public (string, string) loadfromConfig()
+        {
+            var username = ConfigurationManager.AppSettings["username"];
+            var passwordInConfig = ConfigurationManager.AppSettings["password"];
+            var entropyInConfig = ConfigurationManager.AppSettings["entropy"];
+
+            if (username != "")
+            {
+                var passwordInByte = Convert.FromBase64String(passwordInConfig);
+                var entropyInByte = Convert.FromBase64String(entropyInConfig);
+
+                var decryptedPassword = ProtectedData.Unprotect(passwordInByte, entropyInByte, DataProtectionScope.CurrentUser);
+                var password = Encoding.UTF8.GetString(decryptedPassword);
+
+                return (username, password);
+            }
+
+            return (null, null);
+        }
     }
 }
