@@ -9,36 +9,12 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- Định nghĩa hai cột với độ rộng tỷ lệ -->
-            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="30*" MaxWidth="400px"/>
             <ColumnDefinition Width="70*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Cột 1: Điều hướng -->
-        <Border BorderBrush="Black" BorderThickness="0,0,1,0">
-            <StackPanel Grid.Column="0" Background="#006070">
-                <!-- Thêm các điều khiển điều hướng ở đây -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40*"/>
-                        <ColumnDefinition Width="60*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <Button x:Name="btnUser" FontSize="30px" Foreground="#EAEAEA" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                </Grid>
-                <Button Background="#006070" BorderBrush="Black" BorderThickness="0,1,0,0">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock x:Name="Panel_01" Text="Home" FontSize="20px" Foreground="#EAEAEA"/>
-                    </StackPanel>
-                </Button>
-                <Button Background="#006070" BorderBrush="Black" BorderThickness="0,1,0,1">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock x:Name="Panel_02" Text="Danh mục" FontSize="20px" Foreground="#EAEAEA"/>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-        </Border>
-        <Button x:Name="btnLogout" Grid.Column="0" Background="#006070" FontSize="20px" Foreground="#EAEAEA" FontWeight="Bold" Content="Logout" Click="btnLogout_Click" VerticalAlignment="Bottom" BorderBrush="Black" BorderThickness="0,1,1,1" Margin="0,0,0,5"/>
-
+        <local:SlideBarDashBoard/>
         <!-- Cột 2: Thông tin -->
         <StackPanel Grid.Column="1" Background="#EAEAEA">
             <!-- Thêm các điều khiển để hiển thị thông tin ở đây -->

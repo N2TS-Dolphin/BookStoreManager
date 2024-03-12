@@ -18,6 +18,8 @@ using BookStoreManager.Database;
 using BookStoreManager.Support;
 using System.Security.Cryptography;
 using System.Configuration;
+using Microsoft.VisualBasic.ApplicationServices;
+using System.Data.Common;
 
 namespace BookStoreManager
 {
@@ -26,24 +28,39 @@ namespace BookStoreManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<accountInfo> accounts = new List<accountInfo>();
-        readDB read = new readDB();
+        connectDB database = new connectDB();
         public MainWindow()
         {
             InitializeComponent();
+            database.readAccount();
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var result = loadfromConfig();
+            txtUsername.Text = result.Item1;
+            txtPassword.Password = result.Item2;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            accounts = read.LoadDataFromDatabase();
-            int index = accounts.FindIndex(x => x.username == txtUsername.Text);
+            int index = database.accounts.FindIndex(x => x.username == txtUsername.Text);
 
             if (index != -1)
             {
-                if (accounts[index].password == txtPassword.Password)
+                var passwordInByte = Convert.FromBase64String(database.accounts[index].password);
+                var entropyInByte = Convert.FromBase64String(database.accounts[index].entropy);
+
+                var decryptedPassword = ProtectedData.Unprotect(passwordInByte, entropyInByte, DataProtectionScope.CurrentUser);
+                var password = Encoding.UTF8.GetString(decryptedPassword);
+
+                if (password == txtPassword.Password)
                 {
                     Login.Instance.Set(index);
-                    read.accounts = accounts;
                     if(cbxRemember.IsChecked == true)
                     {
                         savetoConfig(txtUsername.Text, txtPassword.Password);
@@ -64,12 +81,8 @@ namespace BookStoreManager
 
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var result = loadfromConfig();
-            txtUsername.Text = result.Item1;
-            txtPassword.Password = result.Item2;
-        }
+
+
 
         /// <summary>
         /// Lưu thông tin đăng nhập gần nhất vào App.config

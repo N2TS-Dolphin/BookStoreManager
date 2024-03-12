@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="BookStoreManager.SlideBarDashBoard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreManager"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Border BorderBrush="Black" BorderThickness="0,0,1,0">
+            <Grid>
+                <StackPanel Grid.Column="0" Background="#006070">
+                    <!-- Thêm các điều khiển điều hướng ở đây -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40*"/>
+                            <ColumnDefinition Width="60*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="btnUser" Background="#006070" Foreground="#EAEAEA" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0"/>
+                    </Grid>
+                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0" Click="Home_Click" Height="40px">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="Panel_01" Text="Home" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0" Click="Product_Click" Height="40px">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="Panel_02" Text="Danh mục" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Bottom">
+                    <Button x:Name="btnCreate" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,10" Height="40px" Click="btnCreate_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="txtCreate" Text="Create new account" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="btnLogout" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,10" Height="40px" Click="btnLogout_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="txtLogout" Text="Logout" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

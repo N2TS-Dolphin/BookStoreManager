@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookStoreManager.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,23 +13,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using BookStoreManager.Database;
-using BookStoreManager.Support;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace BookStoreManager
 {
     /// <summary>
-    /// Interaction logic for Dashboard.xaml
+    /// Interaction logic for CreateNewAccount.xaml
     /// </summary>
-    public partial class Dashboard : Window
+    public partial class CreateNewAccount : Window
     {
         connectDB database = new connectDB();
-
-        public Dashboard()
+        public CreateNewAccount()
         {
             InitializeComponent();
-            database.accounts = database.readAccount();
+        }
+
+        private void btnCreate_Click(object sender, RoutedEventArgs e)
+        {
+            database.writeAccount(txtUsername.Text, txtPassword.Password, txtFullname.Text);
+            this.Close();
         }
     }
 }
