@@ -1,0 +1,176 @@
+﻿USE MASTER
+GO
+IF DB_ID('MYSHOP') IS NOT NULL
+	DROP DATABASE MYSHOP
+GO
+
+--CREATE DATABASE
+CREATE DATABASE MYSHOP
+GO
+USE MYSHOP
+GO
+
+CREATE TABLE ACCOUNT
+(
+	ACCOUNT_ID CHAR(3) NOT NULL,
+	USERNAME VARCHAR(20) NOT NULL UNIQUE,
+	PASS NVARCHAR(MAX) NOT NULL,
+	ENTROPY NVARCHAR(MAX) NOT NULL,
+	FULLNAME NVARCHAR(50)
+
+	CONSTRAINT PK_ACCOUNT
+	PRIMARY KEY (ACCOUNT_ID)
+)
+
+CREATE TABLE CATEGORY
+(
+	CATEGORY_ID CHAR(3) NOT NULL,
+	CATEGORY_NAME NVARCHAR(50) NOT NULL UNIQUE,
+
+	CONSTRAINT PK_CATEGORY
+	PRIMARY KEY (CATEGORY_ID)
+)
+
+CREATE TABLE BOOK
+(
+	BOOK_ID CHAR(3) NOT NULL,
+	BOOK_NAME NVARCHAR(50) NOT NULL,
+	PRICE INT NOT NULL,
+	AUTHOR NVARCHAR(50) NOT NULL,
+	IMG NVARCHAR(100),
+
+	CONSTRAINT PK_BOOK
+	PRIMARY KEY (BOOK_ID)
+)
+
+CREATE TABLE BOOK_CATEGORY
+(
+	BOOK_ID CHAR(3) NOT NULL,
+	CATEGORY_ID CHAR(3) NOT NULL,
+
+	CONSTRAINT FK_BOOK_CATEGORY_BOOK 
+	FOREIGN KEY (BOOK_ID) 
+	REFERENCES BOOK(BOOK_ID),
+
+	CONSTRAINT FK_BOOK_CATEGORY_CATEGORY 
+	FOREIGN KEY (CATEGORY_ID) 
+	REFERENCES CATEGORY(CATEGORY_ID),
+
+	CONSTRAINT PK_BOOK_CATEGORY 
+	PRIMARY KEY (BOOK_ID, CATEGORY_ID)
+)
+
+CREATE TABLE ORDER_LIST
+(
+	ORDER_ID CHAR(3) NOT NULL,
+	ORDER_DATE DATETIME NOT NULL,
+	PRICE INT,
+
+	CONSTRAINT PK_ORDER_LIST
+	PRIMARY KEY (ORDER_ID)
+)
+
+CREATE TABLE ORDER_ITEM
+(
+	ORDER_ID CHAR(3) NOT NULL,
+	BOOK_ID CHAR(3) NOT NULL,
+	QUANTITY INT NOT NULL DEFAULT(0),
+	PRICE INT NOT NULL DEFAULT(0),
+
+	CONSTRAINT FK_ORDER_ITEM_ORDER_LIST
+	FOREIGN KEY (ORDER_ID)
+	REFERENCES ORDER_LIST(ORDER_ID),
+
+	CONSTRAINT FK_ORDER_ITEM_BOOK
+	FOREIGN KEY (BOOK_ID)
+	REFERENCES BOOK(BOOK_ID),
+)
+
+INSERT ACCOUNT(ACCOUNT_ID, USERNAME, PASS, ENTROPY, FULLNAME)
+VALUES	('001', 'admin', 'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAERQX5xOj8EWQKUBLmg+3JgAAAAACAAAAAAAQZgAAAAEAACAAAAAIYJ1RdaqoENndp+RZ7OCxf9afuyTmev+ukmvtVbbm/gAAAAAOgAAAAAIAACAAAAAo5Ee4hx8Hv4xbzyqnJ676165sN8+VtmduEXa7PCURkhAAAADCWUhQt6tjsZ2Wogn50vV1QAAAAIvgSs/NROoPcLKtOoWmaoouWvAfHEcw8/6G3686oUXBOJPG0b4RqW3NaIoCT6P2S0cUlh3cq3PTyX7AMaMa5Qo=', 'iBwdigFSr3tVbqx0hg7NYRLFOa8XhQNHCZ8zfBzpLvo=', 'admin')
+
+INSERT CATEGORY(CATEGORY_ID, CATEGORY_NAME)
+VALUES  ('001', 'Novel'),
+		('002', 'Action'),
+		('003', 'Adult'),
+		('004', 'Adventure'),
+		('005', 'Business'),
+		('006', 'Childrens mystery'),
+		('007', 'Classic'),
+		('008', 'Classic short story'),
+		('009', 'Comedy'),
+		('010', 'Drama'),
+		('011', 'Family saga'),
+		('012', 'Fantasy'),
+		('013', 'Historical'),
+		('014', 'Horror'),
+		('015', 'Isekai'),
+		('016', 'Josei'),
+		('017', 'LGBTQ+ fiction'),
+		('018', 'Martial arts novel'),
+		('019', 'Middle grade fiction'),
+		('020', 'Mystery'),
+		('021', 'Non-fiction'),
+		('022', 'Psychological'),
+		('023', 'Romance'),
+		('024', 'School Life'),
+		('025', 'Scientific'),
+		('026', 'Sci-Fi'),
+		('027', 'Seinen'),
+		('028', 'Short story'),
+		('029', 'Shoujo'),
+		('030', 'Shounen'),
+		('031', 'Single father novel'),
+		('032', 'Single mother novel'),
+		('033', 'Slice of Life'),
+		('034', 'Speculative'),
+		('035', 'Sports'),
+		('036', 'Supernatural'),
+		('037', 'War'),
+		('038', 'Young adult fiction'),
+		('039', 'Tragedy')
+
+INSERT BOOK(BOOK_ID, BOOK_NAME, PRICE, AUTHOR)
+VALUES  ('001', 'Đắc nhân tâm', 86000, 'Dale Carnegie'),
+		('002', 'One Piece', 21250, 'Eiichiro Oda'),
+		('003', 'Attack On Titan', 144400, 'Isayama Hajime'),
+		('004', 'Naruto', 21500, 'Masashi Kishimoto'),
+		('005', 'Cardcaptor Sakura', 25000, 'CLAMP'),
+		('006', 'Cardcaptor Sakura: Clear Card-hen', 175750, 'CLAMP')
+
+INSERT BOOK_CATEGORY(BOOK_ID, CATEGORY_ID)
+VALUES  ('001', '022'),
+		('002', '002'),
+		('002', '004'),
+		('002', '012'),
+		('002', '009'),
+		('003', '002'),
+		('003', '013'),
+		('003', '014'),
+		('003', '020'),
+		('003', '030'),
+		('003', '039'),
+		('004', '002'),
+		('004', '004'),
+		('004', '009'),
+		('004', '010'),
+		('004', '012'),
+		('004', '030'),
+		('004', '036'),
+		('005', '004'),
+		('005', '009'),
+		('005', '012'),
+		('005', '023'),
+		('005', '029'),
+		('006', '004'),
+		('006', '009'),
+		('006', '012'),
+		('006', '023'),
+		('006', '029')
+
+INSERT ORDER_LIST(ORDER_ID, ORDER_DATE, PRICE)
+VALUES  ('001', '03/05/2024', 476500)
+
+INSERT ORDER_ITEM(ORDER_ID, BOOK_ID, QUANTITY, PRICE)
+VALUES  ('001', '005', 5, 125000),
+		('001', '006', 2, 351500)
