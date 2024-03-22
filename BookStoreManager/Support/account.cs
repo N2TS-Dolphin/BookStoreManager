@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-using MySql.Data.MySqlClient;
 
 namespace BookStoreManager.Support
 {

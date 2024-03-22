@@ -10,10 +10,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System;
 
-using MySql.Data.MySqlClient;
 using System.Data.SqlClient;
 using System.Data;
-using MySqlX.XDevAPI.Common;
 using BookStoreManager.Database;
 using BookStoreManager.Support;
 using System.Security.Cryptography;
@@ -49,7 +47,7 @@ namespace BookStoreManager
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             int index = database.accounts.FindIndex(x => x.username == txtUsername.Text);
-
+            
             if (index != -1)
             {
                 var passwordInByte = Convert.FromBase64String(database.accounts[index].password);
@@ -57,7 +55,6 @@ namespace BookStoreManager
 
                 var decryptedPassword = ProtectedData.Unprotect(passwordInByte, entropyInByte, DataProtectionScope.CurrentUser);
                 var password = Encoding.UTF8.GetString(decryptedPassword);
-
                 if (password == txtPassword.Password)
                 {
                     Login.Instance.Set(index);
