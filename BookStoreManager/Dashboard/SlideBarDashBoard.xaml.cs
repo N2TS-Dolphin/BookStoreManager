@@ -23,6 +23,8 @@ namespace BookStoreManager
     /// </summary>
     public partial class SlideBarDashBoard : UserControl
     {
+        private Button selectedButton = null;
+
         connectDB database = new connectDB();
 
         public SlideBarDashBoard()
@@ -87,14 +89,18 @@ namespace BookStoreManager
             }
         }
 
-        private void Product_Click(object sender, RoutedEventArgs e)
+        private void btn_Click(object sender, RoutedEventArgs e)
         {
+            Button clickedButton = (Button)sender;
 
-        }
+            if(selectedButton != null && selectedButton != clickedButton)
+            {
+                selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#006070"));
+            }
 
-        private void Home_Click(object sender, RoutedEventArgs e)
-        {
+            selectedButton = clickedButton;
 
+            selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0093AC"));
         }
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
@@ -124,5 +130,6 @@ namespace BookStoreManager
             screen.Show();
             currentScreen.Close();
         }
+
     }
 }

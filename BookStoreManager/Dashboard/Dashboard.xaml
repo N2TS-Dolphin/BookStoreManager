@@ -18,7 +18,7 @@
         <!-- Cột 2: Thông tin -->
         <StackPanel Grid.Column="1" Background="#EAEAEA">
             <!-- Thêm các điều khiển để hiển thị thông tin ở đây -->
-            <TextBlock Text="Thông tin chi tiết sẽ được hiển thị ở đây"/>
+            <local:HomePage/>
         </StackPanel>
     </Grid>
 </Window>

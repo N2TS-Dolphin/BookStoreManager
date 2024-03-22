@@ -19,16 +19,43 @@
                         <Image Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Button x:Name="btnUser" Background="#006070" Foreground="#EAEAEA" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0"/>
                     </Grid>
-                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0" Click="Home_Click" Height="40px">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="Panel_01" Text="Home" Foreground="#EAEAEA"/>
-                        </StackPanel>
+
+                    <Button x:Name="Panel_01" Content="Home" BorderThickness="0" Click="btn_Click" Height="40px">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#006070"/>
+                                <Setter Property="Foreground" Value="#EAEAEA"/>
+                                <!-- Màu nền mặc định -->
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#0093AC"/>
+                                        <Setter Property="Foreground" Value="#000000"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <!-- Màu nền khi hover -->
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
-                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0" Click="Product_Click" Height="40px">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="Panel_02" Text="Danh mục" Foreground="#EAEAEA"/>
-                        </StackPanel>
+
+                    <Button x:Name="Panel_02" Content="Danh mục" BorderThickness="0" Click="btn_Click" Height="40px">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#006070"/>
+                                <Setter Property="Foreground" Value="#EAEAEA"/>
+                                <!-- Màu nền mặc định -->
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#0093AC"/>
+                                        <Setter Property="Foreground" Value="#000000"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <!-- Màu nền khi hover -->
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
+
                 </StackPanel>
                 <StackPanel VerticalAlignment="Bottom">
                     <Button x:Name="btnCreate" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,10" Height="40px" Click="btnCreate_Click">
