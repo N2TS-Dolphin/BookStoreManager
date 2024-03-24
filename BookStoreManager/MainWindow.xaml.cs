@@ -18,6 +18,7 @@ using System.Security.Cryptography;
 using System.Configuration;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace BookStoreManager
 {
@@ -52,8 +53,8 @@ namespace BookStoreManager
             {
                 var passwordInByte = Convert.FromBase64String(database.accounts[index].password);
                 var entropyInByte = Convert.FromBase64String(database.accounts[index].entropy);
-
                 var decryptedPassword = ProtectedData.Unprotect(passwordInByte, entropyInByte, DataProtectionScope.CurrentUser);
+
                 var password = Encoding.UTF8.GetString(decryptedPassword);
                 if (password == txtPassword.Password)
                 {

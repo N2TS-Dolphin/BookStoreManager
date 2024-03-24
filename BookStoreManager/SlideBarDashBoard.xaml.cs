@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace BookStoreManager
 {
@@ -24,6 +25,7 @@ namespace BookStoreManager
     public partial class SlideBarDashBoard : UserControl
     {
         connectDB database = new connectDB();
+        private string PagePath;
 
         public SlideBarDashBoard()
         {
@@ -86,10 +88,10 @@ namespace BookStoreManager
                 txtCreate.FontSize = newSize;
             }
         }
-
         private void Product_Click(object sender, RoutedEventArgs e)
         {
-
+            var bookWindow = new BookWindow();
+            bookWindow.Show();
         }
 
         private void Home_Click(object sender, RoutedEventArgs e)
