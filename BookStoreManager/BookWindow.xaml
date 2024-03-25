@@ -20,6 +20,11 @@
             <RowDefinition Height="8*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,5,0">
+            <Button x:Name="addCategoryButton" Content="Add" FontSize="10" Width="45" Height="25" Click="addCategoryButton_Click" Margin="0,0,5,0"/>
+            <Button x:Name="updateCategoryButton" Content="Update" FontSize="10" Width="45" Height="25" Click="updateCategoryButton_Click"/>
+            <Button x:Name="deteleCategoryButton" Content="Detele" FontSize="10" Width="45" Height="25" Click="deteleCategoryButton_Click" Margin="5,0,0,0"/>
+        </StackPanel>
         <ListView x:Name="categoryListView" Grid.Row="2" Grid.Column="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                   Margin="10,0,5,0" SelectionChanged="categoryListView_SelectionChanged">
             <ListView.ItemTemplate>
@@ -33,7 +38,8 @@
             <Button x:Name="searchButton" Content="Search" FontSize="15" Padding="5,0,5,0" Click="searchButton_click"/>
         </StackPanel>
         <ListView x:Name="bookListView" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" 
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="20">
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="20"
+                  SelectionChanged="bookListView_SelectionChanged">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Margin="0" />
@@ -56,6 +62,29 @@
             <Button x:Name="prevButton" Content="Prev" FontSize="15" Width="55" Height="25" Margin="5" Click="prevButton_click"/>
             <TextBlock x:Name="txtItemPage" Text="1/1" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Button x:Name="nextButton" Content="Next" FontSize="15" Width="55" Height="25" Margin="5" Click="nextButton_click"/>
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2" Grid.Column="3">
+            <StackPanel x:Name="bookDetail" Orientation="Vertical">
+                <Border BorderBrush="Black" BorderThickness="1" Width="140" Height="190" Margin="20,0,20,20">
+                    <Image x:Name="bookImg" Source="{Binding Image}" Width="140" Height="190"/>
+                </Border>
+                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
+                    <Run Text="Name: "/><Run x:Name="txtBookName" Text="{Binding BookName}"/>
+                </TextBlock>
+                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
+                    <Run Text="Author: "/><Run x:Name="txtBookAuthor" Text="{Binding Author}"/>
+                </TextBlock>
+                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
+                    <Run Text="Price: "/><Run x:Name="txtBookPrice" Text="{Binding Price}"/>
+                </TextBlock>
+                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
+                    <Run Text="Category: "/><Run x:Name="txtBookCategory" Text="{Binding CategoryString}"/>
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button x:Name="updateBookButton" Content="Update" FontSize="15" Width="55" Height="25" Click="updateBookButton_Click" Margin="0,0,5,0"/>
+            <Button x:Name="deteleBookButton" Content="Detele" FontSize="15" Width="55" Height="25" Click="deteleBookButton_Click" Margin="5,0,0,0"/>
         </StackPanel>
     </Grid>
 </Window>
