@@ -18,7 +18,6 @@ using System.Security.Cryptography;
 using System.Configuration;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.Common;
-using System.Diagnostics;
 
 namespace BookStoreManager
 {

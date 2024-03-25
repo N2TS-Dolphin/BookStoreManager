@@ -15,7 +15,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml;
 
 namespace BookStoreManager
 {
@@ -25,7 +24,6 @@ namespace BookStoreManager
     public partial class SlideBarDashBoard : UserControl
     {
         connectDB database = new connectDB();
-        private string PagePath;
 
         public SlideBarDashBoard()
         {
