@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +23,7 @@ namespace BookStoreManager
     {
         BindingList<BookModel> _bookList = new();
         BindingList<CategoryModel> _categoryList = new();
+        BookModel _bookDetail = new();
         BookDao _bookDao = new BookDao();
         CategoryDao _categoryDao = new CategoryDao();
         int _currentPage = 1, _totalPages = 0; 
@@ -37,6 +39,7 @@ namespace BookStoreManager
             _categoryList.Insert(0, new CategoryModel("000", "All"));
             categoryListView.ItemsSource = _categoryList;
             loadBookList();
+            loadBookDetail(0);
         }
         public void loadBookList()
         {
@@ -47,6 +50,19 @@ namespace BookStoreManager
             var currentPage = (totalPages == 0) ? 0 : _currentPage;
             txtItemsCount.Text = $"Item count: {totalItems}";
             txtItemPage.Text = $"{currentPage}/{totalPages}";
+        }
+        public void loadBookDetail(int index)
+        {
+            if(_bookList.Count == 0)
+            {
+                _bookDetail.clearBook();
+                return;
+            }
+            string selectedID = _bookList[index].BookID;
+            _bookDetail = _bookDao.getBookDetail(selectedID);
+            _bookDetail.Category = _categoryDao.getBookCategory(selectedID);
+            _bookDetail.CategoryString = _bookDetail.categoryToString();
+            bookDetail.DataContext = _bookDetail;
         }
 
         private void prevButton_click(object sender, RoutedEventArgs e)
@@ -61,12 +77,45 @@ namespace BookStoreManager
             loadBookList();
         }
 
+        private void bookListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedIndex = bookListView.SelectedIndex; 
+            if (selectedIndex < 0) return;
+            loadBookDetail(selectedIndex);
+        }
+
+        private void updateBookButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void deteleBookButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void updateCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void deteleCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void categoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = categoryListView.SelectedIndex;
             _category = (selected == 0) ? "" : _categoryList[selected].CategoryName;
             _currentPage = 1;
             loadBookList();
+            loadBookDetail(0);
         }
 
         private void searchButton_click(object sender, RoutedEventArgs e)
@@ -74,6 +123,7 @@ namespace BookStoreManager
             _search = tboxSearch.Text;
             _currentPage = 1;
             loadBookList();
+            loadBookDetail(0);
         }
     }
 }
