@@ -38,5 +38,31 @@ namespace BookStoreManager
             }
             return result;
         }
+        public BindingList<CategoryModel> getBookCategory(string bookId)
+        {
+            BindingList<CategoryModel> result = new();
+            string sql = """
+                select *
+                from CATEGORY as C 
+                join BOOK_CATEGORY as BC on C.CATEGORY_ID = BC.CATEGORY_ID
+                where BC.BOOK_ID = @Id
+                """;
+
+            var command = new SqlCommand(sql, _connection);
+            command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = bookId;
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string categoryID = (reader["CATEGORY_ID"] == DBNull.Value) ? "" : (string)reader["CATEGORY_ID"];
+                    string categoryName = (reader["CATEGORY_NAME"] == DBNull.Value) ? "" : (string)reader["CATEGORY_NAME"];
+                    result.Add(new CategoryModel(categoryID, categoryName));
+                }
+            }
+            return result;
+        }
     }
+
+    
 }
