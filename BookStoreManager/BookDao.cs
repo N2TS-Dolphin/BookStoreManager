@@ -102,5 +102,31 @@ namespace BookStoreManager
             }
             return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
         }
+
+        public BookModel getBookDetail(string id)
+        {
+            BookModel result = new();
+            string sql = """
+                select * from BOOK
+                where BOOK_ID = @Id
+                """;
+            var command = new SqlCommand(sql, _connection);
+            command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = id;
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string bookId = (reader["BOOK_ID"] == DBNull.Value) ? "" : (string)reader["BOOK_ID"];
+                    string bookName = (reader["BOOK_NAME"] == DBNull.Value) ? "" : (string)reader["BOOK_NAME"];
+                    int price = (reader["PRICE"] == DBNull.Value) ? 0 : (int)reader["PRICE"];
+                    string author = (reader["AUTHOR"] == DBNull.Value) ? "" : (string)reader["AUTHOR"];
+                    string image = (reader["IMG"] == DBNull.Value) ? "" : (string)reader["IMG"];
+                    result.BookID = bookId; result.BookName = bookName;
+                    result.Author = author; result.Image = image;
+                    result.Price = price;
+                }
+            }
+            return result;
+        }
     }
 }
