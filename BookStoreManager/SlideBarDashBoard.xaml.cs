@@ -124,5 +124,16 @@ namespace BookStoreManager
             screen.Show();
             currentScreen.Close();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+            var orderWindow = new ManageOrder();
+            orderWindow.Show();
+        }
     }
 }
