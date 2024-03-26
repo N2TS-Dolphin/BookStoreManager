@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace BookStoreManager
 {
@@ -15,7 +17,6 @@ namespace BookStoreManager
         public string Author { get; set; }
         public string Image { get; set; }
         public BindingList<CategoryModel>? Category { get; set; }
-        public string CategoryString { get; set; }
         public BookModel() { }
         public BookModel(string bookID, string bookName, string image)
         {
@@ -31,15 +32,6 @@ namespace BookStoreManager
             Author = author;
             Image = image;
         }
-        public string categoryToString()
-        {
-            string result = "";
-            foreach (var item in Category)
-            {
-                result += (item == Category[0]) ? $"{item.CategoryName}" : $", {item.CategoryName}";
-            }
-            return result;
-        }
         public BookModel clearBook()
         {
             BookID = "";
@@ -48,9 +40,43 @@ namespace BookStoreManager
             Author = "";
             Image = "";
             Category = null;
-            CategoryString = "";
             return this;
         }
         public event PropertyChangedEventHandler? PropertyChanged;
     }
+    class CreditToVNDConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int credit = (int)value;
+            CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+            string result = credit.ToString("#,### VNĐ", cul.NumberFormat);
+            return result;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    class CategoryToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            BindingList<CategoryModel> category = (BindingList<CategoryModel>)value;
+            string result = "";
+            if(category != null)
+            {
+                foreach (var item in category)
+                {
+                    result += (item == category[0]) ? $"{item.CategoryName}" : $", {item.CategoryName}";
+                }
+            }
+            return result;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

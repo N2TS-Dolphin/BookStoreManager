@@ -30,6 +30,7 @@ namespace BookStoreManager
         public MainWindow()
         {
             InitializeComponent();
+            savetoConfig("admin", "admin");
             database.readAccount();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)

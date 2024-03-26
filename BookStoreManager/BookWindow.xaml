@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="BookWindow" Height="450" Width="800"
         Loaded="Window_Loaded">
+    <Window.Resources>
+        <local:CreditToVNDConverter x:Key="VndConverter"/>
+        <local:CategoryToStringConverter x:Key="CategoryConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -75,10 +79,10 @@
                     <Run Text="Author: "/><Run x:Name="txtBookAuthor" Text="{Binding Author}"/>
                 </TextBlock>
                 <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
-                    <Run Text="Price: "/><Run x:Name="txtBookPrice" Text="{Binding Price}"/>
+                    <Run Text="Price: "/><Run x:Name="txtBookPrice" Text="{Binding Price, Converter={StaticResource VndConverter}}"/>
                 </TextBlock>
                 <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
-                    <Run Text="Category: "/><Run x:Name="txtBookCategory" Text="{Binding CategoryString}"/>
+                    <Run Text="Category: "/><Run x:Name="txtBookCategory" Text="{Binding Category, Converter={StaticResource CategoryConverter}}"/>
                 </TextBlock>
             </StackPanel>
         </ScrollViewer>

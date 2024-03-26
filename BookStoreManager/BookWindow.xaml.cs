@@ -61,7 +61,6 @@ namespace BookStoreManager
             string selectedID = _bookList[index].BookID;
             _bookDetail = _bookDao.getBookDetail(selectedID);
             _bookDetail.Category = _categoryDao.getBookCategory(selectedID);
-            _bookDetail.CategoryString = _bookDetail.categoryToString();
             bookDetail.DataContext = _bookDetail;
         }
 
