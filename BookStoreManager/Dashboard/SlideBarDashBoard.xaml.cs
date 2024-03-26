@@ -97,18 +97,15 @@ namespace BookStoreManager
             {
                 selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#006070"));
             }
+            selectedButton = clickedButton;
+
+            selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0093AC"));
         }
         private void Product_Click(object sender, RoutedEventArgs e)
         {
             var bookWindow = new BookWindow();
             bookWindow.Show();
         }
-
-            selectedButton = clickedButton;
-
-            selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0093AC"));
-        }
-
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
             CreateNewAccount screen = new CreateNewAccount();

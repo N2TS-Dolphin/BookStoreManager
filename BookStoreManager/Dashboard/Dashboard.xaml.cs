@@ -23,6 +23,7 @@ namespace BookStoreManager
     /// </summary>
     public partial class Dashboard : Window
     {
+        private Button selectedButton = null;
         connectDB database = new connectDB();
 
         public Dashboard()
@@ -88,18 +89,23 @@ namespace BookStoreManager
                 txtCreate.FontSize = newSize;
             }
         }
+        private void btn_Click(object sender, RoutedEventArgs e)
+        {
+            Button clickedButton = (Button)sender;
+
+            if (selectedButton != null && selectedButton != clickedButton)
+            {
+                selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#006070"));
+            }
+            selectedButton = clickedButton;
+
+            selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0093AC"));
+        }
         private void Product_Click(object sender, RoutedEventArgs e)
         {
-            //var bookWindow = new BookWindow();
-            //bookWindow.Show();
-            MainPage.Content = new ProductPage();
+            var bookWindow = new BookWindow();
+            bookWindow.Show();
         }
-
-        private void Home_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
             CreateNewAccount screen = new CreateNewAccount();
