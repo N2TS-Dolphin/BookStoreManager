@@ -55,7 +55,11 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
+                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0"  Height="40px" Click="Order_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="Panel_03" Text="Đơn hàng" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Bottom">
                     <Button x:Name="btnCreate" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,10" Height="40px" Click="btnCreate_Click">

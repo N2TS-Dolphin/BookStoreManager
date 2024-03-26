@@ -5,20 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="Dashboard" Height="450" Width="800">
+        Title="Dashboard" Height="630" Width="1120">
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- Định nghĩa hai cột với độ rộng tỷ lệ -->
-            <ColumnDefinition Width="30*" MaxWidth="400px"/>
-            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="25*" MaxWidth="400px"/>
+            <ColumnDefinition Width="75*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Cột 1: Điều hướng -->
-        <local:SlideBarDashBoard/>
+        <!--<local:SlideBarDashBoard/>-->
+        <Border x:Name="slidebar" BorderBrush="Black" BorderThickness="0,0,1,0">
+            <Grid>
+                <StackPanel Grid.Column="0" Background="#006070">
+                    <!-- Thêm các điều khiển điều hướng ở đây -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40*"/>
+                            <ColumnDefinition Width="60*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="btnUser" Background="#006070" Foreground="#EAEAEA" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0"/>
+                    </Grid>
+                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0" Click="Home_Click" Height="50px">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="Panel_01" Text="Home" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0" Click="Product_Click" Height="50px">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="Panel_02" Text="Danh mục" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0"  Height="50px" Click="Order_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="Panel_03" Text="Đơn hàng" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Bottom">
+                    <Button x:Name="btnCreate" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,0" Height="50px" Click="btnCreate_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="txtCreate" Text="Create new account" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="btnLogout" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,10" Height="50px" Click="btnLogout_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="txtLogout" Text="Logout" Foreground="#EAEAEA"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
         <!-- Cột 2: Thông tin -->
         <StackPanel Grid.Column="1" Background="#EAEAEA">
             <!-- Thêm các điều khiển để hiển thị thông tin ở đây -->
-            <local:HomePage/>
+            <Frame x:Name="MainPage"/>
         </StackPanel>
     </Grid>
 </Window>

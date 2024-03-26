@@ -30,6 +30,7 @@ namespace BookStoreManager
         public MainWindow()
         {
             InitializeComponent();
+            savetoConfig("admin", "admin");
             database.readAccount();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -52,8 +53,8 @@ namespace BookStoreManager
             {
                 var passwordInByte = Convert.FromBase64String(database.accounts[index].password);
                 var entropyInByte = Convert.FromBase64String(database.accounts[index].entropy);
-
                 var decryptedPassword = ProtectedData.Unprotect(passwordInByte, entropyInByte, DataProtectionScope.CurrentUser);
+
                 var password = Encoding.UTF8.GetString(decryptedPassword);
                 if (password == txtPassword.Password)
                 {
