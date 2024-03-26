@@ -96,7 +96,7 @@ namespace BookStoreManager
                     }
                     string bookId = (reader["id"] == DBNull.Value) ? "" : (string)reader["id"];
                     string bookName = (reader["name"] == DBNull.Value) ? "" : (string)reader["name"];
-                    string image = (reader["image"] == DBNull.Value) ? "" : (string)reader["image"];
+                    string image = (reader["image"] == DBNull.Value) ? "blank_cover.jpg" : (string)reader["image"];
                     result.Add(new BookModel(bookId, bookName, image));
                 }
             }
