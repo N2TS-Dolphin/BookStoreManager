@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreManager", "BookStoreManager\BookStoreManager.csproj", "{DBE2C675-A2D5-467E-93D5-68CF459921EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreManager", "BookStoreManager\BookStoreManager.csproj", "{DBE2C675-A2D5-467E-93D5-68CF459921EE}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{586CF5AF-1D83-4192-909F-756523AE7138}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{DBE2C675-A2D5-467E-93D5-68CF459921EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBE2C675-A2D5-467E-93D5-68CF459921EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBE2C675-A2D5-467E-93D5-68CF459921EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586CF5AF-1D83-4192-909F-756523AE7138}.Debug|Any CPU.ActiveCfg = Debug
+		{586CF5AF-1D83-4192-909F-756523AE7138}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
