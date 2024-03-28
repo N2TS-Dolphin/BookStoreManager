@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
     {
         public List<accountInfo> accounts = new List<accountInfo>();
 
-        private string ConnectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string ConnectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
         /// <summary>
         /// Nhập hết tài khoản từ database
