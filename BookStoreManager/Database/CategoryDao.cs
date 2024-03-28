@@ -31,14 +31,14 @@ namespace BookStoreManager.Database
             {
                 while (reader.Read())
                 {
-                    string categoryID = reader["CATEGORY_ID"] == DBNull.Value ? "" : (string)reader["CATEGORY_ID"];
-                    string categoryName = reader["CATEGORY_NAME"] == DBNull.Value ? "" : (string)reader["CATEGORY_NAME"];
+                    int categoryID = (reader["CATEGORY_ID"] == DBNull.Value) ? -1 : (int)reader["CATEGORY_ID"];
+                    string categoryName = (reader["CATEGORY_NAME"] == DBNull.Value) ? "" : (string)reader["CATEGORY_NAME"];
                     result.Add(new CategoryModel(categoryID, categoryName));
                 }
             }
             return result;
         }
-        public BindingList<CategoryModel> getBookCategory(string bookId)
+        public BindingList<CategoryModel> getBookCategory(int bookId)
         {
             BindingList<CategoryModel> result = new();
             string sql = """
@@ -55,8 +55,8 @@ namespace BookStoreManager.Database
             {
                 while (reader.Read())
                 {
-                    string categoryID = reader["CATEGORY_ID"] == DBNull.Value ? "" : (string)reader["CATEGORY_ID"];
-                    string categoryName = reader["CATEGORY_NAME"] == DBNull.Value ? "" : (string)reader["CATEGORY_NAME"];
+                    int categoryID = (reader["CATEGORY_ID"] == DBNull.Value) ? -1 : (int)reader["CATEGORY_ID"];
+                    string categoryName = (reader["CATEGORY_NAME"] == DBNull.Value) ? "" : (string)reader["CATEGORY_NAME"];
                     result.Add(new CategoryModel(categoryID, categoryName));
                 }
             }

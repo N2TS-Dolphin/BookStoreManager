@@ -101,11 +101,6 @@ namespace BookStoreManager
 
             selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0093AC"));
         }
-        private void Product_Click(object sender, RoutedEventArgs e)
-        {
-            var bookWindow = new BookWindow();
-            bookWindow.Show();
-        }
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
             CreateNewAccount screen = new CreateNewAccount();
@@ -143,6 +138,12 @@ namespace BookStoreManager
         {
             var orderWindow = new ManageOrder();
             orderWindow.Show();
+        }
+
+        private void Product_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new BookWindow();
+            window.Show();
         }
     }
 }

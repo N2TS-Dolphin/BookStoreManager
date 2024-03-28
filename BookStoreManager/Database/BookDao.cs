@@ -25,13 +25,13 @@ namespace BookStoreManager.Database
             if (search != "" && category != "")
             {
                 sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, count(*) over() as totalItems
+                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price count(*) over() as totalItems
                     from BOOK as B 
                     join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
                     join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
                     where C.CATEGORY_NAME = @Category
                     and B.BOOK_NAME like @Search
-                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG
+                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
                     order by B.BOOK_ID
                     offset @Skip rows
                     fetch next @Take rows only
@@ -41,7 +41,7 @@ namespace BookStoreManager.Database
             else if (search != "" && category == "")
             {
                 sql = """
-                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, count(*) over() as totalItems
+                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
                     from BOOK
                     where BOOK_NAME like @Search
                     order by BOOK_ID
@@ -52,12 +52,12 @@ namespace BookStoreManager.Database
             else if (search == "" && category != "")
             {
                 sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, count(*) over() as totalItems
+                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
                     from BOOK as B 
                     join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
                     join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
                     where C.CATEGORY_NAME = @Category
-                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG
+                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
                     order by B.BOOK_ID
                     offset @Skip rows
                     fetch next @Take rows only
@@ -66,7 +66,7 @@ namespace BookStoreManager.Database
             if (search == "" && category == "")
             {
                 sql = """
-                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, count(*) over() as totalItems
+                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
                     from BOOK
                     order by BOOK_ID
                     offset @Skip rows
@@ -94,16 +94,19 @@ namespace BookStoreManager.Database
                         totalPages = totalItems / itemsPerPage + (totalItems % itemsPerPage == 0 ? 0 : 1);
                         totalPages = totalPages < 0 ? 0 : totalPages;
                     }
-                    string bookId = reader["id"] == DBNull.Value ? "" : (string)reader["id"];
-                    string bookName = reader["name"] == DBNull.Value ? "" : (string)reader["name"];
-                    string image = reader["image"] == DBNull.Value ? "blank_cover.jpg" : (string)reader["image"];
-                    result.Add(new BookModel(bookId, bookName, image));
+                    int bookId = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
+                    string bookName = (reader["name"] == DBNull.Value) ? "" : (string)reader["name"];
+                    string image = (reader["image"] == DBNull.Value) ? "blank_cover.jpg" : (string)reader["image"];
+                    string author = (reader["author"] == DBNull.Value) ? "N/A" : (string)reader["author"];
+                    int price = (reader["price"] == DBNull.Value) ? 0 : (int)reader["price"];
+
+                    result.Add(new BookModel(bookId, bookName, price, author, image));
                 }
             }
             return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
         }
 
-        public BookModel getBookDetail(string id)
+        public BookModel getBookDetail(int id)
         {
             BookModel result = new();
             string sql = """
@@ -116,11 +119,11 @@ namespace BookStoreManager.Database
             {
                 while (reader.Read())
                 {
-                    string bookId = reader["BOOK_ID"] == DBNull.Value ? "" : (string)reader["BOOK_ID"];
-                    string bookName = reader["BOOK_NAME"] == DBNull.Value ? "" : (string)reader["BOOK_NAME"];
-                    int price = reader["PRICE"] == DBNull.Value ? 0 : (int)reader["PRICE"];
-                    string author = reader["AUTHOR"] == DBNull.Value ? "" : (string)reader["AUTHOR"];
-                    string image = reader["IMG"] == DBNull.Value ? "" : (string)reader["IMG"];
+                    int bookId = (reader["BOOK_ID"] == DBNull.Value) ? -1 : (int)reader["BOOK_ID"];
+                    string bookName = (reader["BOOK_NAME"] == DBNull.Value) ? "" : (string)reader["BOOK_NAME"];
+                    int price = (reader["PRICE"] == DBNull.Value) ? 0 : (int)reader["PRICE"];
+                    string author = (reader["AUTHOR"] == DBNull.Value) ? "" : (string)reader["AUTHOR"];
+                    string image = (reader["IMG"] == DBNull.Value) ? "" : (string)reader["IMG"];
                     result.BookID = bookId; result.BookName = bookName;
                     result.Author = author; result.Image = image;
                     result.Price = price;

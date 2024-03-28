@@ -45,7 +45,7 @@
                         </Button.Style>
                     </Button>
 
-                    <Button x:Name="Panel_02" Content="Danh mục" BorderThickness="0" Click="btn_Click" Height="50px">
+                    <Button x:Name="Panel_02" Content="Sản phẩm" BorderThickness="0" Click="Product_Click" Height="50px">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="#006070"/>
