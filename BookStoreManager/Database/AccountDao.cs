@@ -58,7 +58,7 @@ namespace BookStoreManager.Database
                 connection.Open();
                 accounts = readAccount();
 
-                var insertAccount = "INSERT INTO ACCOUNT(ACCOUNT_ID, USERNAME, PASS, ENTROPY, FULLNAME) VALUES (@account_id, @username, @pass, @entropy, @fullname)";
+                var insertAccount = "INSERT INTO ACCOUNT(USERNAME, PASS, ENTROPY, FULLNAME) VALUES (@username, @pass, @entropy, @fullname)";
 
                 var password = pass;
 
@@ -76,7 +76,6 @@ namespace BookStoreManager.Database
 
                 using (SqlCommand command = new SqlCommand(insertAccount, connection))
                 {
-                    command.Parameters.AddWithValue($"@account_id", accountID);
                     command.Parameters.AddWithValue($"@username", username);
                     command.Parameters.AddWithValue($"@pass", Convert.ToBase64String(cypherText));
                     command.Parameters.AddWithValue($"@entropy", Convert.ToBase64String(entropy));
