@@ -11,20 +11,20 @@ namespace BookStoreManager
 {
     public class BookModel: INotifyPropertyChanged
     {
-        public string BookID{ get; set; }
+        public int BookID{ get; set; }
         public string BookName { get; set; }
         public int Price { get; set; }
         public string Author { get; set; }
         public string Image { get; set; }
         public BindingList<CategoryModel>? Category { get; set; }
         public BookModel() { }
-        public BookModel(string bookID, string bookName, string image)
+        public BookModel(int bookID, string bookName, string image)
         {
             BookID = bookID;
             BookName = bookName;
             Image = image;
         }
-        public BookModel(string bookID, string bookName, int price, string author, string image)
+        public BookModel(int bookID, string bookName, int price, string author, string image)
         {
             BookID = bookID;
             BookName = bookName;
@@ -34,7 +34,7 @@ namespace BookStoreManager
         }
         public BookModel clearBook()
         {
-            BookID = "";
+            BookID = -1;
             BookName = "";
             Price = 0;
             Author = "";

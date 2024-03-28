@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
     {
         public List<accountInfo> accounts = new List<accountInfo>();
 
-        private string ConnectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string ConnectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
 
         /// <summary>
         /// Nhập hết tài khoản từ database
