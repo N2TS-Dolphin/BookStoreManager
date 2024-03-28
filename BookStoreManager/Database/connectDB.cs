@@ -1,4 +1,4 @@
-﻿using BookStoreManager.Support;
+﻿using BookStoreManager.DataType;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

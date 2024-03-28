@@ -13,11 +13,11 @@ using System;
 using System.Data.SqlClient;
 using System.Data;
 using BookStoreManager.Database;
-using BookStoreManager.Support;
 using System.Security.Cryptography;
 using System.Configuration;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.Common;
+using BookStoreManager.DataType;
 
 namespace BookStoreManager
 {
@@ -78,9 +78,6 @@ namespace BookStoreManager
             }
 
         }
-
-
-
 
         /// <summary>
         /// Lưu thông tin đăng nhập gần nhất vào App.config

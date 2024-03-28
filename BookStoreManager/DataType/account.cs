@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace BookStoreManager.Support
+namespace BookStoreManager.DataType
 {
     public class accountInfo
     {
@@ -15,6 +15,6 @@ namespace BookStoreManager.Support
         public string password { get; set; }
         public string name { get; set; }
         public string entropy { get; set; }
-        
+
     }
 }

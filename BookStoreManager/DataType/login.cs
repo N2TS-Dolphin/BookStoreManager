@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BookStoreManager.Database;
 using System.Security.Cryptography.X509Certificates;
 
-namespace BookStoreManager.Support
+namespace BookStoreManager.DataType
 {
     public class Login
     {
