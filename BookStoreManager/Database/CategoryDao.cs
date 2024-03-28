@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStoreManager
+namespace BookStoreManager.Database
 {
     public class CategoryDao
     {
@@ -31,8 +31,8 @@ namespace BookStoreManager
             {
                 while (reader.Read())
                 {
-                    string categoryID = (reader["CATEGORY_ID"] == DBNull.Value) ? "" : (string)reader["CATEGORY_ID"];
-                    string categoryName = (reader["CATEGORY_NAME"] == DBNull.Value) ? "" : (string)reader["CATEGORY_NAME"];
+                    string categoryID = reader["CATEGORY_ID"] == DBNull.Value ? "" : (string)reader["CATEGORY_ID"];
+                    string categoryName = reader["CATEGORY_NAME"] == DBNull.Value ? "" : (string)reader["CATEGORY_NAME"];
                     result.Add(new CategoryModel(categoryID, categoryName));
                 }
             }
@@ -55,8 +55,8 @@ namespace BookStoreManager
             {
                 while (reader.Read())
                 {
-                    string categoryID = (reader["CATEGORY_ID"] == DBNull.Value) ? "" : (string)reader["CATEGORY_ID"];
-                    string categoryName = (reader["CATEGORY_NAME"] == DBNull.Value) ? "" : (string)reader["CATEGORY_NAME"];
+                    string categoryID = reader["CATEGORY_ID"] == DBNull.Value ? "" : (string)reader["CATEGORY_ID"];
+                    string categoryName = reader["CATEGORY_NAME"] == DBNull.Value ? "" : (string)reader["CATEGORY_NAME"];
                     result.Add(new CategoryModel(categoryID, categoryName));
                 }
             }
@@ -64,5 +64,5 @@ namespace BookStoreManager
         }
     }
 
-    
+
 }

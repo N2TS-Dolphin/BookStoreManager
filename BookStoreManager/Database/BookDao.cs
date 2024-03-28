@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStoreManager
+namespace BookStoreManager.Database
 {
     public class BookDao
     {
@@ -22,7 +22,7 @@ namespace BookStoreManager
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
             string sql = "";
-            if(search != "" && category != "")
+            if (search != "" && category != "")
             {
                 sql = """
                     select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, count(*) over() as totalItems
@@ -38,7 +38,7 @@ namespace BookStoreManager
                     """;
 
             }
-            else if(search != "" && category == "")
+            else if (search != "" && category == "")
             {
                 sql = """
                     select BOOK_ID as id, BOOK_NAME as name, IMG as image, count(*) over() as totalItems
@@ -49,7 +49,7 @@ namespace BookStoreManager
                     fetch next @Take rows only
                     """;
             }
-            else if(search == "" && category != "")
+            else if (search == "" && category != "")
             {
                 sql = """
                     select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, count(*) over() as totalItems
@@ -90,13 +90,13 @@ namespace BookStoreManager
                     if (totalItems == 0)
                     {
                         totalItems = (int)reader["totalItems"];
-                        totalItems = (totalItems < 0) ? 0 : totalItems;
-                        totalPages = (totalItems / itemsPerPage) + (((totalItems % itemsPerPage) == 0) ? 0 : 1);
-                        totalPages = (totalPages < 0) ? 0 : totalPages;
+                        totalItems = totalItems < 0 ? 0 : totalItems;
+                        totalPages = totalItems / itemsPerPage + (totalItems % itemsPerPage == 0 ? 0 : 1);
+                        totalPages = totalPages < 0 ? 0 : totalPages;
                     }
-                    string bookId = (reader["id"] == DBNull.Value) ? "" : (string)reader["id"];
-                    string bookName = (reader["name"] == DBNull.Value) ? "" : (string)reader["name"];
-                    string image = (reader["image"] == DBNull.Value) ? "blank_cover.jpg" : (string)reader["image"];
+                    string bookId = reader["id"] == DBNull.Value ? "" : (string)reader["id"];
+                    string bookName = reader["name"] == DBNull.Value ? "" : (string)reader["name"];
+                    string image = reader["image"] == DBNull.Value ? "blank_cover.jpg" : (string)reader["image"];
                     result.Add(new BookModel(bookId, bookName, image));
                 }
             }
@@ -116,11 +116,11 @@ namespace BookStoreManager
             {
                 while (reader.Read())
                 {
-                    string bookId = (reader["BOOK_ID"] == DBNull.Value) ? "" : (string)reader["BOOK_ID"];
-                    string bookName = (reader["BOOK_NAME"] == DBNull.Value) ? "" : (string)reader["BOOK_NAME"];
-                    int price = (reader["PRICE"] == DBNull.Value) ? 0 : (int)reader["PRICE"];
-                    string author = (reader["AUTHOR"] == DBNull.Value) ? "" : (string)reader["AUTHOR"];
-                    string image = (reader["IMG"] == DBNull.Value) ? "" : (string)reader["IMG"];
+                    string bookId = reader["BOOK_ID"] == DBNull.Value ? "" : (string)reader["BOOK_ID"];
+                    string bookName = reader["BOOK_NAME"] == DBNull.Value ? "" : (string)reader["BOOK_NAME"];
+                    int price = reader["PRICE"] == DBNull.Value ? 0 : (int)reader["PRICE"];
+                    string author = reader["AUTHOR"] == DBNull.Value ? "" : (string)reader["AUTHOR"];
+                    string image = reader["IMG"] == DBNull.Value ? "" : (string)reader["IMG"];
                     result.BookID = bookId; result.BookName = bookName;
                     result.Author = author; result.Image = image;
                     result.Price = price;

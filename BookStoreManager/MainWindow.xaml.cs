@@ -26,7 +26,7 @@ namespace BookStoreManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        connectDB database = new connectDB();
+        AccountDao database = new AccountDao();
         public MainWindow()
         {
             InitializeComponent();
@@ -41,7 +41,7 @@ namespace BookStoreManager
         }
 
         /// <summary>
-        /// 
+        /// Nút đăng nhập
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
