@@ -5,8 +5,90 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="ManageOrder" Height="450" Width="800">
+        Title="ManageOrder" Height="600" Width="800">
+    <Window.Resources>
+        <local:PriceConverter x:Key="VndConverter"/>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="txtBlockOrder" MouseLeftButtonDown="ReloadPage"  Text="Manage Order" Grid.Row="1" Grid.Column="1" FontWeight="Bold" FontSize="20"></TextBlock>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
+            <Button x:Name="AddBtn" Content="Add" FontSize="15" Width="55" Height="25" Click="AddBtn_Click" Margin="0,0,10,0"/>
+            <Button x:Name="UpdateBtn" Content="Update" FontSize="15" Width="55"  Height="25"  Click="UpdateBtn_Click" Margin="0,0,0,0"/>
+            <Button x:Name="DeleteBtn" Content="Delete" FontSize="15" Width="55"  Height="25"  Click="DeleteBtn_Click" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+            <TextBlock Text="From" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <DatePicker Name="FromDatePicker" Height="25"  IsTodayHighlighted="True" AutomationProperties.IsOffscreenBehavior="Onscreen"/>
+
+            <TextBlock Text="To" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <DatePicker Name="ToDatePicker" Height="25" IsTodayHighlighted="True"/>
+
+            <Button Content="Filter" FontSize="15" Width="55"  Height="25" Name="FilterBtn" Click="FilterBtn_Click" Margin="10,0"/>
+
+        </StackPanel>
+
+
+
+        <DataGrid x:Name="OrderDataGrid" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" 
+              AutoGenerateColumns="False"
+              CanUserResizeColumns="False" 
+              BorderThickness="1"
+              VerticalScrollBarVisibility="Hidden" 
+              HorizontalScrollBarVisibility="Hidden" 
+              GridLinesVisibility="None" 
+              CanUserAddRows="False"
+              SelectionMode="Single"
+              SelectedIndex="-1"
+              CanUserDeleteRows="False"
+              IsReadOnly="True">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="FontSize" Value="15"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
+                <DataGridTextColumn Header="Customer Name" Binding="{Binding CustomerName}" Width="3*"/>
+                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate}" Width="3*"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
+                <DataGridTemplateColumn Header="Detail" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Detail" Click="DetailBtn_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center">
+            <Button x:Name="PrevBtn" Content="Prev" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
+            <TextBlock x:Name="txtItemPage" Text="1/1" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button x:Name="NextBtn" Content="Next" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
+        </StackPanel>
+
+
     </Grid>
 </Window>

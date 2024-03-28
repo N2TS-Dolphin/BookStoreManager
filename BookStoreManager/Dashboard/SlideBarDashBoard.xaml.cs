@@ -1,5 +1,5 @@
 ﻿using BookStoreManager.Database;
-using BookStoreManager.Support;
+using BookStoreManager.DataType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,5 +131,9 @@ namespace BookStoreManager
             currentScreen.Close();
         }
 
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
