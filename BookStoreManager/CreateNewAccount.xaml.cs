@@ -20,7 +20,7 @@ namespace BookStoreManager
     /// </summary>
     public partial class CreateNewAccount : Window
     {
-        connectDB database = new connectDB();
+        AccountDao database = new AccountDao();
         public CreateNewAccount()
         {
             InitializeComponent();

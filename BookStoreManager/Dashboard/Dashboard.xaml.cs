@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 using BookStoreManager.Database;
-using BookStoreManager.Support;
+using BookStoreManager.DataType;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BookStoreManager
@@ -24,7 +24,7 @@ namespace BookStoreManager
     public partial class Dashboard : Window
     {
         private Button selectedButton = null;
-        connectDB database = new connectDB();
+        AccountDao database = new AccountDao();
 
         public Dashboard()
         {

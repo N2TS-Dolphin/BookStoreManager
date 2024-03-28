@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace BookStoreManager.Database
 {
-    public class connectDB
+    public class AccountDao
     {
-        public List<accountInfo> accounts = new List<accountInfo>();
+        public List<AccountModel> accounts = new List<AccountModel>();
 
         private string ConnectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
@@ -19,7 +19,7 @@ namespace BookStoreManager.Database
         /// Nhập hết tài khoản từ database
         /// </summary>
         /// <returns>Danh sách tài khoản</returns>
-        public List<accountInfo> readAccount()
+        public List<AccountModel> readAccount()
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -31,7 +31,7 @@ namespace BookStoreManager.Database
 
                 while (reader.Read())
                 {
-                    var newAccount = new accountInfo
+                    var newAccount = new AccountModel
                     {
                         username = (string)reader["USERNAME"],
                         password = (string)reader["PASS"],
@@ -58,7 +58,7 @@ namespace BookStoreManager.Database
                 connection.Open();
                 accounts = readAccount();
 
-                var insertAccount = "INSERT INTO ACCOUNT(ACCOUNT_ID, USERNAME, PASS, ENTROPY, FULLNAME) VALUES (@account_id, @username, @pass, @entropy, @fullname)";
+                var insertAccount = "INSERT INTO ACCOUNT(USERNAME, PASS, ENTROPY, FULLNAME) VALUES (@username, @pass, @entropy, @fullname)";
 
                 var password = pass;
 
@@ -76,7 +76,6 @@ namespace BookStoreManager.Database
 
                 using (SqlCommand command = new SqlCommand(insertAccount, connection))
                 {
-                    command.Parameters.AddWithValue($"@account_id", accountID);
                     command.Parameters.AddWithValue($"@username", username);
                     command.Parameters.AddWithValue($"@pass", Convert.ToBase64String(cypherText));
                     command.Parameters.AddWithValue($"@entropy", Convert.ToBase64String(entropy));

@@ -1,5 +1,5 @@
 ﻿using BookStoreManager.Database;
-using BookStoreManager.DataType;
+using BookStoreManager.Support;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace BookStoreManager
     {
         private Button selectedButton = null;
 
-        connectDB database = new connectDB();
+        AccountDao database = new AccountDao();
 
         public SlideBarDashBoard()
         {
@@ -97,15 +97,12 @@ namespace BookStoreManager
             {
                 selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#006070"));
             }
+
             selectedButton = clickedButton;
 
             selectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0093AC"));
         }
-        private void Product_Click(object sender, RoutedEventArgs e)
-        {
-            var bookWindow = new BookWindow();
-            bookWindow.Show();
-        }
+
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
             CreateNewAccount screen = new CreateNewAccount();
@@ -134,15 +131,5 @@ namespace BookStoreManager
             currentScreen.Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Order_Click(object sender, RoutedEventArgs e)
-        {
-            var orderWindow = new ManageOrder();
-            orderWindow.Show();
-        }
     }
 }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace BookStoreManager.DataType
 {
-    public class accountInfo
+    public class AccountModel : INotifyPropertyChanged
     {
         public string username { get; set; }
         public string password { get; set; }
         public string name { get; set; }
         public string entropy { get; set; }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
