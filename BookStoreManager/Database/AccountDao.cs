@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
     {
         public List<AccountModel> accounts = new List<AccountModel>();
 
-        private string ConnectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
         /// <summary>
         /// Nhập hết tài khoản từ database
@@ -21,7 +21,7 @@ namespace BookStoreManager.Database
         /// <returns>Danh sách tài khoản</returns>
         public List<AccountModel> readAccount()
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -41,7 +41,6 @@ namespace BookStoreManager.Database
                     accounts.Add(newAccount);
                 }
             }
-
             return accounts;
         }
 
@@ -53,7 +52,7 @@ namespace BookStoreManager.Database
         /// <param name="fullname">Tên người dùng</param>
         public void writeAccount(string username, string pass, string fullname)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 accounts = readAccount();

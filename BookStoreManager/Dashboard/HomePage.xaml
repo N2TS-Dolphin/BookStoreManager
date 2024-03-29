@@ -19,18 +19,18 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <lvc:CartesianChart x:Name="Total_Order" Grid.Column="0">
+            <lvc:CartesianChart x:Name="Total_Order" Grid.Column="0" Series="{Binding SeriesCollection}" MinHeight="200" Margin="10,0,0,0">
                 <lvc:CartesianChart.AxisX>
-                    <lvc:Axis Title="Months"/>
+                    <lvc:Axis Labels="{Binding Labels}"/>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="Order"/>
+                    <lvc:Axis/>
                 </lvc:CartesianChart.AxisY>
             </lvc:CartesianChart>
 
-            <lvc:CartesianChart x:Name="Total_Revenue" Grid.Column="1">
+            <lvc:CartesianChart x:Name="Total_Revenue" Grid.Column="1" MinHeight="200" Margin="10,0,0,0">
                 <lvc:CartesianChart.AxisX>
-                    <lvc:Axis Title="Months"/>
+                    <lvc:Axis/>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
                     <lvc:Axis Title="Revenue"/>

@@ -1,6 +1,4 @@
-﻿using BookStoreManager.Database;
-using BookStoreManager.Support;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using BookStoreManager.Database;
+using BookStoreManager.DataType;
 
 namespace BookStoreManager
 {
@@ -131,5 +132,9 @@ namespace BookStoreManager
             currentScreen.Close();
         }
 
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
         private SqlConnection _connection;
         public CategoryDao()
         {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+            string connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
             _connection = new SqlConnection(connectionString);
             _connection.Open();
         }

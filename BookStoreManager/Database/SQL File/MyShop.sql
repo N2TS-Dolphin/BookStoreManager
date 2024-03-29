@@ -87,57 +87,57 @@ CREATE TABLE ORDER_ITEM
 	REFERENCES BOOK(BOOK_ID),
 )
 
-INSERT ACCOUNT( USERNAME, PASS, ENTROPY, FULLNAME)
+INSERT ACCOUNT(USERNAME, PASS, ENTROPY, FULLNAME)
 VALUES	( 'admin', 'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAERQX5xOj8EWQKUBLmg+3JgAAAAACAAAAAAAQZgAAAAEAACAAAAAIYJ1RdaqoENndp+RZ7OCxf9afuyTmev+ukmvtVbbm/gAAAAAOgAAAAAIAACAAAAAo5Ee4hx8Hv4xbzyqnJ676165sN8+VtmduEXa7PCURkhAAAADCWUhQt6tjsZ2Wogn50vV1QAAAAIvgSs/NROoPcLKtOoWmaoouWvAfHEcw8/6G3686oUXBOJPG0b4RqW3NaIoCT6P2S0cUlh3cq3PTyX7AMaMa5Qo=', 'iBwdigFSr3tVbqx0hg7NYRLFOa8XhQNHCZ8zfBzpLvo=', 'admin')
 
-INSERT CATEGORY( CATEGORY_NAME)
+INSERT CATEGORY(CATEGORY_NAME)
 VALUES  ('Novel'),
-		( 'Action'),
-		( 'Adult'),
-		( 'Adventure'),
-		( 'Business'),
-		( 'Childrens mystery'),
+		('Action'),
+		('Adult'),
+		('Adventure'),
+		('Business'),
+		('Childrens mystery'),
 		('Classic'),
 		('Classic short story'),
-		( 'Comedy'),
+		('Comedy'),
 		('Drama'),
 		('Family saga'),
-		( 'Fantasy'),
-		( 'Historical'),
+		('Fantasy'),
+		('Historical'),
 		('Horror'),
 		('Isekai'),
-		( 'Josei'),
+		('Josei'),
 		('LGBTQ+ fiction'),
-		( 'Martial arts novel'),
-		( 'Middle grade fiction'),
-		( 'Mystery'),
-		( 'Non-fiction'),
-		( 'Psychological'),
-		( 'Romance'),
+		('Martial arts novel'),
+		('Middle grade fiction'),
+		('Mystery'),
+		('Non-fiction'),
+		('Psychological'),
+		('Romance'),
 		('School Life'),
-		( 'Scientific'),
-		( 'Sci-Fi'),
+		('Scientific'),
+		('Sci-Fi'),
 		('Seinen'),
 		('Short story'),
 		('Shoujo'),
 		('Shounen'),
 		('Single father novel'),
-		( 'Single mother novel'),
-		( 'Slice of Life'),
-		( 'Speculative'),
+		('Single mother novel'),
+		('Slice of Life'),
+		('Speculative'),
 		('Sports'),
 		('Supernatural'),
-		( 'War'),
-		( 'Young adult fiction'),
+		('War'),
+		('Young adult fiction'),
 		('Tragedy')
 
-INSERT BOOK( BOOK_NAME, PRICE, AUTHOR)
+INSERT BOOK(BOOK_NAME, PRICE, AUTHOR)
 VALUES  (N'Đắc nhân tâm', 86000, 'Dale Carnegie'),
-		( 'One Piece', 21250, 'Eiichiro Oda'),
-		('Attack On Titan', 144400, 'Isayama Hajime'),
-		( 'Naruto', 21500, 'Masashi Kishimoto'),
-		( 'Cardcaptor Sakura', 25000, 'CLAMP'),
-		( 'Cardcaptor Sakura: Clear Card-hen', 175750, 'CLAMP')
+		(N'One Piece', 21250, 'Eiichiro Oda'),
+		(N'Attack On Titan', 144400, 'Isayama Hajime'),
+		(N'Naruto', 21500, 'Masashi Kishimoto'),
+		(N'Cardcaptor Sakura', 25000, 'CLAMP'),
+		(N'Cardcaptor Sakura: Clear Card-hen', 175750, 'CLAMP')
 
 INSERT BOOK_CATEGORY(BOOK_ID, CATEGORY_ID)
 VALUES  (1, 22),
@@ -169,9 +169,27 @@ VALUES  (1, 22),
 		(6, 23),
 		(6, 29)
 
-INSERT ORDER_LIST(CUSTOMER_NAME, ORDER_DATE)
-VALUES  (N'Nguyễn Văn Anh' ,'03/05/2024')
+INSERT ORDER_LIST(CUSTOMER_NAME, ORDER_DATE, PRICE)
+VALUES  (N'Nguyễn Văn Anh', '03/05/2024', 476500),
+		(N'Trần Chí Hào', '03/10/2024', 235750),
+		(N'Trần Thái Sơn', '03/03/2024', 941500),
+		(N'Huỳnh Phúc Tịnh', '03/20/2024', 966400),
+		(N'Ngô Toàn Trung', '03/30/2024', 885150)
 
 INSERT ORDER_ITEM(ORDER_ID, BOOK_ID, QUANTITY)
 VALUES  (1, 5, 5),
-		(1, 6, 2)
+		(1, 6, 2),
+		(2, 2, 3),
+		(2, 1, 1),
+		(2, 4, 4),
+		(3, 5, 2),
+		(3, 6, 3),
+		(3, 1, 3),
+		(3, 2, 5),
+		(4, 5, 4),
+		(4, 3, 6),
+		(5, 5, 1),
+		(5, 1, 3),
+		(5, 6, 2),
+		(5, 3, 1),
+		(5, 2, 5)

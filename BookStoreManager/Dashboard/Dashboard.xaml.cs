@@ -24,13 +24,14 @@ namespace BookStoreManager
     public partial class Dashboard : Window
     {
         private Button selectedButton = null;
-        AccountDao database = new AccountDao();
+        AccountDao account = new AccountDao();
+        OrderDao order = new OrderDao();
 
         public Dashboard()
         {
             InitializeComponent();
-            database.accounts = database.readAccount();
-            btnUser.Content = database.accounts[Login.Instance.Get()].name;
+            account.accounts = account.readAccount();
+            btnUser.Content = account.accounts[Login.Instance.Get()].name;
 
             // Nếu không phải là tài khoản admin thì cho đăng ký người dùng mới
             if (Login.Instance.Get() == 0)
