@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BookStoreManager.DataType;
+using System.Data.Common;
 
 namespace BookStoreManager.Database
 {
@@ -15,7 +16,16 @@ namespace BookStoreManager.Database
     {
         public List<OrderModel> orders = new List<OrderModel>();
 
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+
+        private SqlConnection _connection;
+
+        public OrderDao()
+        { 
+            _connection = new SqlConnection(_connectionString);
+            _connection.Open();
+        }
+
 
         /// <summary>
         /// Đọc dữ liệu đơn hàng
@@ -37,8 +47,8 @@ namespace BookStoreManager.Database
                     {
                         OrderId = (int)reader["ORDER_ID"],
                         CustomerName = (string)reader["CUSTOMER_NAME"],
-                        OrderDate = (DateTime)reader["ORDER_DATE"],
-                        price = (int)reader["PRICE"]
+                        OrderDate = DateOnly.Parse(DateTime.Parse(reader["ORDER_DATE"].ToString()).Date.ToShortDateString()),
+                        Price = (int)reader["PRICE"]
                     };
                     orders.Add(newOrder);
                 }

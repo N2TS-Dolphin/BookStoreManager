@@ -42,7 +42,7 @@ namespace BookStoreManager
             List<string> days = new List<string>();
             for (int i = 0; i < order.orders.Count; i++)
             {
-                values.Add(order.orders[i].price);
+                values.Add(order.orders[i].Price);
                 days.Add(order.orders[i].OrderDate.Day.ToString());
             }
 
