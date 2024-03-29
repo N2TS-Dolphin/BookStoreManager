@@ -1,5 +1,3 @@
-﻿using BookStoreManager.Database;
-using BookStoreManager.DataType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using BookStoreManager.Database;
+using BookStoreManager.DataType;
 
 namespace BookStoreManager
 {
