@@ -37,7 +37,7 @@ namespace BookStoreManager
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             _categoryList = _categoryDao.getCategoryList();
-            _categoryList.Insert(0, new CategoryModel("000", "All"));
+            _categoryList.Insert(0, new CategoryModel(0, "All"));
             categoryListView.ItemsSource = _categoryList;
             loadBookList();
             loadBookDetail(0);
@@ -59,7 +59,7 @@ namespace BookStoreManager
                 _bookDetail.clearBook();
                 return;
             }
-            string selectedID = _bookList[index].BookID;
+            int selectedID = _bookList[index].BookID;
             _bookDetail = _bookDao.getBookDetail(selectedID);
             _bookDetail.Category = _categoryDao.getBookCategory(selectedID);
             bookDetail.DataContext = _bookDetail;
