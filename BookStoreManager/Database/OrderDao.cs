@@ -47,7 +47,7 @@ namespace BookStoreManager.Database
                     {
                         OrderId = (int)reader["ORDER_ID"],
                         CustomerName = (string)reader["CUSTOMER_NAME"],
-                        OrderDate = DateOnly.Parse(DateTime.Parse(reader["ORDER_DATE"].ToString()).Date.ToShortDateString()),
+                        OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
                         Price = (int)reader["PRICE"]
                     };
                     orders.Add(newOrder);
@@ -73,7 +73,7 @@ namespace BookStoreManager.Database
                         {
                             OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
                             CustomerName = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME")),
-                            OrderDate = DateOnly.Parse(DateTime.Parse(reader["ORDER_DATE"].ToString()).Date.ToShortDateString()),
+                            OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
                             Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
                         };
                         orders.Add(order);
@@ -138,7 +138,7 @@ namespace BookStoreManager.Database
                         {
                             OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
                             CustomerName = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME")),
-                            OrderDate = DateOnly.Parse(reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")).ToShortDateString()),
+                            OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
                             Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
                         };
                         orders.Add(order);
@@ -187,5 +187,89 @@ namespace BookStoreManager.Database
                 }
             }
         }
+
+        public BindingList<OrderDetailModel> GetOrderDetails(int orderId)
+        {
+            BindingList<OrderDetailModel> orderDetails = new BindingList<OrderDetailModel>();
+            BookDao _bookDao = new BookDao();
+
+            string query = "SELECT ORDER_ID, BOOK_ID, QUANTITY FROM ORDER_ITEM WHERE ORDER_ID = @OrderId ORDER BY BOOK_ID";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@OrderId", orderId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    
+                    while (reader.Read())
+                    {   
+                        OrderDetailModel orderDetail = new OrderDetailModel
+                        {
+                            
+                            OrderID = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
+                            Book = _bookDao.getBookDetail(reader.GetInt32(reader.GetOrdinal("BOOK_ID"))),
+                            Quantity = reader.GetInt32(reader.GetOrdinal("QUANTITY"))
+                        };
+                        orderDetails.Add(orderDetail);
+                    }
+                }
+            }
+
+            return orderDetails;
+        }
+
+        public OrderModel GetOrderById(int orderId)
+        {
+            string query = "SELECT ORDER_ID, CUSTOMER_NAME, ORDER_DATE, PRICE FROM ORDER_LIST WHERE ORDER_ID = @OrderId";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@OrderId", orderId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        OrderModel order = new OrderModel
+                        {
+                            OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
+                            CustomerName = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME")),
+                            OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
+                            Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
+                        };
+                        return order;
+                    }
+                }
+            }
+
+            return null; // Return null if order with the provided orderId is not found
+        }
+
+        public void UpdateOrder(int orderId, string newCustomerName, DateTime newOrderDate, int newPrice)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE ORDER_LIST SET CUSTOMER_NAME = @CustomerName, ORDER_DATE = @OrderDate, Price = @Price WHERE ORDER_ID = @OrderId";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@CustomerName", newCustomerName);
+                        command.Parameters.AddWithValue("@OrderDate", newOrderDate);
+                        command.Parameters.AddWithValue("@Price", newPrice);
+                        command.Parameters.AddWithValue("@OrderId", orderId);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that may occur during the database operation
+                System.Diagnostics.Debug.WriteLine($"An error occurred while updating the order: {ex.Message}");
+            }
+        }
+
     }
 }
