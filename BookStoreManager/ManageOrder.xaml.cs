@@ -68,7 +68,20 @@ namespace BookStoreManager
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (OrderDataGrid.SelectedItem != null)
+            {
+                OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
+                int orderId = selectedOrder.OrderId;
 
+               
+                OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
+                orderDetailWindow.ShowDialog();
+                LoadPage(fromDate, toDate);
+            }
+            else
+            {
+                MessageBox.Show("Please select an order to update.");
+            }
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
@@ -111,9 +124,31 @@ namespace BookStoreManager
             LoadPage(fromDate, toDate);
         }
 
+
+        private TargetType GetParent<TargetType>(DependencyObject o) where TargetType : DependencyObject
+        {
+            if (o == null || o is TargetType) return (TargetType)o;
+            return GetParent<TargetType>(VisualTreeHelper.GetParent(o));
+        }
         private void DetailBtn_Click(object sender, RoutedEventArgs e)
         {
+            var row = GetParent<DataGridRow>((Button)sender);
+            int index = OrderDataGrid.Items.IndexOf(row.Item);
+            if (index != -1)
+            {
+                OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
+                int orderId = selectedOrder.OrderId;
 
+
+                OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
+                orderDetailWindow.ShowDialog();
+                LoadPage(fromDate, toDate);
+            }
+            else
+            {
+                // If no order is selected, display a message or handle it accordingly
+                MessageBox.Show("Please select an order to update.");
+            }
         }
 
 
