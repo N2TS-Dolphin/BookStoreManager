@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BookStoreManager.Database
 {
@@ -13,7 +14,7 @@ namespace BookStoreManager.Database
         private SqlConnection _connection;
         public BookDao()
         {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
             _connection = new SqlConnection(connectionString);
             _connection.Open();
         }
@@ -82,27 +83,28 @@ namespace BookStoreManager.Database
             command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
             command.Parameters.Add("@Search", System.Data.SqlDbType.NVarChar).Value = "%" + search + "%";
             command.Parameters.Add("@Category", System.Data.SqlDbType.NVarChar).Value = category;
-
-            using (var reader = command.ExecuteReader())
-            {
-                while (reader.Read())
+            //try {
+                using (var reader = command.ExecuteReader())
                 {
-                    if (totalItems == 0)
+                    while (reader.Read())
                     {
-                        totalItems = (int)reader["totalItems"];
-                        totalItems = totalItems < 0 ? 0 : totalItems;
-                        totalPages = totalItems / itemsPerPage + (totalItems % itemsPerPage == 0 ? 0 : 1);
-                        totalPages = totalPages < 0 ? 0 : totalPages;
-                    }
-                    int bookId = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
-                    string bookName = (reader["name"] == DBNull.Value) ? "" : (string)reader["name"];
-                    string image = (reader["image"] == DBNull.Value) ? "blank_cover.jpg" : (string)reader["image"];
-                    string author = (reader["author"] == DBNull.Value) ? "N/A" : (string)reader["author"];
-                    int price = (reader["price"] == DBNull.Value) ? 0 : (int)reader["price"];
+                        if (totalItems == 0)
+                        {
+                            totalItems = (int)reader["totalItems"];
+                            totalItems = totalItems < 0 ? 0 : totalItems;
+                            totalPages = totalItems / itemsPerPage + (totalItems % itemsPerPage == 0 ? 0 : 1);
+                            totalPages = totalPages < 0 ? 0 : totalPages;
+                        }
+                        int bookId = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
+                        string bookName = (reader["name"] == DBNull.Value) ? "" : (string)reader["name"];
+                        string image = (reader["image"] == DBNull.Value) ? "blank_cover.jpg" : (string)reader["image"];
+                        string author = (reader["author"] == DBNull.Value) ? "N/A" : (string)reader["author"];
+                        int price = (reader["price"] == DBNull.Value) ? 0 : (int)reader["price"];
 
-                    result.Add(new BookModel(bookId, bookName, price, author, image));
+                        result.Add(new BookModel(bookId, bookName, price, author, image));
+                    }
                 }
-            }
+            //}catch (Exception ex) { MessageBox.Show("Error!"); }
             return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
         }
 
@@ -115,20 +117,22 @@ namespace BookStoreManager.Database
                 """;
             var command = new SqlCommand(sql, _connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = id;
-            using (var reader = command.ExecuteReader())
-            {
-                while (reader.Read())
+            //try {
+                using (var reader = command.ExecuteReader())
                 {
-                    int bookId = (reader["BOOK_ID"] == DBNull.Value) ? -1 : (int)reader["BOOK_ID"];
-                    string bookName = (reader["BOOK_NAME"] == DBNull.Value) ? "" : (string)reader["BOOK_NAME"];
-                    int price = (reader["PRICE"] == DBNull.Value) ? 0 : (int)reader["PRICE"];
-                    string author = (reader["AUTHOR"] == DBNull.Value) ? "" : (string)reader["AUTHOR"];
-                    string image = (reader["IMG"] == DBNull.Value) ? "" : (string)reader["IMG"];
-                    result.BookID = bookId; result.BookName = bookName;
-                    result.Author = author; result.Image = image;
-                    result.Price = price;
+                    while (reader.Read())
+                    {
+                        int bookId = (reader["BOOK_ID"] == DBNull.Value) ? -1 : (int)reader["BOOK_ID"];
+                        string bookName = (reader["BOOK_NAME"] == DBNull.Value) ? "" : (string)reader["BOOK_NAME"];
+                        int price = (reader["PRICE"] == DBNull.Value) ? 0 : (int)reader["PRICE"];
+                        string author = (reader["AUTHOR"] == DBNull.Value) ? "" : (string)reader["AUTHOR"];
+                        string image = (reader["IMG"] == DBNull.Value) ? "" : (string)reader["IMG"];
+                        result.BookID = bookId; result.BookName = bookName;
+                        result.Author = author; result.Image = image;
+                        result.Price = price;
+                    }
                 }
-            }
+            //} catch (Exception ex) { MessageBox.Show("Error!"); }
             return result;
         }
     }

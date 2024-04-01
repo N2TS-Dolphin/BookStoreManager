@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace BookStoreManager
 {
-    public class BookModel: INotifyPropertyChanged
+    public class BookModel: INotifyPropertyChanged, ICloneable
     {
         public int BookID{ get; set; }
         public string BookName { get; set; }
@@ -42,6 +42,12 @@ namespace BookStoreManager
             Category = null;
             return this;
         }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
     }
     class CreditToVNDConverter : IValueConverter

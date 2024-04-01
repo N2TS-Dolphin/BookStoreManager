@@ -25,13 +25,15 @@ namespace BookStoreManager
         BindingList<BookModel> _bookList = new();
         BindingList<CategoryModel> _categoryList = new();
         BookModel _bookDetail = new();
-        BookDao _bookDao = new BookDao();
-        CategoryDao _categoryDao = new CategoryDao();
+        BookDao _bookDao;
+        CategoryDao _categoryDao;
         int _currentPage = 1, _totalPages = 0; 
         string _search = "", _category = "";
         public BookWindow()
         {
             InitializeComponent();
+            _bookDao = new BookDao();
+            _categoryDao = new CategoryDao();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -93,25 +95,57 @@ namespace BookStoreManager
         {
 
         }
-
         private void addCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            AddCategory addCategory = new AddCategory();
+            addCategory.ShowDialog();
+            if(addCategory.DialogResult == true)
+            {
+                var newCategory = addCategory._newCategory;
+                _categoryList.Add(newCategory);
+            }
         }
-
         private void updateCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var selectedIndex = categoryListView.SelectedIndex;
+            if(selectedIndex > 0 && selectedIndex < _categoryList.Count)
+            {
+                UpdateCategory updateCategory = new UpdateCategory((CategoryModel)_categoryList[selectedIndex].Clone());
+                updateCategory.ShowDialog();
+                if (updateCategory.DialogResult == true)
+                {
+                    var newCategory = updateCategory._selectedCategory;
+                    _categoryList[selectedIndex] = newCategory;
+                }
+            }
+            else { MessageBox.Show("Chọn danh mục trước khi sửa"); }
         }
-
         private void deteleCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var selectedIndex = categoryListView.SelectedIndex;
+            if (selectedIndex > 0 && selectedIndex < _categoryList.Count)
+            {
+                var id = _categoryList[selectedIndex].CategoryID;
+                var name = _categoryList[selectedIndex].CategoryName;
+                var messbox = MessageBox.Show($"Bạn có chắc muốn xóa danh mục {name}, id = {id}?", $"Xóa danh mục {name}"
+                    , MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                if(messbox == MessageBoxResult.OK) {
+                    try
+                    {
+                        _categoryDao.DeleteACategory(id);
+                        _categoryList.RemoveAt(selectedIndex);
+                        MessageBox.Show("Delete Success");
+                    }
+                    catch (Exception ex) { MessageBox.Show("Delete Failed"); }
+                }
+            }
+            else { MessageBox.Show("Chọn danh mục muốn xóa"); }
         }
-
         private void categoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = categoryListView.SelectedIndex;
+            selected = (selected > 0 && selected < _categoryList.Count) ? selected : 0;
+            MessageBox.Show($"{selected}");
             _category = (selected == 0) ? "" : _categoryList[selected].CategoryName;
             _currentPage = 1;
             loadBookList();
