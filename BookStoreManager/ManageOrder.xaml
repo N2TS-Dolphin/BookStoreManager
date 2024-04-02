@@ -8,6 +8,7 @@
         Title="ManageOrder" Height="600" Width="800">
     <Window.Resources>
         <local:PriceConverter x:Key="VndConverter"/>
+        <local:OrderDateConverter x:Key="orderDateConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -71,8 +72,8 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
                 <DataGridTextColumn Header="Customer Name" Binding="{Binding CustomerName}" Width="3*"/>
-                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate}" Width="3*"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
+                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
+                <DataGridTextColumn Header="Total Price" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
                 <DataGridTemplateColumn Header="Detail" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
