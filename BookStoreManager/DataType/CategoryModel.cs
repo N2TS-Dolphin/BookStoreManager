@@ -9,10 +9,10 @@ namespace BookStoreManager
 {
     public class CategoryModel : INotifyPropertyChanged
     {
-        public string CategoryID { get; set; }
+        public int CategoryID { get; set; }
         public string CategoryName { get; set; }
         public CategoryModel() { }
-        public CategoryModel(string categoryID, string categoryName)
+        public CategoryModel(int categoryID, string categoryName)
         {
             CategoryID = categoryID;
             CategoryName = categoryName;
