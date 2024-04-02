@@ -14,7 +14,7 @@ namespace BookStoreManager
         public int OrderId { get; set; }
         public string CustomerName { get; set; }
         public DateTime OrderDate { get; set; }
-        public int price { get; set; }
+        public int Price { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }
@@ -31,6 +31,23 @@ namespace BookStoreManager
             }
             string result = credit.ToString("#,### VNĐ", cul.NumberFormat);
             return result;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class OrderDateConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DateTime dateTime)
+            {
+                return dateTime.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+            return string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
