@@ -10,7 +10,7 @@ namespace BookStoreManager.Database
 {
     class OrderDao
     {
-        public List<OrderModel> orders = new List<OrderModel>();
+        public List<OrderModel> OrderInfo = new List<OrderModel>();
 
         private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
@@ -18,7 +18,7 @@ namespace BookStoreManager.Database
         /// Đọc dữ liệu đơn hàng
         /// </summary>
         /// <returns>Danh sách đơn hàng</returns>
-        public List<OrderModel> readOrders()
+        public List<OrderModel> getOrders()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -37,11 +37,11 @@ namespace BookStoreManager.Database
                         OrderDate = (DateTime)reader["ORDER_DATE"],
                         price = (int)reader["PRICE"]
                     };
-                    orders.Add(newOrder);
+                    OrderInfo.Add(newOrder);
                 }
-                orders = orders.OrderBy(o => o.OrderDate).ToList();
+                OrderInfo = OrderInfo.OrderBy(o => o.OrderDate).ToList();
             }
-            return orders;
+            return OrderInfo;
         }
 
         /// <summary>
