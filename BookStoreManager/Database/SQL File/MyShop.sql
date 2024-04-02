@@ -173,8 +173,8 @@ INSERT ORDER_LIST(CUSTOMER_NAME, ORDER_DATE, PRICE)
 VALUES  (N'Nguyễn Văn Anh', '03/05/2024', 476500),
 		(N'Trần Chí Hào', '03/10/2024', 235750),
 		(N'Trần Thái Sơn', '03/03/2024', 941500),
-		(N'Huỳnh Phúc Tịnh', '03/20/2024', 966400),
-		(N'Ngô Toàn Trung', '03/30/2024', 885150)
+		(N'Vương Huỳnh Phúc Tịnh', '03/09/2024', 966400),
+		(N'Ngô Toàn Trung', '03/10/2024', 885150)
 
 INSERT ORDER_ITEM(ORDER_ID, BOOK_ID, QUANTITY)
 VALUES  (1, 5, 5),
@@ -193,3 +193,7 @@ VALUES  (1, 5, 5),
 		(5, 6, 2),
 		(5, 3, 1),
 		(5, 2, 5)
+
+SELECT ORDER_DATE, SUM(PRICE), COUNT(*)
+FROM ORDER_LIST
+GROUP BY ORDER_DATE
