@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BookStoreManager.DataType;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Data.Common;
 
 namespace BookStoreManager.Database
@@ -48,8 +47,8 @@ namespace BookStoreManager.Database
                     {
                         OrderId = (int)reader["ORDER_ID"],
                         CustomerName = (string)reader["CUSTOMER_NAME"],
-                        OrderDate = (DateTime)reader["ORDER_DATE"],
-                        price = (int)reader["PRICE"]
+                        OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
+                        Price = (int)reader["PRICE"]
                     };
                     OrderInfo.Add(newOrder);
                 }
@@ -64,18 +63,17 @@ namespace BookStoreManager.Database
 
             string query = "SELECT ORDER_ID, CUSTOMER_NAME, ORDER_DATE, PRICE FROM ORDER_LIST";
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand(query, _connection))
             {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
                         OrderModel order = new OrderModel
                         {
                             OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
                             CustomerName = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME")),
-                            OrderDate = DateOnly.Parse(DateTime.Parse(reader["ORDER_DATE"].ToString()).Date.ToShortDateString()),
+                            OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
                             Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
                         };
                         orders.Add(order);
