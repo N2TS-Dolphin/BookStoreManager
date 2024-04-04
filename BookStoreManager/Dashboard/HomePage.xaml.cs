@@ -27,7 +27,8 @@ namespace BookStoreManager
     {
         RevenueDao revenueDao = new RevenueDao();
         private List<string> _months = new List<string>() { "January", "Febrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        public string[] Labels { get; set; }
+
+        public List<string> Labels { get; set; }
         public SeriesCollection RevenueSeriesCollection { get; set; }
         public SeriesCollection OrderSeriesCollection { get; set; }
 
@@ -35,17 +36,15 @@ namespace BookStoreManager
         private int _YearSelected;
 
         List<int> revenues = new List<int>();
-        List<string> days = new List<string>();
         List<int> quantitys = new List<int>();
 
         public HomePage()
         {
             InitializeComponent();
 
-            revenueDao.Revenues = revenueDao.GetRevenues();
-
             RevenueSeriesCollection = new SeriesCollection();
             OrderSeriesCollection = new SeriesCollection();
+            Labels = new List<string>();
         }
 
         /// <summary>
@@ -53,11 +52,8 @@ namespace BookStoreManager
         /// </summary>
         /// <param name="Revenue">Danh sách doanh thu theo ngày</param>
         /// <param name="days">Danh sách ngày</param>
-        private void LoadChart(List<int> Quantity, List<int> Revenue, List<string> days)
+        private void LoadChart(List<int> Quantity, List<int> Revenue, List<string> Temps)
         {
-            // Đặt title cho trục X
-            Labels = days.ToArray();
-
             RevenueSeriesCollection.Add(
                 new LineSeries
                 {
@@ -75,7 +71,7 @@ namespace BookStoreManager
                     LabelPoint = point => point.Y.ToString("#,##0"), // Format hiển thị trên từng điểm của đồ thị
                 }
             );
-
+            Labels.AddRange(Temps);
         }
 
         /// <summary>
@@ -89,18 +85,26 @@ namespace BookStoreManager
 
             if (comboBox.SelectedIndex == 0)
             {
+                revenueDao.Revenues.Clear();
+                revenueDao.Revenues.AddRange(revenueDao.GetRevenuesByDay());
                 Month.Visibility = Visibility.Visible;
                 Year.Visibility = Visibility.Collapsed;
+                btn_Year.Visibility = Visibility.Collapsed;
             }
             else
             {
+                revenueDao.Revenues.Clear();
+                revenueDao.Revenues.AddRange(revenueDao.GetRevenuesByMonth());
                 Month.Visibility = Visibility.Collapsed;
                 Year.Visibility = Visibility.Visible;
+                btn_Year.Visibility = Visibility.Visible;
             }
         }
 
         private void Month_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            List<string> temps = new List<string>();
+
             ComboBox comboBox = sender as ComboBox;
 
             _MonthSelected = comboBox.SelectedIndex;
@@ -109,25 +113,79 @@ namespace BookStoreManager
             Total_Order.AxisX[0].Title = _months[_MonthSelected].ToString();
             Total_Revenue.AxisX[0].Title = _months[_MonthSelected].ToString();
 
-            quantitys.Clear();
-            revenues.Clear();
-            days.Clear();
             RevenueSeriesCollection.Clear();
             OrderSeriesCollection.Clear();
+            Labels.Clear();
+
+            quantitys.Clear();
+            revenues.Clear();
 
             foreach (var revenue in revenueDao.Revenues)
             {
-                if(revenue.OrderDate.Month == _MonthSelected + 1)
+                if (revenue.OrderDate.Month == _MonthSelected + 1 && revenue.OrderDate.Year == DateTime.Now.Year)
                 {
                     quantitys.Add(revenue.Quantity);
                     revenues.Add(revenue.Revenue);
-                    days.Add(revenue.OrderDate.Day.ToString());
+                    temps.Add(revenue.OrderDate.Day.ToString());
                 }
             }
-
-
-            LoadChart(quantitys, revenues, days);
+            LoadChart(quantitys, revenues, temps);
             DataContext = this;
+        }
+
+        private void btn_Year_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> temps = new List<string>();
+
+            RevenueSeriesCollection.Clear();
+            OrderSeriesCollection.Clear();
+            Labels.Clear();
+
+            quantitys.Clear();
+            revenues.Clear();
+
+            // Thay đổi Title Chart
+            Total_Order.AxisX[0].Title = Year.Text;
+            Total_Revenue.AxisX[0].Title = Year.Text;
+
+            var curMonth = 0;
+
+            if (int.TryParse(Year.Text, out _YearSelected) && Year.Text.Length <= 4)
+            {
+                foreach (var revenue in revenueDao.Revenues)
+                {
+                    if (revenue.Year == _YearSelected)
+                    {
+                        for (int i = curMonth + 1; i <= revenue.Month; i++)
+                        {
+                            if (i == revenue.Month)
+                            {
+                                quantitys.Add(revenue.Quantity);
+                                revenues.Add(revenue.Revenue);
+                                curMonth = i;
+                            }
+                            else
+                            {
+                                quantitys.Add(0);
+                                revenues.Add(0);
+                            }
+                            temps.Add(_months[i - 1]);
+                        }
+                    }
+                }
+                for (int i = curMonth + 1; i <= 12; i++)
+                {
+                    quantitys.Add(0);
+                    revenues.Add(0);
+                    temps.Add(_months[i - 1]);
+                }
+                LoadChart(quantitys, revenues, temps);
+                DataContext = this;
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng nhập số nguyên có 4 chữ số");
+            }
         }
     }
 }

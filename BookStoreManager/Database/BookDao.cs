@@ -10,11 +10,11 @@ namespace BookStoreManager.Database
 {
     public class BookDao
     {
+        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
         private SqlConnection _connection;
         public BookDao()
         {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
-            _connection = new SqlConnection(connectionString);
+            _connection = new SqlConnection(_connectionString);
             _connection.Open();
         }
         public Tuple<BindingList<BookModel>, int, int> getBookList(int page, int itemsPerPage, string search, string category)

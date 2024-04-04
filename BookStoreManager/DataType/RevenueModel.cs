@@ -12,6 +12,8 @@ namespace BookStoreManager.DataType
         public DateTime OrderDate { get; set; }
         public int Revenue { get; set; }
         public int Quantity { get; set; }
+        public int Month {  get; set; }
+        public int Year { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }
