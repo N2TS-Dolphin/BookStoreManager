@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
     {
         public List<RevenueModel> Revenues = new List<RevenueModel>();
 
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
         /// <summary>
         /// Lấy dữ liệu doanh thu từ Database

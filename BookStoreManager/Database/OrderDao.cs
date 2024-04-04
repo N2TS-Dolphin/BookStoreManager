@@ -183,36 +183,7 @@ namespace BookStoreManager.Database
             }
         }
 
-        public BindingList<OrderDetailModel> GetOrderDetails(int orderId)
-        {
-            BindingList<OrderDetailModel> orderDetails = new BindingList<OrderDetailModel>();
-            BookDao _bookDao = new BookDao();
 
-            string query = "SELECT ORDER_ID, BOOK_ID, QUANTITY FROM ORDER_ITEM WHERE ORDER_ID = @OrderId ORDER BY BOOK_ID";
-
-            using (SqlCommand command = new SqlCommand(query, _connection))
-            {
-                command.Parameters.AddWithValue("@OrderId", orderId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-
-                    while (reader.Read())
-                    {
-                        OrderDetailModel orderDetail = new OrderDetailModel
-                        {
-
-                            OrderID = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
-                            Book = _bookDao.getBookDetail(reader.GetInt32(reader.GetOrdinal("BOOK_ID"))),
-                            Quantity = reader.GetInt32(reader.GetOrdinal("QUANTITY"))
-                        };
-                        orderDetails.Add(orderDetail);
-                    }
-                }
-            }
-
-            return orderDetails;
-        }
 
         public OrderModel GetOrderById(int orderId)
         {
@@ -265,6 +236,10 @@ namespace BookStoreManager.Database
                 System.Diagnostics.Debug.WriteLine($"An error occurred while updating the order: {ex.Message}");
             }
         }
+
+        
+
+        
 
     }
 }

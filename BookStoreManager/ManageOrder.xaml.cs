@@ -75,8 +75,15 @@ namespace BookStoreManager
 
                
                 OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
-                orderDetailWindow.ShowDialog();
-                LoadPage(fromDate, toDate);
+                var result=orderDetailWindow.ShowDialog();
+                if (result == true) {
+                    LoadPage(fromDate, toDate);
+                }
+                else
+                {
+                    //Do nothing
+                }
+                
             }
             else
             {
