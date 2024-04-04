@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreManager
 {
-    internal class OrderDetailModel
+    public class OrderDetailModel
     {
         public int OrderID { get; set; }
         public BookModel Book { get; set; }
