@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace BookStoreManager.Database
 {
@@ -131,5 +133,44 @@ namespace BookStoreManager.Database
             }
             return result;
         }
+
+        public BindingList<BookModel> getBooksByCategory(int categoryId)
+        {
+            var sql = "SELECT B.* FROM BOOK AS B " +
+                      "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
+                      "WHERE BC.CATEGORY_ID = @CategoryID";
+
+            var sqlParameter = new SqlParameter("@CategoryID", System.Data.SqlDbType.Int);
+            sqlParameter.Value = categoryId;
+
+            var command = new SqlCommand(sql, _connection);
+            command.Parameters.Add(sqlParameter);
+
+            var reader = command.ExecuteReader();
+
+            BindingList<BookModel> list = new BindingList<BookModel>();
+            while (reader.Read())
+            {
+                var bookId = (int)reader["BOOK_ID"];
+                var bookName = (string)reader["BOOK_NAME"];
+                var author = (string)reader["AUTHOR"];
+                var price = (int)reader["PRICE"];
+                var image = reader.IsDBNull(reader.GetOrdinal("IMG")) ? "" : (string)reader["IMG"];
+
+                BookModel book = new BookModel()
+                {
+                    BookID = bookId,
+                    BookName = bookName,
+                    Author = author,
+                    Price = price,
+                    Image = image
+                };
+
+                list.Add(book);
+            }
+            reader.Close();
+            return list;
+        }
+
     }
 }

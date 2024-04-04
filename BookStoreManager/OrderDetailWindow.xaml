@@ -69,11 +69,14 @@
                 <DataGridTextColumn Header="Book ID" Binding="{Binding Path=Book.BookID}" Width="*"/>
                 <DataGridTextColumn Header="Book Name" Binding="{Binding Path=Book.BookName}" Width="2.5*"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Unit Price" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="2*"/>
+                <DataGridTextColumn Header="Unit Price" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="1.5*"/>
                 <DataGridTemplateColumn Header="Operation" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Delete" Click="DeleteProductBtn_Click"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="Update" Click="UpdateProductBtn_Click"  Margin="0,0,5,0"/>
+                                <Button Content="Delete" Click="DeleteProductBtn_Click"/>
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -90,7 +93,11 @@
             <TextBlock Foreground="Green" x:Name="TotalPriceTxtBlock" Text="{Binding Price,Converter={StaticResource VndConverter}}"  VerticalAlignment="Center"  FontWeight="Bold" FontSize="20"/>
         </StackPanel>
 
-        <Button Content="Save" x:Name="SaveOrderDetailBtn" Width="70" Height="40" Grid.Column="3" Grid.Row="4" Click="SaveOrderDetailBtn_Click"/>
+        <StackPanel Orientation="Horizontal"  Grid.Column="3" Grid.Row="4" HorizontalAlignment="Center">
+            <Button Content="Save" x:Name="SaveOrderDetailBtn" Width="70" Height="40" Click="SaveOrderDetailBtn_Click" Margin="0,0 5,0"/>
+            <Button Content="Cancel" x:Name="CancelOrderDetailBtn" Width="70" Height="40" Click="CancelOrderDetailBtn_Click"/>
+        </StackPanel>
+        
 
 
     </Grid>
