@@ -6,64 +6,103 @@
              xmlns:local="clr-namespace:BookStoreManager"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50*"/>
             <RowDefinition Height="25*"/>
+            <RowDefinition Height="50*"/>
             <RowDefinition Height="25*"/>
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,10,0">
-                <ComboBox x:Name="Month" Width="100" Margin="0,0,10,0" SelectionChanged="Month_SelectionChanged" Visibility="Visible">
-                    <ComboBoxItem>Tháng 1</ComboBoxItem>
-                    <ComboBoxItem>Tháng 2</ComboBoxItem>
-                    <ComboBoxItem>Tháng 3</ComboBoxItem>
-                    <ComboBoxItem>Tháng 4</ComboBoxItem>
-                    <ComboBoxItem>Tháng 5</ComboBoxItem>
-                    <ComboBoxItem>Tháng 6</ComboBoxItem>
-                    <ComboBoxItem>Tháng 7</ComboBoxItem>
-                    <ComboBoxItem>Tháng 8</ComboBoxItem>
-                    <ComboBoxItem>Tháng 9</ComboBoxItem>
-                    <ComboBoxItem>Tháng 10</ComboBoxItem>
-                    <ComboBoxItem>Tháng 11</ComboBoxItem>
-                    <ComboBoxItem>Tháng 12</ComboBoxItem>
-                </ComboBox>
+            <StackPanel>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="Year" Width="100" Margin="0,0,10,0" Visibility="Collapsed" />
-                <Button x:Name="btn_Year" Content="Done" Width="40" Margin="0,0,10,0" Visibility="Collapsed" Click="btn_Year_Click"/>
+                    <!-- Doanh thu tháng -->
+                    <Grid Grid.Column="0" Margin="10, 0, 10, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40px"/>
+                        </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="MonthYear" Width="100" SelectionChanged="MonthYear_SelectionChanged" SelectedIndex="0">
-                    <ComboBoxItem>Theo tháng</ComboBoxItem>
-                    <ComboBoxItem>Theo năm</ComboBoxItem>
-                </ComboBox>
+                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                            <TextBlock Text="Số đơn hàng" FontSize="20px" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding TotalOrderCurMonth}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Margin="10, 0, 10, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40px"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                            <TextBlock Text="Doanh thu" FontSize="20px" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding TotalRevenueCurMonth}"/>
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
             </StackPanel>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,10,0">
+                    <ComboBox x:Name="Month" Width="100" Margin="0,0,10,0" SelectionChanged="Month_SelectionChanged" Visibility="Visible">
+                        <ComboBoxItem>Tháng 1</ComboBoxItem>
+                        <ComboBoxItem>Tháng 2</ComboBoxItem>
+                        <ComboBoxItem>Tháng 3</ComboBoxItem>
+                        <ComboBoxItem>Tháng 4</ComboBoxItem>
+                        <ComboBoxItem>Tháng 5</ComboBoxItem>
+                        <ComboBoxItem>Tháng 6</ComboBoxItem>
+                        <ComboBoxItem>Tháng 7</ComboBoxItem>
+                        <ComboBoxItem>Tháng 8</ComboBoxItem>
+                        <ComboBoxItem>Tháng 9</ComboBoxItem>
+                        <ComboBoxItem>Tháng 10</ComboBoxItem>
+                        <ComboBoxItem>Tháng 11</ComboBoxItem>
+                        <ComboBoxItem>Tháng 12</ComboBoxItem>
+                    </ComboBox>
 
-                <lvc:CartesianChart x:Name="Total_Order" Grid.Column="0" Series="{Binding OrderSeriesCollection}" MinHeight="200" Margin="10,0,0,0">
-                    <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Labels="{Binding Labels}"/>
-                    </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis/>
-                    </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>
+                    <TextBox x:Name="Year" Width="100" Margin="0,0,10,0" Visibility="Collapsed" />
+                    <Button x:Name="btn_Year" Content="Done" Width="40" Margin="0,0,10,0" Visibility="Collapsed" Click="btn_Year_Click"/>
 
-                <lvc:CartesianChart x:Name="Total_Revenue" Grid.Column="1" Series="{Binding RevenueSeriesCollection}" MinHeight="200" Margin="10,0,0,0">
-                    <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Labels="{Binding Labels}"/>
-                    </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Title="Revenue"/>
-                    </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>
-            </Grid>
+                    <ComboBox x:Name="MonthYear" Width="100" SelectionChanged="MonthYear_SelectionChanged" SelectedIndex="0">
+                        <ComboBoxItem>Theo tháng</ComboBoxItem>
+                        <ComboBoxItem>Theo năm</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <lvc:CartesianChart x:Name="Total_Order" Grid.Column="0" Series="{Binding OrderSeriesCollection}" MinHeight="200" Margin="10,0,0,0">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Labels="{Binding Labels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+
+                    <lvc:CartesianChart x:Name="Total_Revenue" Grid.Column="1" Series="{Binding RevenueSeriesCollection}" MinHeight="200" Margin="10,0,0,0">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Labels="{Binding Labels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Revenue"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Grid>
+            </StackPanel>
         </StackPanel>
+
     </Grid>
 </UserControl>

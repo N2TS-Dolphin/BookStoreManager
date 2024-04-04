@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BookStoreManager.Database
 {
@@ -14,32 +15,33 @@ namespace BookStoreManager.Database
 
         private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
-        private SqlConnection _connection;
-        public RevenueDao()
-        {
-            _connection = new SqlConnection(_connectionString);
-            _connection.Open();
-        }
-
         /// <summary>
         /// Lấy dữ liệu doanh thu từ Database
         /// </summary>
         /// <returns>Dữ liệu doanh thu theo ngày</returns>
         public List<RevenueModel> GetRevenuesByDay()
         {
-            var sqlOrder = "SELECT ORDER_DATE, SUM(PRICE) AS REVENUE, COUNT(*) AS QUANTITY FROM ORDER_LIST GROUP BY ORDER_DATE";
-            var commandOrder = new SqlCommand(sqlOrder, _connection);
-            var reader = commandOrder.ExecuteReader();
-
-            while (reader.Read())
+            using (var connection = new SqlConnection(_connectionString))
             {
-                var newRevenue = new RevenueModel()
+                connection.Open();
+
+                var sqlOrder = "SELECT ORDER_DATE, SUM(PRICE) AS REVENUE, COUNT(*) AS QUANTITY FROM ORDER_LIST GROUP BY ORDER_DATE";
+                var commandOrder = new SqlCommand(sqlOrder, connection);
+                var reader = commandOrder.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    OrderDate = (DateTime)reader["ORDER_DATE"],
-                    Revenue = (int)reader["REVENUE"],
-                    Quantity = (int)reader["QUANTITY"]
-                };
-                Revenues.Add(newRevenue);
+                    var newRevenue = new RevenueModel()
+                    {
+                        OrderDate = (DateTime)reader["ORDER_DATE"],
+                        Revenue = (int)reader["REVENUE"],
+                        Quantity = (int)reader["QUANTITY"]
+                    };
+                    Revenues.Add(newRevenue);
+                }
+
+                reader.Close();
+                connection.Close();
             }
             Revenues = Revenues.OrderBy(o => o.OrderDate).ToList();
 
@@ -48,22 +50,29 @@ namespace BookStoreManager.Database
 
         public List<RevenueModel> GetRevenuesByMonth()
         {
-            var sqlOrder = "SELECT MONTH(ORDER_DATE) AS MONTH, YEAR(ORDER_DATE) AS YEAR, SUM(PRICE) AS REVENUE, COUNT(*) AS QUANTITY FROM ORDER_LIST GROUP BY MONTH(ORDER_DATE), YEAR(ORDER_DATE) ORDER BY MONTH(ORDER_DATE)";
-            var commandOrder = new SqlCommand(sqlOrder, _connection);
-            var reader = commandOrder.ExecuteReader();
-
-            while (reader.Read())
+            using (var connection = new SqlConnection(_connectionString))
             {
-                var revenue = new RevenueModel()
+                connection.Open();
+
+                var sqlOrder = "SELECT MONTH(ORDER_DATE) AS MONTH, YEAR(ORDER_DATE) AS YEAR, SUM(PRICE) AS REVENUE, COUNT(*) AS QUANTITY FROM ORDER_LIST GROUP BY MONTH(ORDER_DATE), YEAR(ORDER_DATE) ORDER BY MONTH(ORDER_DATE)";
+                var commandOrder = new SqlCommand(sqlOrder, connection);
+                var reader = commandOrder.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    Month = (int)reader["MONTH"],
-                    Year = (int)reader["YEAR"],
-                    Revenue = (int)reader["REVENUE"],
-                    Quantity = (int)reader["QUANTITY"]
-                };
-                Revenues.Add(revenue);
+                    var revenue = new RevenueModel()
+                    {
+                        Month = (int)reader["MONTH"],
+                        Year = (int)reader["YEAR"],
+                        Revenue = (int)reader["REVENUE"],
+                        Quantity = (int)reader["QUANTITY"]
+                    };
+                    Revenues.Add(revenue);
+                }
+                reader.Close();
+                connection.Close();
             }
-            Revenues = Revenues.OrderBy(o =>o.Month).OrderBy(o => o.Year).ToList();
+            Revenues = Revenues.OrderBy(o => o.Month).OrderBy(o => o.Year).ToList();
 
             return Revenues;
         }
