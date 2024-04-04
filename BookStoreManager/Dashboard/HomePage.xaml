@@ -33,6 +33,7 @@
                         <StackPanel Grid.Column="0" Orientation="Vertical">
                             <TextBlock Text="Số đơn hàng" FontSize="20px" FontWeight="Bold"/>
                             <TextBlock Text="{Binding TotalOrderCurMonth}"/>
+                            <TextBlock Text="{Binding CompareOrder}"/>
                         </StackPanel>
                     </Grid>
 
@@ -45,6 +46,7 @@
                         <StackPanel Grid.Column="0" Orientation="Vertical">
                             <TextBlock Text="Doanh thu" FontSize="20px" FontWeight="Bold"/>
                             <TextBlock Text="{Binding TotalRevenueCurMonth}"/>
+                            <TextBlock Text="{Binding CompareRevenue}"/>
                         </StackPanel>
                     </Grid>
 

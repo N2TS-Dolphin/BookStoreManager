@@ -30,6 +30,10 @@ namespace BookStoreManager
 
         public string TotalOrderCurMonth { get; set; }
         public string TotalRevenueCurMonth { get; set; }
+        public string CompareOrder { get; set; }
+        public string Order { get; set; }
+        public string CompareRevenue { get; set; }
+        public string Revenue { get; set; }
         public List<string> Labels { get; set; }
         public SeriesCollection RevenueSeriesCollection { get; set; }
         public SeriesCollection OrderSeriesCollection { get; set; }
@@ -227,19 +231,51 @@ namespace BookStoreManager
         {
             int curMonth = DateTime.Now.Month;
             int curYear = DateTime.Now.Year;
+            int lstMonth = 0;
+            int lstYear = 0;
 
-            int temp1 = 0, temp2 = 0;
+            if (curMonth != 1)
+            {
+                lstMonth = curMonth - 1;
+                lstYear = curYear;
+            }
+            else
+            {
+                lstMonth = 12;
+                lstYear = curYear - 1;
+            }
+
+            int[] temps = new int[4];
 
             foreach (var data in revenueDao.GetRevenuesByMonth())
             {
-                if (data.Month == curMonth && data.Year == curYear)
+                if (data.OrderDate.Month == curMonth && data.OrderDate.Year == curYear)
                 {
-                    temp1 += data.Quantity;
-                    temp2 += data.Revenue;
+                    temps[0] += data.Quantity;
+                    temps[1] += data.Revenue;
+                }
+                if (data.OrderDate.Month == lstMonth && data.OrderDate.Year == lstYear)
+                {
+                    temps[2] += data.Quantity;
+                    temps[3] += data.Revenue;
                 }
             }
-            TotalOrderCurMonth = temp1.ToString("#,##0");
-            TotalRevenueCurMonth = temp2.ToString("#,##0");
+            TotalOrderCurMonth = temps[0].ToString("#,##0");
+            TotalRevenueCurMonth = temps[1].ToString("#,##0");
+
+            if (((double)(temps[0] - temps[2]) / temps[2] * 100) >= 0)
+                Order = "tăng";
+            else
+                Order = "giảm";
+
+            if (((double)(temps[1] - temps[3]) / temps[3] * 100) >= 0)
+                Revenue = "tăng";
+            else
+                Revenue = "giảm";
+
+            CompareOrder = $"Tổng đơn hàng tháng {curMonth}/{curYear} {Order} {Math.Abs((double)(temps[0] - temps[2]) / temps[2] * 100).ToString("0")}% so với tháng {lstMonth}/{lstYear}";
+            CompareRevenue = $"Tổng doanh thu tháng {curMonth}/{curYear} {Revenue} {Math.Abs((double)(temps[1] - temps[3]) / temps[3] * 100).ToString("0")}% so với tháng {lstMonth}/{lstYear}";
+
             DataContext = this;
         }
     }
