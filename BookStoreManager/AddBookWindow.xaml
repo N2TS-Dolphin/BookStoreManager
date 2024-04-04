@@ -30,7 +30,7 @@
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
                 <Grid>
                     <Label Style="{StaticResource InfoLabelStyle}" Content="Tên sách:"/>
-                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding BookName}" TextChanged="TextBox_TextChanged">
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding BookName}" Padding="10,7,0,0" d:Text="Book Name">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>
@@ -42,7 +42,7 @@
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
                 <Grid>
                     <Label Style="{StaticResource InfoLabelStyle}" Content="Tác giả:"/>
-                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Author}">
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Author}" Padding="10,7,0,0" d:Text="Author">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>
@@ -54,7 +54,7 @@
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
                 <Grid>
                     <Label Style="{StaticResource InfoLabelStyle}" Content="Giá tiền:"/>
-                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Price, Converter={StaticResource VndConverter}}">
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Price}" Padding="10,7,0,0" d:Text="20000">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>
@@ -68,20 +68,25 @@
                     <Label Content="Danh Mục:" Foreground="White" FontSize="15" FontWeight="Bold" Margin="3,0,0,0"/>
                     <Button x:Name="removeCategory" Content="Loại bỏ" Style="{StaticResource WhiteButtonStyle}" Width="80" Height="30" 
                      HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,3,0" Click="removeCategory_Click"/>
-                    <ListView x:Name="categoryLV" Margin="2" Width="419" Height="158" VerticalAlignment="Bottom" Background="White">
+                    <ListView x:Name="categoryLV" Margin="2" Width="419" Height="158" VerticalAlignment="Bottom" Background="White"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <ListView.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>
                             </Style>
                         </ListView.Resources>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Margin="1" />
-                        </ItemsPanelTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Margin="0" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="#006070" CornerRadius="10" Width="70" Height="20">
-                                    <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="White" 
-                                            d:Text="Action" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Border Background="#006070" CornerRadius="10" Height="20">
+                                    <Grid HorizontalAlignment="Stretch">
+                                        <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="White" TextAlignment="Center" Padding="10,0,10,0"
+                                                   TextWrapping="NoWrap" d:Text="Action" VerticalAlignment="Center"/>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -93,10 +98,10 @@
                     <Label Content="Thêm Danh Mục:" Foreground="White" FontSize="15" FontWeight="Bold" Margin="3,0,0,0"/>
                     <Button x:Name="addCategory" Content="Thêm" Style="{StaticResource WhiteButtonStyle}" Width="80" Height="30" 
                          HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,3,0" Click="addCategory_Click"/>
-                    <ComboBox Name="addCategoryCB" Style="{StaticResource CategoryComboBoxStyle}" Margin="2">
+                    <ComboBox Name="addCategoryCB" Width="400" Height="35" VerticalAlignment="Bottom" Margin="2">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding CategoryName}"/>
+                                <TextBlock Text="{Binding CategoryName}" FontSize="15" Foreground="Black" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

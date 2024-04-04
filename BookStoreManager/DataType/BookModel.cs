@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BookStoreManager
@@ -17,7 +19,10 @@ namespace BookStoreManager
         public string Author { get; set; }
         public string Image { get; set; }
         public BindingList<CategoryModel>? Category { get; set; }
-        public BookModel() { }
+        public BookModel() {
+            Price = 0;
+            Category = new BindingList<CategoryModel>();
+        }
         public BookModel(int bookID, string bookName, string image)
         {
             BookID = bookID;
@@ -32,14 +37,14 @@ namespace BookStoreManager
             Author = author;
             Image = image;
         }
-        public BookModel clearBook()
+        public BookModel ClearBook()
         {
             BookID = -1;
             BookName = "";
             Price = 0;
             Author = "";
             Image = "";
-            Category = null;
+            Category.Clear();
             return this;
         }
 
@@ -61,9 +66,18 @@ namespace BookStoreManager
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            string strValue = value as string;
+            if (string.IsNullOrWhiteSpace(strValue))
+                return 0; // or throw exception if empty string is not allowed
+
+            string cleanedValue = Regex.Replace(strValue, @"[^\d]", "");
+            if (int.TryParse(cleanedValue, out int result))
+                return result;
+            else
+                return 0;
         }
     }
+ 
     class CategoryToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -59,7 +59,7 @@ namespace BookStoreManager
         {
             if(_bookList.Count == 0)
             {
-                _bookDetail.clearBook();
+                _bookDetail.ClearBook();
                 return;
             }
             int selectedID = _bookList[index].BookID;
