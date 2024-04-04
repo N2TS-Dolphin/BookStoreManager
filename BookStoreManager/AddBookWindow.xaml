@@ -1,0 +1,125 @@
+﻿<Window x:Class="BookStoreManager.AddBookWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookStoreManager"
+        mc:Ignorable="d"
+        Title="AddBookWindow" Height="700" Width="1000"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:CreditToVNDConverter x:Key="VndConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="BookResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="500"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Thêm sách mới" FontSize="50" Foreground="#006070"  Margin="30,30,0,0"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" Content="Tên sách:"/>
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding BookName}" TextChanged="TextBox_TextChanged">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" Content="Tác giả:"/>
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Author}">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" Content="Giá tiền:"/>
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Price, Converter={StaticResource VndConverter}}">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource CategoryBorderStyle}" Height="200" Width="430" Margin="0,0,0,10">
+                <Grid>
+                    <Label Content="Danh Mục:" Foreground="White" FontSize="15" FontWeight="Bold" Margin="3,0,0,0"/>
+                    <Button x:Name="removeCategory" Content="Loại bỏ" Style="{StaticResource WhiteButtonStyle}" Width="80" Height="30" 
+                     HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,3,0" Click="removeCategory_Click"/>
+                    <ListView x:Name="categoryLV" Margin="2" Width="419" Height="158" VerticalAlignment="Bottom" Background="White">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </ListView.Resources>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="1" />
+                        </ItemsPanelTemplate>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#006070" CornerRadius="10" Width="70" Height="20">
+                                    <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="White" 
+                                            d:Text="Action" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource CategoryBorderStyle}" Width="430" Height="80">
+                <Grid>
+                    <Label Content="Thêm Danh Mục:" Foreground="White" FontSize="15" FontWeight="Bold" Margin="3,0,0,0"/>
+                    <Button x:Name="addCategory" Content="Thêm" Style="{StaticResource WhiteButtonStyle}" Width="80" Height="30" 
+                         HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,3,0" Click="addCategory_Click"/>
+                    <ComboBox Name="addCategoryCB" Style="{StaticResource CategoryComboBoxStyle}" Margin="2">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CategoryName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </Border>
+        </StackPanel>
+        <Border Style="{StaticResource CategoryBorderStyle}" Grid.Row="1" Grid.Column="1" Width="310" Height="440" VerticalAlignment="Top" Padding="20">
+            <Grid>
+                <Border BorderBrush="White" BorderThickness="1" Width="250" Height="356" VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <Image Source="{Binding BookImage}" Width="250" Height="356" RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Border>
+                <Button x:Name="changeIMG" Content="Đổi ảnh" Style="{StaticResource WhiteButtonStyle}" Width="250" Height="35" 
+                 HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="changeIMG_Click"/>
+            </Grid>
+        </Border>
+        <Grid HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" 
+                 Width="350" Height="50" VerticalAlignment="Top">
+            <Button x:Name="confirmButton" Content="Xác nhận" Style="{StaticResource OtherButtonStyle}" Background="LightGreen"
+                     HorizontalAlignment="Left" VerticalAlignment="Center" Click="confirmButton_Click"/>
+            <Button x:Name="refreshButton" Content="Tải lại" Style="{StaticResource OtherButtonStyle}"  Background="Yellow"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="refreshButton_Click"/>
+            <Button x:Name="quitButton" Content="Quay về" Style="{StaticResource OtherButtonStyle}"  Background="Red"
+                 HorizontalAlignment="Right" VerticalAlignment="Center" IsCancel="True"/>
+        </Grid>
+    </Grid>
+</Window>

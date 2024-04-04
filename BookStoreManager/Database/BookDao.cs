@@ -11,15 +11,23 @@ namespace BookStoreManager.Database
 {
     public class BookDao
     {
-        private SqlConnection _connection;
+        public static SqlConnection Connection = InitializeConnection();
         public BookDao()
         {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
+            //string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
+            //_connection = new SqlConnection(connectionString);
+            //_connection.Open();
+            //_connection = InitializeConnection();
         }
-        public Tuple<BindingList<BookModel>, int, int> getBookList(int page, int itemsPerPage, string search, string category)
+        public static SqlConnection InitializeConnection() {
+            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
+            var connection = new SqlConnection(connectionString);
+            return connection;
+        }
+        public static Tuple<BindingList<BookModel>, int, int> getBookList(int page, int itemsPerPage, string search, string category)
         {
+            var _connection = Connection;
+            _connection.Open();
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
             string sql = "";
@@ -105,11 +113,14 @@ namespace BookStoreManager.Database
                     }
                 }
             //}catch (Exception ex) { MessageBox.Show("Error!"); }
+            _connection.Close();
             return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
         }
 
-        public BookModel getBookDetail(int id)
+        public static BookModel getBookDetail(int id)
         {
+            var _connection = Connection;
+            _connection.Open();
             BookModel result = new();
             string sql = """
                 select * from BOOK
@@ -133,6 +144,7 @@ namespace BookStoreManager.Database
                     }
                 }
             //} catch (Exception ex) { MessageBox.Show("Error!"); }
+            _connection.Close();
             return result;
         }
     }

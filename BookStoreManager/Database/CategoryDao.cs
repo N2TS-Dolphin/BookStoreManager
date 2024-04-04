@@ -11,15 +11,17 @@ namespace BookStoreManager.Database
 {
     public class CategoryDao
     {
-        private SqlConnection _connection;
+        //private SqlConnection _connection;
         public CategoryDao()
         {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
-            _connection = new SqlConnection(connectionString);
+            //string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
+            //_connection = new SqlConnection(connectionString);
             //_connection.Open();
+            //_connection = BookDao.InitializeConnection();
         }
-        public BindingList<CategoryModel> getCategoryList()
+        public static BindingList<CategoryModel> getCategoryList()
         {
+            var _connection = BookDao.Connection;
             _connection.Open();
             BindingList<CategoryModel> result = new();
             string sql = """
@@ -42,8 +44,9 @@ namespace BookStoreManager.Database
             _connection.Close();
             return result;
         }
-        public BindingList<CategoryModel> getBookCategory(int bookId)
+        public static BindingList<CategoryModel> getBookCategory(int bookId)
         {
+            var _connection = BookDao.Connection;
             _connection.Open();
             BindingList<CategoryModel> result = new();
             string sql = """
@@ -70,8 +73,9 @@ namespace BookStoreManager.Database
             return result;
         }
 
-        public int InsertNewCategory(CategoryModel category)
+        public static int InsertNewCategory(CategoryModel category)
         {
+            var _connection = BookDao.Connection;
             int result = -1;
             _connection.Open();
             string sql = "insert into CATEGORY (CATEGORY_NAME) values (@Name)";
@@ -101,8 +105,9 @@ namespace BookStoreManager.Database
             _connection.Close();
             return result;
         }
-        public void UpdateACategory(CategoryModel category)
+        public static void UpdateACategory(CategoryModel category)
         {
+            var _connection = BookDao.Connection;
             _connection.Open();
             string sql = """
                 update CATEGORY set CATEGORY_NAME = @Name where CATEGORY_ID = @Id
@@ -117,8 +122,9 @@ namespace BookStoreManager.Database
             } catch (Exception ex){ MessageBox.Show("Update failed"); }
             _connection.Close();
         }
-        public void DeleteACategory(int ID)
+        public static void DeleteACategory(int ID)
         {
+            var _connection = BookDao.Connection;
             _connection.Open();
             string sql = """
                 Delete from CATEGORY where CATEGORY_ID = @Id
