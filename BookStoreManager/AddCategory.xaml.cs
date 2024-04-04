@@ -35,8 +35,8 @@ namespace BookStoreManager
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int insertedID = _categoryDao.InsertNewCategory((CategoryModel)_newCategory.Clone());
-            _newCategory.CategoryID = insertedID;
+            //int insertedID = _categoryDao.InsertNewCategory((CategoryModel)_newCategory.Clone());
+            //_newCategory.CategoryID = insertedID;
             DialogResult = true;
         }
     }

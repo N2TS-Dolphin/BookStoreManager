@@ -35,7 +35,7 @@ namespace BookStoreManager
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _categoryDao.UpdateACategory((CategoryModel)_selectedCategory.Clone());
+            //_categoryDao.UpdateACategory((CategoryModel)_selectedCategory.Clone());
             DialogResult = true;
         }
     }
