@@ -31,7 +31,8 @@
                     <ComboBoxItem>Tháng 12</ComboBoxItem>
                 </ComboBox>
 
-                <TextBox x:Name="Year" Width="100" Margin="0,0,10,0" Visibility="Collapsed"/>
+                <TextBox x:Name="Year" Width="100" Margin="0,0,10,0" Visibility="Collapsed" />
+                <Button x:Name="btn_Year" Content="Done" Width="40" Margin="0,0,10,0" Visibility="Collapsed" Click="btn_Year_Click"/>
 
                 <ComboBox x:Name="MonthYear" Width="100" SelectionChanged="MonthYear_SelectionChanged" SelectedIndex="0">
                     <ComboBoxItem>Theo tháng</ComboBoxItem>

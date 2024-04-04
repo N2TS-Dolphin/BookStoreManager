@@ -16,16 +16,15 @@ namespace BookStoreManager.Database
     {
         public List<OrderModel> OrderInfo = new List<OrderModel>();
 
-        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
 
         private SqlConnection _connection;
 
         public OrderDao()
-        { 
+        {
             _connection = new SqlConnection(_connectionString);
             _connection.Open();
         }
-
 
         /// <summary>
         /// Đọc dữ liệu đơn hàng
@@ -33,27 +32,23 @@ namespace BookStoreManager.Database
         /// <returns>Danh sách đơn hàng</returns>
         public List<OrderModel> getOrders()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var sqlOrder = "SELECT * FROM ORDER_LIST";
+            var commandOrder = new SqlCommand(sqlOrder, _connection);
+            var reader = commandOrder.ExecuteReader();
+
+            while (reader.Read())
             {
-                connection.Open();
-
-                var sqlOrder = "SELECT * FROM ORDER_LIST";
-                var commandOrder = new SqlCommand(sqlOrder, connection);
-                var reader = commandOrder.ExecuteReader();
-
-                while (reader.Read())
+                var newOrder = new OrderModel()
                 {
-                    var newOrder = new OrderModel()
-                    {
-                        OrderId = (int)reader["ORDER_ID"],
-                        CustomerName = (string)reader["CUSTOMER_NAME"],
-                        OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
-                        Price = (int)reader["PRICE"]
-                    };
-                    OrderInfo.Add(newOrder);
-                }
-                OrderInfo = OrderInfo.OrderBy(o => o.OrderDate).ToList();
+                    OrderId = (int)reader["ORDER_ID"],
+                    CustomerName = (string)reader["CUSTOMER_NAME"],
+                    OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
+                    Price = (int)reader["PRICE"]
+                };
+                OrderInfo.Add(newOrder);
             }
+            OrderInfo = OrderInfo.OrderBy(o => o.OrderDate).ToList();
+
             return OrderInfo;
         }
 
@@ -188,7 +183,7 @@ namespace BookStoreManager.Database
             }
         }
 
-        
+
 
         public OrderModel GetOrderById(int orderId)
         {

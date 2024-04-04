@@ -10,11 +10,11 @@ namespace BookStoreManager.Database
 {
     public class CategoryDao
     {
+        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
         private SqlConnection _connection;
         public CategoryDao()
         {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
-            _connection = new SqlConnection(connectionString);
+            _connection = new SqlConnection(_connectionString);
             _connection.Open();
         }
         public BindingList<CategoryModel> getCategoryList()
