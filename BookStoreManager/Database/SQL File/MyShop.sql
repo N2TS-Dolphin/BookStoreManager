@@ -174,7 +174,10 @@ VALUES  (N'Nguyễn Văn Anh', '03/05/2024', 476500),
 		(N'Trần Chí Hào', '03/10/2024', 235750),
 		(N'Trần Thái Sơn', '03/03/2024', 941500),
 		(N'Vương Huỳnh Phúc Tịnh', '03/09/2024', 966400),
-		(N'Ngô Toàn Trung', '03/10/2024', 885150)
+		(N'Ngô Toàn Trung', '03/10/2024', 885150),
+		(N'Đào Nguyễn Nhật Minh', '04/02/2024', 685100),
+		(N'Nguyễn Phùng Tài', '10/20/2023', 738250),
+		(N'Đào Nhật Minh', '04/01/2024', 685100)
 
 INSERT ORDER_ITEM(ORDER_ID, BOOK_ID, QUANTITY)
 VALUES  (1, 5, 5),
@@ -192,8 +195,17 @@ VALUES  (1, 5, 5),
 		(5, 1, 3),
 		(5, 6, 2),
 		(5, 3, 1),
-		(5, 2, 5)
+		(5, 2, 5),
+		(6, 3, 4),
+		(6, 4, 5),
+		(7, 1, 1),
+		(7, 5, 5),
+		(7, 6, 3),
+		(8, 3, 4),
+		(8, 4, 5)
 
-SELECT ORDER_DATE, SUM(PRICE), COUNT(*)
+SELECT MONTH(ORDER_DATE), YEAR(ORDER_DATE),
+       SUM(PRICE) AS TOTAL_PRICE
 FROM ORDER_LIST
-GROUP BY ORDER_DATE
+GROUP BY MONTH(ORDER_DATE), YEAR(ORDER_DATE)
+ORDER BY MONTH(ORDER_DATE);

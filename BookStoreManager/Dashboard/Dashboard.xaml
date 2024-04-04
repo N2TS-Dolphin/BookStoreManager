@@ -99,7 +99,7 @@
             </Grid>
         </Border>
         <!-- Cột 2: Thông tin -->
-        <StackPanel Grid.Column="1" Background="#EAEAEA">
+        <StackPanel Grid.Column="1" Background="#FFFFFF">
             <!-- Thêm các điều khiển để hiển thị thông tin ở đây -->
             <!--<Frame x:Name="MainPage"/>-->
             <local:HomePage/>
