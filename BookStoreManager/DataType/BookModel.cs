@@ -98,5 +98,17 @@ namespace BookStoreManager
             throw new NotImplementedException();
         }
     }
-
+    class ImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string name = (string)value;
+            string result = $"/Image/{name}";
+            return result;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

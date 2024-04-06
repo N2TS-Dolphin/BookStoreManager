@@ -27,14 +27,14 @@ namespace BookStoreManager
         BookModel _bookDetail = new();
         //BookDao BookDao;
         //CategoryDao CategoryDao;
-        int _currentPage = 1, _totalPages = 0; 
+        int _currentPage = 1, _totalPages = 0;
         string _search = "", _category = "";
         public BookWindow()
         {
             InitializeComponent();
-            //BookDao = new BookDao();
-            //CategoryDao = new CategoryDao();
             new BookDao();
+            //CategoryDao = new CategoryDao();
+            //new BookDao();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -57,17 +57,26 @@ namespace BookStoreManager
         }
         public void loadBookDetail(int index)
         {
-            if(_bookList.Count == 0)
+            if (_bookList.Count == 0)
             {
                 _bookDetail.ClearBook();
                 return;
             }
             int selectedID = _bookList[index].BookID;
-            _bookDetail = BookDao.getBookDetail(selectedID);
+            //_bookDetail = BookDao.getBookDetail(selectedID);
+            _bookDetail = (BookModel)_bookList[index].Clone();
             _bookDetail.Category = CategoryDao.getBookCategory(selectedID);
             bookDetail.DataContext = _bookDetail;
+            lvCategory.ItemsSource = _bookDetail.Category;
         }
-
+        public void refreshPage()
+        {
+            _category = _categoryList[0].CategoryName;
+            _search = "";
+            _currentPage = 1;
+            loadBookList();
+            loadBookDetail(0);
+        }
         private void prevButton_click(object sender, RoutedEventArgs e)
         {
             _currentPage = (_currentPage-- <= 1) ? 1 : _currentPage;
@@ -82,14 +91,15 @@ namespace BookStoreManager
 
         private void bookListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedIndex = bookListView.SelectedIndex; 
+            var selectedIndex = bookListView.SelectedIndex;
             if (selectedIndex < 0) return;
             loadBookDetail(selectedIndex);
         }
 
         private void updateBookButton_Click(object sender, RoutedEventArgs e)
         {
-
+            UpdateBookWindow updateBookWindow = new UpdateBookWindow();
+            updateBookWindow.Show();    
         }
 
         private void deteleBookButton_Click(object sender, RoutedEventArgs e)
@@ -100,7 +110,7 @@ namespace BookStoreManager
         {
             AddCategory addCategory = new AddCategory();
             addCategory.ShowDialog();
-            if(addCategory.DialogResult == true)
+            if (addCategory.DialogResult == true)
             {
                 try
                 {
@@ -108,6 +118,7 @@ namespace BookStoreManager
                     int insertedID = CategoryDao.InsertNewCategory((CategoryModel)newCategory.Clone());
                     newCategory.CategoryID = insertedID;
                     _categoryList.Add(newCategory);
+                    _categoryList.OrderBy(x => x.CategoryName).ToList();
                     MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
                 }
                 catch (Exception ex) { MessageBox.Show("Thêm danh mục không thành công."); }
@@ -116,7 +127,7 @@ namespace BookStoreManager
         private void updateCategoryButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedIndex = categoryListView.SelectedIndex;
-            if(selectedIndex > 0 && selectedIndex < _categoryList.Count)
+            if (selectedIndex > 0 && selectedIndex < _categoryList.Count)
             {
                 var id = _categoryList[selectedIndex].CategoryID;
                 UpdateCategory updateCategory = new UpdateCategory((CategoryModel)_categoryList[selectedIndex].Clone());
@@ -144,7 +155,8 @@ namespace BookStoreManager
                 var name = _categoryList[selectedIndex].CategoryName;
                 var messbox = MessageBox.Show($"Bạn có chắc muốn xóa danh mục {name}, id = {id}?", $"Xóa danh mục {name}"
                     , MessageBoxButton.OKCancel, MessageBoxImage.Question);
-                if(messbox == MessageBoxResult.OK) {
+                if (messbox == MessageBoxResult.OK)
+                {
                     try
                     {
                         CategoryDao.DeleteACategory(id);
@@ -172,6 +184,27 @@ namespace BookStoreManager
             _currentPage = 1;
             loadBookList();
             loadBookDetail(0);
+        }
+
+        private void priceButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void refreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            refreshPage();
+        }
+
+        private void execlButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddBookWindow addBookWindow = new AddBookWindow();
+            addBookWindow.Show();
         }
     }
 }
