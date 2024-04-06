@@ -2,13 +2,8 @@
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
-using Microsoft.Build.Evaluation;
-using System.Net.NetworkInformation;
-using EnvDTE;
-using EnvDTE80;
-using Project = EnvDTE.Project;
-using ProjectItem = EnvDTE.ProjectItem;
 using Microsoft.VisualStudio.Shell;
+using System.Drawing;
 
 namespace BookStoreManager
 {
@@ -16,12 +11,32 @@ namespace BookStoreManager
     {
         public static BindingList<CategoryModel> GetCategories()
         {
-            return CategoryDao.getCategoryList();
+            return CategoryDao.GetCategoryListFromDB();
         }
-
+        public static BindingList<string> GetImageName()
+        {
+            BindingList<string> result = new BindingList<string>
+            {
+                {"blank_cover.jpg" },
+                {"OnePieceCover.jpg" }
+            };
+            return result;
+        }
         public static int AddNewBook(BookModel newBook)
         {
-            return BookDao.InsertNewBookToDB(newBook);
+            int bookID = BookDao.InsertNewBookToDB(newBook);
+            newBook.BookID = bookID;
+            CategoryDao.InsertNewBookCategoryToDB(newBook);
+            return newBook.BookID;
+        }
+        public static BindingList<CategoryModel> GetUnuseCategory(BookModel book) {
+            return CategoryDao.GetUnuseCategoriesFromDB(book);
+        }
+        public static void UpdateBook(BookModel book, BindingList<CategoryModel> deleteCategories, BindingList<CategoryModel> insertCategories)
+        {
+            CategoryDao.DeleteOldBookCategoryFromDB(book, deleteCategories);
+            CategoryDao.InsertNewBookCategoryToDB(book, insertCategories);
+            BookDao.UpdateBookToDB(book);
         }
 
         //public static string SaveImageToProject(string filePath, string bookid)

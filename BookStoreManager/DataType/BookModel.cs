@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -20,8 +21,12 @@ namespace BookStoreManager
         public string Image { get; set; }
         public BindingList<CategoryModel>? Category { get; set; }
         public BookModel() {
+            BookID = -1;
+            BookName = "";
             Price = 0;
             Category = new BindingList<CategoryModel>();
+            Author = "";
+            Image = "";
         }
         public BookModel(int bookID, string bookName, string image)
         {
@@ -54,6 +59,10 @@ namespace BookStoreManager
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+    }
+    public class ImageItem
+    {
+        public string ImageName { get; set; }
     }
     class CreditToVNDConverter : IValueConverter
     {

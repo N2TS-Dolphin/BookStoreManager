@@ -25,7 +25,7 @@ namespace BookStoreManager.Database
             var connection = new SqlConnection(connectionString);
             return connection;
         }
-        public static Tuple<BindingList<BookModel>, int, int> getBookList(int page, int itemsPerPage, string search, string category)
+        public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category)
         {
             var _connection = Connection;
             _connection.Open();
@@ -92,7 +92,6 @@ namespace BookStoreManager.Database
             command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
             command.Parameters.Add("@Search", System.Data.SqlDbType.NVarChar).Value = "%" + search + "%";
             command.Parameters.Add("@Category", System.Data.SqlDbType.NVarChar).Value = category;
-            //try {
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -113,12 +112,11 @@ namespace BookStoreManager.Database
                     result.Add(new BookModel(bookId, bookName, price, author, image));
                 }
             }
-            //}catch (Exception ex) { MessageBox.Show("Error!"); }
             _connection.Close();
             return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
         }
 
-        public static BookModel getBookDetail(int id)
+        public static BookModel GetBookDetailFromDB(int id)
         {
             var _connection = Connection;
             _connection.Open();
@@ -129,7 +127,7 @@ namespace BookStoreManager.Database
                 """;
             var command = new SqlCommand(sql, _connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = id;
-            //try {
+
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -144,7 +142,6 @@ namespace BookStoreManager.Database
                     result.Price = price;
                 }
             }
-            //} catch (Exception ex) { MessageBox.Show("Error!"); }
             _connection.Close();
             return result;
         }
@@ -160,30 +157,58 @@ namespace BookStoreManager.Database
             command.Parameters.Add("@Price", System.Data.SqlDbType.Int).Value = newBook.Price;
             command.Parameters.Add("@Author", System.Data.SqlDbType.NVarChar).Value = newBook.Author;
             command.Parameters.Add("@Image", System.Data.SqlDbType.NVarChar).Value = newBook.Image;
-            //try
-            //{
-                command.ExecuteNonQuery();
-            //}
-            //catch (Exception ex) { MessageBox.Show("Insert failed."); }
+                
+            command.ExecuteNonQuery();
 
             string sql2 = "select MAX(BOOK_ID) as id from BOOK";
             var command2 = new SqlCommand(sql2, _connection);
 
-            //try
-            //{
-                using (var reader = command2.ExecuteReader())
+            using (var reader = command2.ExecuteReader())
+            {
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        int bookID = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
-                        result = bookID;
-                        MessageBox.Show($"Get inserted id: {result}");
-                    }
+                    int bookID = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
+                    result = bookID;
                 }
-            //}
-            //catch (exception ex) { messagebox.show("cant get inserted id."); }
+            }
             _connection.Close();
             return result;
+        }
+        public static void UpdateBookToDB(BookModel book)
+        {
+            var _connection = Connection;
+            _connection.Open();
+            string sql = """
+                update BOOK set 
+                BOOK_NAME = @Name,
+                PRICE = @Price,
+                AUTHOR = @Author,
+                IMG = @Image
+                where BOOK_ID = @Id 
+                """;
+            var command = new SqlCommand(sql, _connection);
+            command.Parameters.Add("@Id", System.Data.SqlDbType.NVarChar).Value = book.BookID;
+            command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = book.BookName;
+            command.Parameters.Add("@Price", System.Data.SqlDbType.Int).Value = book.Price;
+            command.Parameters.Add("@Author", System.Data.SqlDbType.NVarChar).Value = book.Author;
+            command.Parameters.Add("@Image", System.Data.SqlDbType.NVarChar).Value = book.Image;
+
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+
+        public static void DeleteBookFromDB(BookModel book)
+        {
+            var _connection = Connection;
+            _connection.Open();
+            string sql = """
+                delete from BOOK where BOOK_ID = @Id
+                """;
+            var command = new SqlCommand(sql, _connection);
+            command.Parameters.Add("@Id", System.Data.SqlDbType.NVarChar).Value = book.BookID;
+            command.ExecuteNonQuery();
+
+            _connection.Close();
         }
     }
 }

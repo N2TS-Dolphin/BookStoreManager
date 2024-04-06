@@ -24,9 +24,9 @@ namespace BookStoreManager
     public partial class AddBookWindow : Window
     {
         public BookModel NewBook { get; set; }
-        //BookModel NewBook = new BookModel();
         public BindingList<CategoryModel> AllCategories { get; set; }
         public BindingList<CategoryModel> Categories { get; set; }
+        public BindingList<string> ImageName { get; set; }
         public AddBookWindow()
         {
             InitializeComponent();
@@ -35,14 +35,17 @@ namespace BookStoreManager
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             NewBook = new BookModel();
-            //AllCategories = ManageBook.GetCategories();
-            //Categories = new BindingList<CategoryModel>();
-            //Categories = AllCategories;
-            //NewBook.Image = "/Image/tempID_BookIMG.jpg";
-            //Categories = ManageBook.GetCategories();
-            categoryLV.ItemsSource = NewBook.Category;
-            addCategoryCB.ItemsSource = Categories;
             DataContext = NewBook;
+            categoryLV.ItemsSource = NewBook.Category;
+
+            AllCategories = ManageBook.GetCategories();
+            Categories = new BindingList<CategoryModel>();
+            Categories = AllCategories;
+            addCategoryCB.ItemsSource = Categories;
+
+            ImageName = ManageBook.GetImageName();
+            imageNameCB.ItemsSource = ImageName;
+            imageNameCB.SelectedItem = ImageName[0];
         }
 
         private void removeCategory_Click(object sender, RoutedEventArgs e)
@@ -50,19 +53,13 @@ namespace BookStoreManager
             var selected = categoryLV.SelectedItem as CategoryModel;
             if (selected == null)
             {
-                MessageBox.Show("Choose item first");
+                MessageBox.Show("Bạn phải chọn 1 danh mục trước.");
                 return;
             }
             if (NewBook.Category.Contains(selected))
             {
-                try
-                {
-                    Categories.Add(selected);
-                    NewBook.Category.Remove(selected);
-                    MessageBox.Show("Success");
-                }
-                catch (Exception) { MessageBox.Show("Failed"); }
-
+                Categories.Add(selected);
+                NewBook.Category.Remove(selected);
             }
         }
 
@@ -71,65 +68,45 @@ namespace BookStoreManager
             var selected = addCategoryCB.SelectedItem as CategoryModel;
             if(selected == null)
             {
-                MessageBox.Show("Choose item first");
+                MessageBox.Show("Bạn phải chọn 1 danh mục trước.");
                 return;
             }
             if (!NewBook.Category.Contains(selected))
             {
-                try
-                {
-                    NewBook.Category.Add(selected);
-                    Categories.Remove(selected);
-                    MessageBox.Show("Success");
-                }catch(Exception) { MessageBox.Show("Failed"); }
+                NewBook.Category.Add(selected);
+                Categories.Remove(selected);
             }
         }
-
-        private void changeIMG_Click(object sender, RoutedEventArgs e)
-        {
-            //OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.Filter = "Image files (.png;.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (.)|*.*";
-
-            //if (openFileDialog.ShowDialog() == true)
-            //{
-            //    string filePath = openFileDialog.FileName;
-            //    MessageBox.Show($"{filePath}");
-            //    if (!String.IsNullOrEmpty(NewBook.Image))
-            //    {
-            //        if (!ManageBook.DeleteImageFromProject(NewBook.Image))
-            //        {
-            //            return;
-            //        }
-            //    }
-            //    var newFileName = ManageBook.SaveImageToProject(filePath, "tempID");
-            //    NewBook.Image = $"/Image/{newFileName}";
-
-            //    //var uri = new Uri($"/Image/{newFileName}", UriKind.Relative);
-            //    //var bitmap = new BitmapImage(uri);
-            //    //bookImg.Source = bitmap;
-            //    MessageBox.Show(NewBook.Image);
-            //}
-            string Img = ImageTB.Text;
-            NewBook.Image = Img;
-        }
-
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
             int id = ManageBook.AddNewBook(NewBook);
             if (id == -1)
             {
-                MessageBox.Show("Them that bai");
+                MessageBox.Show("Thêm thấtt bại");
             }
             else
             {
-                MessageBox.Show($"{id}");
+                Categories = AllCategories;
                 NewBook.ClearBook();
             }
+            MessageBox.Show("Thêm sách thình công.");
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
+            Categories = AllCategories;
             NewBook.ClearBook();
+            imageNameCB.SelectedItem = ImageName[0];
+            MessageBox.Show("Đã tải lại trang");
+        }
+
+        private void imageNameCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selected = imageNameCB.SelectedItem as string;
+            if(selected != null)
+            {
+                NewBook.Image = selected;
+            }
         }
     }
 }
