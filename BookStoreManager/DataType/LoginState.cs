@@ -8,22 +8,22 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace BookStoreManager.DataType
 {
-    public class Login
+    public class LoginState
     {
-        private static Login? _instance;
+        private static LoginState? _instance;
         private int _index;
 
-        public static Login Instance
+        public static LoginState Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new Login();
+                    _instance = new LoginState();
                 return _instance;
             }
         }
 
-        private Login() { }
+        private LoginState() { }
 
         public int Get()
         {

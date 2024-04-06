@@ -9,15 +9,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System;
-
 using System.Data.SqlClient;
 using System.Data;
-using BookStoreManager.Database;
 using System.Security.Cryptography;
 using System.Configuration;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.Common;
+
 using BookStoreManager.DataType;
+using BookStoreManager.Database;
 
 namespace BookStoreManager
 {
@@ -26,12 +26,12 @@ namespace BookStoreManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        AccountDao database = new AccountDao();
+        AccountDao account = new AccountDao();
         public MainWindow()
         {
             InitializeComponent();
-            savetoConfig("admin", "admin");
-            database.readAccount();
+            //savetoConfig("admin", "admin");
+            account.readAccount();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -47,18 +47,18 @@ namespace BookStoreManager
         /// <param name="e"></param>
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            int index = database.accounts.FindIndex(x => x.username == txtUsername.Text);
+            int index = account.accounts.FindIndex(x => x.username == txtUsername.Text);
             
             if (index != -1)
             {
-                var passwordInByte = Convert.FromBase64String(database.accounts[index].password);
-                var entropyInByte = Convert.FromBase64String(database.accounts[index].entropy);
+                var passwordInByte = Convert.FromBase64String(account.accounts[index].password);
+                var entropyInByte = Convert.FromBase64String(account.accounts[index].entropy);
                 var decryptedPassword = ProtectedData.Unprotect(passwordInByte, entropyInByte, DataProtectionScope.CurrentUser);
 
                 var password = Encoding.UTF8.GetString(decryptedPassword);
                 if (password == txtPassword.Password)
                 {
-                    Login.Instance.Set(index);
+                    LoginState.Instance.Set(index);
                     if(cbxRemember.IsChecked == true)
                     {
                         savetoConfig(txtUsername.Text, txtPassword.Password);

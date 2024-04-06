@@ -62,11 +62,26 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Background="#006070" BorderBrush="Black" BorderThickness="0"  Height="50px" Click="Order_Click">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="Panel_03" Text="Đơn hàng" Foreground="#EAEAEA"/>
-                        </StackPanel>
+
+                    <Button x:Name="Panel_03" Content="Đơn hàng" BorderThickness="0" Click="Order_Click" Height="50px">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#006070"/>
+                                <Setter Property="Foreground" Value="#EAEAEA"/>
+                                <!-- Màu nền mặc định -->
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#0093AC"/>
+                                        <Setter Property="Foreground" Value="#000000"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <!-- Màu nền khi hover -->
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
+
+                   
                 </StackPanel>
                 <StackPanel VerticalAlignment="Bottom">
                     <Button x:Name="btnCreate" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,0" Height="50px" Click="btnCreate_Click">
@@ -84,7 +99,7 @@
             </Grid>
         </Border>
         <!-- Cột 2: Thông tin -->
-        <StackPanel Grid.Column="1" Background="#EAEAEA">
+        <StackPanel Grid.Column="1" Background="#FFFFFF">
             <!-- Thêm các điều khiển để hiển thị thông tin ở đây -->
             <!--<Frame x:Name="MainPage"/>-->
             <local:HomePage/>

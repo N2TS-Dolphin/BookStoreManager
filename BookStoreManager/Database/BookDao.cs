@@ -2,22 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace BookStoreManager.Database
 {
     public class BookDao
     {
         public static SqlConnection Connection = InitializeConnection();
+        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private SqlConnection _connection;
         public BookDao()
         {
-            //string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
-            //_connection = new SqlConnection(connectionString);
-            //_connection.Open();
-            //_connection = InitializeConnection();
+            _connection = new SqlConnection(_connectionString);
+            _connection.Open();
         }
         public static SqlConnection InitializeConnection()
         {
@@ -27,8 +29,8 @@ namespace BookStoreManager.Database
         }
         public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category)
         {
-            var _connection = Connection;
-            _connection.Open();
+            var connection = Connection;
+            connection.Open();
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
             string sql = "";
@@ -112,14 +114,14 @@ namespace BookStoreManager.Database
                     result.Add(new BookModel(bookId, bookName, price, author, image));
                 }
             }
-            _connection.Close();
+            connection.Close();
             return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
         }
 
         public static BookModel GetBookDetailFromDB(int id)
         {
-            var _connection = Connection;
-            _connection.Open();
+            var connection = Connection;
+            connection.Open();
             BookModel result = new();
             string sql = """
                 select * from BOOK
@@ -142,13 +144,13 @@ namespace BookStoreManager.Database
                     result.Price = price;
                 }
             }
-            _connection.Close();
+            connection.Close();
             return result;
         }
         public static int InsertNewBookToDB(BookModel newBook)
         {
-            var _connection = Connection;
-            _connection.Open();
+            var connection = Connection;
+            connection.Open();
 
             int result = -1;
             string sql = "insert into BOOK (BOOK_NAME, PRICE, AUTHOR, IMG) values (@Name, @Price, @Author, @Image)";
@@ -171,13 +173,13 @@ namespace BookStoreManager.Database
                     result = bookID;
                 }
             }
-            _connection.Close();
+            connection.Close();
             return result;
         }
         public static void UpdateBookToDB(BookModel book)
         {
-            var _connection = Connection;
-            _connection.Open();
+            var connection = Connection;
+            connection.Open();
             string sql = """
                 update BOOK set 
                 BOOK_NAME = @Name,
@@ -194,13 +196,13 @@ namespace BookStoreManager.Database
             command.Parameters.Add("@Image", System.Data.SqlDbType.NVarChar).Value = book.Image;
 
             command.ExecuteNonQuery();
-            _connection.Close();
+            connection.Close();
         }
 
         public static void DeleteBookFromDB(BookModel book)
         {
-            var _connection = Connection;
-            _connection.Open();
+            var connection = Connection;
+            connection.Open();
             string sql = """
                 delete from BOOK where BOOK_ID = @Id
                 """;
@@ -208,7 +210,46 @@ namespace BookStoreManager.Database
             command.Parameters.Add("@Id", System.Data.SqlDbType.NVarChar).Value = book.BookID;
             command.ExecuteNonQuery();
 
-            _connection.Close();
+            connection.Close();
         }
+
+        public BindingList<BookModel> getBooksByCategory(int categoryId)
+        {
+            var sql = "SELECT B.* FROM BOOK AS B " +
+                      "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
+                      "WHERE BC.CATEGORY_ID = @CategoryID";
+
+            var sqlParameter = new SqlParameter("@CategoryID", System.Data.SqlDbType.Int);
+            sqlParameter.Value = categoryId;
+
+            var command = new SqlCommand(sql, _connection);
+            command.Parameters.Add(sqlParameter);
+
+            var reader = command.ExecuteReader();
+
+            BindingList<BookModel> list = new BindingList<BookModel>();
+            while (reader.Read())
+            {
+                var bookId = (int)reader["BOOK_ID"];
+                var bookName = (string)reader["BOOK_NAME"];
+                var author = (string)reader["AUTHOR"];
+                var price = (int)reader["PRICE"];
+                var image = reader.IsDBNull(reader.GetOrdinal("IMG")) ? "" : (string)reader["IMG"];
+
+                BookModel book = new BookModel()
+                {
+                    BookID = bookId,
+                    BookName = bookName,
+                    Author = author,
+                    Price = price,
+                    Image = image
+                };
+
+                list.Add(book);
+            }
+            reader.Close();
+            return list;
+        }
+
     }
 }

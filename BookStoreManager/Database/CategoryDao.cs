@@ -12,25 +12,24 @@ namespace BookStoreManager.Database
 {
     public class CategoryDao
     {
-        //private SqlConnection _connection;
+        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private SqlConnection _connection;
         public CategoryDao()
         {
-            //string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
-            //_connection = new SqlConnection(connectionString);
-            //_connection.Open();
-            //_connection = BookDao.InitializeConnection();
+            _connection = new SqlConnection(_connectionString);
+            _connection.Open();
         }
         public static BindingList<CategoryModel> GetCategoryListFromDB()
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             BindingList<CategoryModel> result = new();
             string sql = """
                 select *
                 from CATEGORY
                 order by CATEGORY_NAME
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -40,13 +39,13 @@ namespace BookStoreManager.Database
                         result.Add(new CategoryModel(categoryID, categoryName));
                     }
                 }
-            _connection.Close();
+            connection.Close();
             return result;
         }
         public static BindingList<CategoryModel> GetBookCategoryFromDB(int bookId)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             BindingList<CategoryModel> result = new();
             string sql = """
                 select *
@@ -55,7 +54,7 @@ namespace BookStoreManager.Database
                 where BC.BOOK_ID = @Id
                 """;
 
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = bookId;
             using (var reader = command.ExecuteReader())
             {
@@ -66,22 +65,22 @@ namespace BookStoreManager.Database
                     result.Add(new CategoryModel(categoryID, categoryName));
                 }
             }
-            _connection.Close();
+            connection.Close();
             return result;
         }
         public static int InsertNewCategoryToDB(CategoryModel category)
         {
-            var _connection = BookDao.Connection;
+            var connection = BookDao.Connection;
             int result = -1;
-            _connection.Open();
+            connection.Open();
             string sql = "insert into CATEGORY (CATEGORY_NAME) values (@Name)";
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = category.CategoryName;
 
             command.ExecuteNonQuery();
 
             string sql2 = "select MAX(CATEGORY_ID) as id from CATEGORY";
-            var command2 = new SqlCommand(sql2, _connection);
+            var command2 = new SqlCommand(sql2, connection);
 
             using (var reader = command2.ExecuteReader())
             {
@@ -92,17 +91,17 @@ namespace BookStoreManager.Database
                     MessageBox.Show($"Get inserted id: {result}");
                 }
             }
-            _connection.Close();
+            connection.Close();
             return result;
         }
         public static void UpdateACategoryToDB(CategoryModel category)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             string sql = """
                 update CATEGORY set CATEGORY_NAME = @Name where CATEGORY_ID = @Id
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = category.CategoryID;
             command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = category.CategoryName;
 
@@ -110,48 +109,48 @@ namespace BookStoreManager.Database
             {
                 command.ExecuteNonQuery();
             } catch (Exception ex){ MessageBox.Show("Update failed"); }
-            _connection.Close();
+            connection.Close();
         }
         public static void DeleteACategoryFromDB(int ID)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
 
             string sql1 = """
                 Delete from BOOK_CATEGORY where CATEGORY_ID = @Id
                 """;
-            var command1 = new SqlCommand(sql1, _connection);
+            var command1 = new SqlCommand(sql1, connection);
             command1.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = ID;
             command1.ExecuteNonQuery();
 
             string sql2 = """
                 Delete from CATEGORY where CATEGORY_ID = @Id
                 """;
-            var command2 = new SqlCommand(sql2, _connection);
+            var command2 = new SqlCommand(sql2, connection);
             command2.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = ID;
             command2.ExecuteNonQuery();
 
-            _connection.Close();
+            connection.Close();
         }
         public static void InsertNewBookCategoryToDB(BookModel book)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             foreach (var category in book.Category)
             {
                 string sql = """
                 insert into BOOK_CATEGORY (BOOK_ID, CATEGORY_ID) values (@BookID, @CategoryID)
                 """;
-                var command = new SqlCommand(sql, _connection);
+                var command = new SqlCommand(sql, connection);
                 command.Parameters.Add("@BookID", System.Data.SqlDbType.Int).Value = book.BookID;
                 command.Parameters.Add("@CategoryID", System.Data.SqlDbType.Int).Value = category.CategoryID;
                 command.ExecuteNonQuery();
             }
-            _connection.Close();
+            connection.Close();
         }
         public static BindingList<CategoryModel> GetUnuseCategoriesFromDB(BookModel book) {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
 
             var result = new BindingList<CategoryModel>();
             string sql = """
@@ -163,7 +162,7 @@ namespace BookStoreManager.Database
                 where BOOK_ID = @Id
                 )
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = book.BookID;
             using (var reader = command.ExecuteReader())
             {
@@ -174,52 +173,56 @@ namespace BookStoreManager.Database
                     result.Add(new CategoryModel(categoryID, categoryName));
                 }
             }
-            _connection.Close();
+            connection.Close();
             return result;
         }
         public static void InsertNewBookCategoryToDB(BookModel book, BindingList<CategoryModel> insertCategories)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             foreach (var category in insertCategories)
             {
                 string sql = """
                 insert into BOOK_CATEGORY (BOOK_ID, CATEGORY_ID) values (@BookID, @CategoryID)
                 """;
-                var command = new SqlCommand(sql, _connection);
+                var command = new SqlCommand(sql, connection);
                 command.Parameters.Add("@BookID", System.Data.SqlDbType.Int).Value = book.BookID;
                 command.Parameters.Add("@CategoryID", System.Data.SqlDbType.Int).Value = category.CategoryID;
                 command.ExecuteNonQuery();
             }
-            _connection.Close();
+            connection.Close();
         }
         public static void DeleteOldBookCategoryFromDB(BookModel book, BindingList<CategoryModel> deleteCategories)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             foreach (var category in deleteCategories)
             {
                 string sql = """
                 delete from BOOK_CATEGORY where CATEGORY_ID = @CategoryID and BOOK_ID = @BookID
                 """;
-                var command = new SqlCommand(sql, _connection);
+                var command = new SqlCommand(sql, connection);
                 command.Parameters.Add("@BookID", System.Data.SqlDbType.Int).Value = book.BookID;
                 command.Parameters.Add("@CategoryID", System.Data.SqlDbType.Int).Value = category.CategoryID;
                 command.ExecuteNonQuery();
             }            
-            _connection.Close();
+            connection.Close();
         }
         public static void DeleteAllBookCategoryFromDB(BookModel book)
         {
-            var _connection = BookDao.Connection;
-            _connection.Open();
+            var connection = BookDao.Connection;
+            connection.Open();
             string sql = """
                 delete from BOOK_CATEGORY where BOOK_ID = @BookID
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@BookID", System.Data.SqlDbType.Int).Value = book.BookID;
             command.ExecuteNonQuery();
-            _connection.Close();
+            connection.Close();
         }
+
+
+        
+
     }
 }

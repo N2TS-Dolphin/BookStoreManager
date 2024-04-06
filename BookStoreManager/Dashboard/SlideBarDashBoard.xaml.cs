@@ -1,5 +1,3 @@
-﻿using BookStoreManager.Database;
-using BookStoreManager.DataType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +14,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using BookStoreManager.Database;
+using BookStoreManager.DataType;
+
 namespace BookStoreManager
 {
     /// <summary>
@@ -31,10 +32,10 @@ namespace BookStoreManager
         {
             InitializeComponent();
             database.accounts = database.readAccount();
-            btnUser.Content = database.accounts[Login.Instance.Get()].name;
+            btnUser.Content = database.accounts[LoginState.Instance.Get()].name;
 
             // Nếu không phải là tài khoản admin thì cho đăng ký người dùng mới
-            if (Login.Instance.Get() == 0)
+            if (LoginState.Instance.Get() == 0)
             {
                 btnCreate.Visibility = Visibility.Visible;
                 btnCreate.IsEnabled = true;
@@ -120,7 +121,7 @@ namespace BookStoreManager
         private void btnLogout_Click(object sender, RoutedEventArgs e)
         {
             //Set trạng thái chưa đăng nhập
-            Login.Instance.Set(-1);
+            LoginState.Instance.Set(-1);
 
             MainWindow screen = new MainWindow();
 
