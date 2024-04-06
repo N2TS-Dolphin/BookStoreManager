@@ -76,7 +76,6 @@ CREATE TABLE ORDER_ITEM
 	ORDER_ID INT NOT NULL,
 	BOOK_ID INT NOT NULL,
 	QUANTITY INT NOT NULL DEFAULT(0),
-	PRICE INT DEFAULT(0),
 
 	CONSTRAINT FK_ORDER_ITEM_ORDER_LIST
 	FOREIGN KEY (ORDER_ID)
@@ -129,15 +128,23 @@ VALUES  ('Novel'),
 		('Supernatural'),
 		('War'),
 		('Young adult fiction'),
-		('Tragedy')
+		('Tragedy'),
+		('Thriller'), 
+		('Quest'),
+		('Self-help')
 
 INSERT BOOK(BOOK_NAME, PRICE, AUTHOR)
-VALUES  (N'Đắc nhân tâm', 86000, 'Dale Carnegie'),
-		(N'One Piece', 21250, 'Eiichiro Oda'),
-		(N'Attack On Titan', 144400, 'Isayama Hajime'),
-		(N'Naruto', 21500, 'Masashi Kishimoto'),
-		(N'Cardcaptor Sakura', 25000, 'CLAMP'),
-		(N'Cardcaptor Sakura: Clear Card-hen', 175750, 'CLAMP')
+VALUES  (N'Đắc nhân tâm', 86000, N'Dale Carnegie'),
+		(N'One Piece', 21250, N'Eiichiro Oda'),
+		(N'Attack On Titan', 144400, N'Isayama Hajime'),
+		(N'Naruto', 21500, N'Masashi Kishimoto'),
+		(N'Cardcaptor Sakura', 25000, N'CLAMP'),
+		(N'Cardcaptor Sakura: Clear Card-hen', 175750, N'CLAMP'),
+		(N'Trốn lên mái nhà để khóc', 72200, N'Lam'),
+		(N'Frieren - Pháp sư tiễn táng', 42750, N'Yamada Kanehito'),
+		(N'Thám tử lừng danh Conan', 23750, N'Gosho Aoyama'),
+		(N'Dược sư tự sự', 44650, N'Natsu Hyuuga'),
+		(N'Nhà giả kim', 61620, N'Paulo Coelho')
 
 INSERT BOOK_CATEGORY(BOOK_ID, CATEGORY_ID)
 VALUES  (1, 22),
@@ -167,7 +174,19 @@ VALUES  (1, 22),
 		(6, 9),
 		(6, 12),
 		(6, 23),
-		(6, 29)
+		(6, 29),
+		(7, 28),
+		(8, 4),
+		(8, 10),
+		(8, 12),
+		(9, 20),
+		(9, 40),
+		(10, 10),
+		(10, 20),
+		(10, 23),
+		(11, 41),
+		(11, 4),
+		(11, 12)
 
 INSERT ORDER_LIST(CUSTOMER_NAME, ORDER_DATE, PRICE)
 VALUES  (N'Nguyễn Văn Anh', '03/05/2024', 476500),
@@ -204,8 +223,6 @@ VALUES  (1, 5, 5),
 		(8, 3, 4),
 		(8, 4, 5)
 
-SELECT MONTH(ORDER_DATE), YEAR(ORDER_DATE),
-       SUM(PRICE) AS TOTAL_PRICE
-FROM ORDER_LIST
-GROUP BY MONTH(ORDER_DATE), YEAR(ORDER_DATE)
-ORDER BY MONTH(ORDER_DATE);
+SELECT BOOK.BOOK_ID, BOOK.BOOK_NAME,SUM(ORDER_ITEM.QUANTITY) AS QUANTITY , SUM(ORDER_ITEM.QUANTITY)*BOOK.PRICE AS REVENUE
+FROM BOOK JOIN ORDER_ITEM ON BOOK.BOOK_ID = ORDER_ITEM.BOOK_ID
+GROUP BY BOOK.BOOK_ID, BOOK.BOOK_NAME, BOOK.PRICE

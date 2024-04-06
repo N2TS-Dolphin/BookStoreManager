@@ -58,7 +58,7 @@ namespace BookStoreManager
                 var password = Encoding.UTF8.GetString(decryptedPassword);
                 if (password == txtPassword.Password)
                 {
-                    Login.Instance.Set(index);
+                    LoginState.Instance.Set(index);
                     if(cbxRemember.IsChecked == true)
                     {
                         savetoConfig(txtUsername.Text, txtPassword.Password);

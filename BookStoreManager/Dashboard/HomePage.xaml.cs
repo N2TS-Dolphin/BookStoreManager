@@ -17,6 +17,8 @@ using LiveCharts;
 
 using BookStoreManager.Database;
 using BookStoreManager.DataType;
+using BookStoreManager.Process;
+using System.ComponentModel;
 
 namespace BookStoreManager
 {
@@ -26,20 +28,21 @@ namespace BookStoreManager
     public partial class HomePage : UserControl
     {
         RevenueDao revenueDao = new RevenueDao();
+        ProductRankingDao productDao = new ProductRankingDao();
+        HomePageBus bus = new HomePageBus();
+
         private List<string> _months = new List<string>() { "January", "Febrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
-        public string TotalOrderCurMonth { get; set; }
-        public string TotalRevenueCurMonth { get; set; }
         public string CompareOrder { get; set; }
-        public string Order { get; set; }
         public string CompareRevenue { get; set; }
-        public string Revenue { get; set; }
         public List<string> Labels { get; set; }
+        public List<ProductRankingModel> TableData {  get; set; }
         public SeriesCollection RevenueSeriesCollection { get; set; }
         public SeriesCollection OrderSeriesCollection { get; set; }
 
         private int _MonthSelected;
         private int _YearSelected;
+        private bool _isSortAscending = false;
 
         List<int> revenues = new List<int>();
         List<int> quantitys = new List<int>();
@@ -52,8 +55,8 @@ namespace BookStoreManager
             OrderSeriesCollection = new SeriesCollection();
             Labels = new List<string>();
 
-            GetDataCurMonth();
-
+            CompareData();
+            Ranking();
         }
 
         /// <summary>
@@ -227,56 +230,50 @@ namespace BookStoreManager
             }
         }
 
-        private void GetDataCurMonth()
+        /// <summary>
+        /// So sánh dữ liệu tháng hiện tại với tháng trước nó
+        /// </summary>
+        private void CompareData()
         {
-            int curMonth = DateTime.Now.Month;
-            int curYear = DateTime.Now.Year;
-            int lstMonth = 0;
-            int lstYear = 0;
-
-            if (curMonth != 1)
-            {
-                lstMonth = curMonth - 1;
-                lstYear = curYear;
-            }
-            else
-            {
-                lstMonth = 12;
-                lstYear = curYear - 1;
-            }
-
-            int[] temps = new int[4];
-
-            foreach (var data in revenueDao.GetRevenuesByMonth())
-            {
-                if (data.OrderDate.Month == curMonth && data.OrderDate.Year == curYear)
-                {
-                    temps[0] += data.Quantity;
-                    temps[1] += data.Revenue;
-                }
-                if (data.OrderDate.Month == lstMonth && data.OrderDate.Year == lstYear)
-                {
-                    temps[2] += data.Quantity;
-                    temps[3] += data.Revenue;
-                }
-            }
-            TotalOrderCurMonth = temps[0].ToString("#,##0");
-            TotalRevenueCurMonth = temps[1].ToString("#,##0");
-
-            if (((double)(temps[0] - temps[2]) / temps[2] * 100) >= 0)
-                Order = "tăng";
-            else
-                Order = "giảm";
-
-            if (((double)(temps[1] - temps[3]) / temps[3] * 100) >= 0)
-                Revenue = "tăng";
-            else
-                Revenue = "giảm";
-
-            CompareOrder = $"Tổng đơn hàng tháng {curMonth}/{curYear} {Order} {Math.Abs((double)(temps[0] - temps[2]) / temps[2] * 100).ToString("0")}% so với tháng {lstMonth}/{lstYear}";
-            CompareRevenue = $"Tổng doanh thu tháng {curMonth}/{curYear} {Revenue} {Math.Abs((double)(temps[1] - temps[3]) / temps[3] * 100).ToString("0")}% so với tháng {lstMonth}/{lstYear}";
+            CompareOrder = bus.CompareOrder();
+            CompareRevenue = bus.CompareRevenue();
 
             DataContext = this;
         }
+    
+        private void Ranking()
+        {
+            RankingTable.ItemsSource = productDao.rankingList();
+        }
+
+        private void RankingTable_Sorting(object sender, DataGridSortingEventArgs e)
+        {
+            DataGridColumn column = e.Column;
+
+            // Đảo chiều sắp xếp
+            _isSortAscending = !_isSortAscending;
+
+            // Xóa sắp xếp trước đó
+            foreach (var col in RankingTable.Columns)
+            {
+                col.SortDirection = null;
+            }
+
+            // Thiết lập cột và hướng sắp xếp mới
+            column.SortDirection = _isSortAscending ? ListSortDirection.Ascending : ListSortDirection.Descending;
+
+            // Sắp xếp dữ liệu
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(RankingTable.ItemsSource);
+            collectionView.SortDescriptions.Clear();
+            if (_isSortAscending)
+            {
+                collectionView.SortDescriptions.Add(new SortDescription(column.SortMemberPath, ListSortDirection.Ascending));
+            }
+            else
+            {
+                collectionView.SortDescriptions.Add(new SortDescription(column.SortMemberPath, ListSortDirection.Descending));
+            }
+        }
+
     }
 }
