@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Image\blank_cover.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
@@ -24,9 +20,9 @@
       <HintPath>bin\MySql.Data.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Image\blank_cover.jpg" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Image\blank_cover.jpg" />
+	  <Resource Include="Image\OnePieceCover.jpg" />
+	</ItemGroup>
 
 </Project>

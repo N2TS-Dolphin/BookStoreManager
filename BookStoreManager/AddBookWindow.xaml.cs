@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +23,9 @@ namespace BookStoreManager
     /// </summary>
     public partial class AddBookWindow : Window
     {
-        public BookModel NewBook {  get; set; }
+        public BookModel NewBook { get; set; }
+        //BookModel NewBook = new BookModel();
+        public BindingList<CategoryModel> AllCategories { get; set; }
         public BindingList<CategoryModel> Categories { get; set; }
         public AddBookWindow()
         {
@@ -30,7 +35,11 @@ namespace BookStoreManager
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             NewBook = new BookModel();
-            Categories = ManageBook.GetCategories();
+            //AllCategories = ManageBook.GetCategories();
+            //Categories = new BindingList<CategoryModel>();
+            //Categories = AllCategories;
+            //NewBook.Image = "/Image/tempID_BookIMG.jpg";
+            //Categories = ManageBook.GetCategories();
             categoryLV.ItemsSource = NewBook.Category;
             addCategoryCB.ItemsSource = Categories;
             DataContext = NewBook;
@@ -78,12 +87,44 @@ namespace BookStoreManager
 
         private void changeIMG_Click(object sender, RoutedEventArgs e)
         {
+            //OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.Filter = "Image files (.png;.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (.)|*.*";
 
+            //if (openFileDialog.ShowDialog() == true)
+            //{
+            //    string filePath = openFileDialog.FileName;
+            //    MessageBox.Show($"{filePath}");
+            //    if (!String.IsNullOrEmpty(NewBook.Image))
+            //    {
+            //        if (!ManageBook.DeleteImageFromProject(NewBook.Image))
+            //        {
+            //            return;
+            //        }
+            //    }
+            //    var newFileName = ManageBook.SaveImageToProject(filePath, "tempID");
+            //    NewBook.Image = $"/Image/{newFileName}";
+
+            //    //var uri = new Uri($"/Image/{newFileName}", UriKind.Relative);
+            //    //var bitmap = new BitmapImage(uri);
+            //    //bookImg.Source = bitmap;
+            //    MessageBox.Show(NewBook.Image);
+            //}
+            string Img = ImageTB.Text;
+            NewBook.Image = Img;
         }
 
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            NewBook.ClearBook();
+            int id = ManageBook.AddNewBook(NewBook);
+            if (id == -1)
+            {
+                MessageBox.Show("Them that bai");
+            }
+            else
+            {
+                MessageBox.Show($"{id}");
+                NewBook.ClearBook();
+            }
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)
