@@ -34,8 +34,4 @@
     <Resource Include="Image\blank_cover.jpg" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Process\" />
-  </ItemGroup>
-
 </Project>
