@@ -89,7 +89,7 @@ namespace BookStoreManager.Database
             int skip = (page - 1) * itemsPerPage;
             int take = itemsPerPage;
 
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Skip", System.Data.SqlDbType.Int).Value = skip;
             command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
             command.Parameters.Add("@Search", System.Data.SqlDbType.NVarChar).Value = "%" + search + "%";
@@ -127,7 +127,7 @@ namespace BookStoreManager.Database
                 select * from BOOK
                 where BOOK_ID = @Id
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar).Value = id;
 
             using (var reader = command.ExecuteReader())
@@ -154,7 +154,7 @@ namespace BookStoreManager.Database
 
             int result = -1;
             string sql = "insert into BOOK (BOOK_NAME, PRICE, AUTHOR, IMG) values (@Name, @Price, @Author, @Image)";
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = newBook.BookName;
             command.Parameters.Add("@Price", System.Data.SqlDbType.Int).Value = newBook.Price;
             command.Parameters.Add("@Author", System.Data.SqlDbType.NVarChar).Value = newBook.Author;
@@ -163,7 +163,7 @@ namespace BookStoreManager.Database
             command.ExecuteNonQuery();
 
             string sql2 = "select MAX(BOOK_ID) as id from BOOK";
-            var command2 = new SqlCommand(sql2, _connection);
+            var command2 = new SqlCommand(sql2, connection);
 
             using (var reader = command2.ExecuteReader())
             {
@@ -188,7 +188,7 @@ namespace BookStoreManager.Database
                 IMG = @Image
                 where BOOK_ID = @Id 
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.NVarChar).Value = book.BookID;
             command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = book.BookName;
             command.Parameters.Add("@Price", System.Data.SqlDbType.Int).Value = book.Price;
@@ -206,7 +206,7 @@ namespace BookStoreManager.Database
             string sql = """
                 delete from BOOK where BOOK_ID = @Id
                 """;
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Id", System.Data.SqlDbType.NVarChar).Value = book.BookID;
             command.ExecuteNonQuery();
 
@@ -222,7 +222,7 @@ namespace BookStoreManager.Database
             var sqlParameter = new SqlParameter("@CategoryID", System.Data.SqlDbType.Int);
             sqlParameter.Value = categoryId;
 
-            var command = new SqlCommand(sql, _connection);
+            var command = new SqlCommand(sql, connection);
             command.Parameters.Add(sqlParameter);
 
             var reader = command.ExecuteReader();
@@ -250,6 +250,5 @@ namespace BookStoreManager.Database
             reader.Close();
             return list;
         }
-
     }
 }
