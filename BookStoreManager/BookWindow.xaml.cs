@@ -22,89 +22,103 @@ namespace BookStoreManager
     /// </summary>
     public partial class BookWindow : Window
     {
-        BindingList<BookModel> _bookList = new();
-        BindingList<CategoryModel> _categoryList = new();
-        BookModel _bookDetail = new();
-        //BookDao BookDao;
-        //CategoryDao CategoryDao;
+        public BindingList<BookModel> BookList { get; set; }
+        public BindingList<CategoryModel> CategoryList { get; set; }
+        public BookModel BookDetail { get; set; }
+        public BookShellBus BookShell { get; set; }
         int _currentPage = 1, _totalPages = 0;
         string _search = "", _category = "";
         public BookWindow()
         {
             InitializeComponent();
             new BookDao();
-            //CategoryDao = new CategoryDao();
-            //new BookDao();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _categoryList = CategoryDao.getCategoryList();
-            _categoryList.Insert(0, new CategoryModel(0, "All"));
-            categoryListView.ItemsSource = _categoryList;
-            loadBookList();
-            loadBookDetail(0);
+            BookShell = new BookShellBus();
+            CategoryList = BookShell.GetAllCategory();
+            categoryListView.ItemsSource = CategoryList;
+            LoadBookList();
+            LoadBookDetail(0);
         }
-        public void loadBookList()
+        public void LoadBookList()
         {
-            var (items, totalItems, totalPages) = BookDao.getBookList(_currentPage, 10, _search, _category);
-            _bookList = items;
-            bookListView.ItemsSource = _bookList;
-            _totalPages = totalPages;
-            var currentPage = (totalPages == 0) ? 0 : _currentPage;
-            txtItemsCount.Text = $"Item count: {totalItems}";
+            var (items, totalItems, totalPages, currentPage) = BookShell.LoadBookList();
+            BookList = items;
+            bookListView.ItemsSource = BookList;
+            //_totalPages = totalPages;
+            //var currentPage = (totalPages == 0) ? 0 : _currentPage;
+            txtItemsCount.Text = $"Kết quả: {totalItems}";
             txtItemPage.Text = $"{currentPage}/{totalPages}";
         }
-        public void loadBookDetail(int index)
+        public void LoadBookDetail(int index)
         {
-            if (_bookList.Count == 0)
+            if (BookList.Count == 0)
             {
-                _bookDetail.ClearBook();
+                BookDetail.ClearBook();
                 return;
             }
-            int selectedID = _bookList[index].BookID;
-            //_bookDetail = BookDao.getBookDetail(selectedID);
-            _bookDetail = (BookModel)_bookList[index].Clone();
-            _bookDetail.Category = CategoryDao.getBookCategory(selectedID);
-            bookDetail.DataContext = _bookDetail;
-            lvCategory.ItemsSource = _bookDetail.Category;
+            int selectedID = BookList[index].BookID;
+            BookDetail = (BookModel)BookList[index].Clone();
+            BookDetail.Category = CategoryDao.GetBookCategoryFromDB(selectedID);
+            bookDetail.DataContext = BookDetail;
+            lvCategory.ItemsSource = BookDetail.Category;
         }
         public void refreshPage()
         {
-            _category = _categoryList[0].CategoryName;
+            _category = CategoryList[0].CategoryName;
             _search = "";
             _currentPage = 1;
-            loadBookList();
-            loadBookDetail(0);
+            LoadBookList();
+            LoadBookDetail(0);
         }
         private void prevButton_click(object sender, RoutedEventArgs e)
         {
             _currentPage = (_currentPage-- <= 1) ? 1 : _currentPage;
-            loadBookList();
+            LoadBookList();
         }
 
         private void nextButton_click(object sender, RoutedEventArgs e)
         {
             _currentPage = (_currentPage++ >= _totalPages) ? _totalPages : _currentPage;
-            loadBookList();
+            LoadBookList();
         }
 
         private void bookListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedIndex = bookListView.SelectedIndex;
             if (selectedIndex < 0) return;
-            loadBookDetail(selectedIndex);
+            LoadBookDetail(selectedIndex);
         }
 
         private void updateBookButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateBookWindow updateBookWindow = new UpdateBookWindow();
+            UpdateBookWindow updateBookWindow = new UpdateBookWindow((BookModel)BookDetail.Clone());
             updateBookWindow.Show();    
         }
 
         private void deteleBookButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var selectedIndex = bookListView.SelectedIndex;
+            if (selectedIndex > 0 && selectedIndex < BookList.Count)
+            {
+                var selectedBook = BookList[selectedIndex];
+                var id = selectedBook.BookID;
+                var name = selectedBook.BookName;
+                var messbox = MessageBox.Show($"Bạn có chắc muốn xóa quyển sách {name}, id = {id}?", $"Xóa quyển sách {name}"
+                    , MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                if (messbox == MessageBoxResult.OK)
+                {
+                    CategoryDao.DeleteAllBookCategoryFromDB(selectedBook);
+                    BookDao.DeleteBookFromDB(selectedBook);
+                    BookList.Remove(selectedBook);
+                    //CategoryDao.DeleteACategoryFromDB(id);
+                    //CategoryList.RemoveAt(selectedIndex);
+                    MessageBox.Show($"Xóa quyển sách {name} thành công.");
+                }
+            }
+            else { MessageBox.Show("Chọn quyển sách muốn xóa"); }
         }
         private void addCategoryButton_Click(object sender, RoutedEventArgs e)
         {
@@ -112,58 +126,46 @@ namespace BookStoreManager
             addCategory.ShowDialog();
             if (addCategory.DialogResult == true)
             {
-                try
-                {
-                    var newCategory = addCategory._newCategory;
-                    int insertedID = CategoryDao.InsertNewCategory((CategoryModel)newCategory.Clone());
-                    newCategory.CategoryID = insertedID;
-                    _categoryList.Add(newCategory);
-                    _categoryList.OrderBy(x => x.CategoryName).ToList();
-                    MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
-                }
-                catch (Exception ex) { MessageBox.Show("Thêm danh mục không thành công."); }
+                var newCategory = addCategory._newCategory;
+                int insertedID = CategoryDao.InsertNewCategoryToDB((CategoryModel)newCategory.Clone());
+                newCategory.CategoryID = insertedID;
+                CategoryList.Add(newCategory);
+                CategoryList.OrderBy(x => x.CategoryName).ToList();
+                MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
             }
         }
         private void updateCategoryButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedIndex = categoryListView.SelectedIndex;
-            if (selectedIndex > 0 && selectedIndex < _categoryList.Count)
+            if (selectedIndex > 0 && selectedIndex < CategoryList.Count)
             {
-                var id = _categoryList[selectedIndex].CategoryID;
-                UpdateCategory updateCategory = new UpdateCategory((CategoryModel)_categoryList[selectedIndex].Clone());
+                var id = CategoryList[selectedIndex].CategoryID;
+                UpdateCategory updateCategory = new UpdateCategory((CategoryModel)CategoryList[selectedIndex].Clone());
                 updateCategory.ShowDialog();
                 if (updateCategory.DialogResult == true)
                 {
-                    try
-                    {
-                        var newCategory = updateCategory._selectedCategory;
-                        CategoryDao.UpdateACategory((CategoryModel)newCategory.Clone());
-                        _categoryList[selectedIndex].CategoryName = newCategory.CategoryName;
-                        MessageBox.Show($"Chỉnh sửa danh mục {newCategory.CategoryName} thành công.");
-                    }
-                    catch (Exception ex) { MessageBox.Show($"Chỉnh sửa danh mục {_categoryList[selectedIndex].CategoryName} không thành công."); }
-                }
+                    var newCategory = updateCategory._selectedCategory;
+                    CategoryDao.UpdateACategoryToDB((CategoryModel)newCategory.Clone());
+                    CategoryList[selectedIndex].CategoryName = newCategory.CategoryName;
+                    MessageBox.Show($"Chỉnh sửa danh mục {newCategory.CategoryName} thành công.");
+                } 
             }
             else { MessageBox.Show("Chọn danh mục trước khi sửa"); }
         }
         private void deteleCategoryButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedIndex = categoryListView.SelectedIndex;
-            if (selectedIndex > 0 && selectedIndex < _categoryList.Count)
+            if (selectedIndex > 0 && selectedIndex < CategoryList.Count)
             {
-                var id = _categoryList[selectedIndex].CategoryID;
-                var name = _categoryList[selectedIndex].CategoryName;
+                var id = CategoryList[selectedIndex].CategoryID;
+                var name = CategoryList[selectedIndex].CategoryName;
                 var messbox = MessageBox.Show($"Bạn có chắc muốn xóa danh mục {name}, id = {id}?", $"Xóa danh mục {name}"
                     , MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (messbox == MessageBoxResult.OK)
                 {
-                    try
-                    {
-                        CategoryDao.DeleteACategory(id);
-                        _categoryList.RemoveAt(selectedIndex);
-                        MessageBox.Show($"Xóa danh mục {name} thành công.");
-                    }
-                    catch (Exception ex) { MessageBox.Show($"Xóa danh mục {name} không thành công."); }
+                    CategoryDao.DeleteACategoryFromDB(id);
+                    CategoryList.RemoveAt(selectedIndex);
+                    MessageBox.Show($"Xóa danh mục {name} thành công.");
                 }
             }
             else { MessageBox.Show("Chọn danh mục muốn xóa"); }
@@ -171,19 +173,19 @@ namespace BookStoreManager
         private void categoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = categoryListView.SelectedIndex;
-            selected = (selected > 0 && selected < _categoryList.Count) ? selected : 0;
-            _category = (selected == 0) ? "" : _categoryList[selected].CategoryName;
+            selected = (selected > 0 && selected < CategoryList.Count) ? selected : 0;
+            _category = (selected == 0) ? "" : CategoryList[selected].CategoryName;
             _currentPage = 1;
-            loadBookList();
-            loadBookDetail(0);
+            LoadBookList();
+            LoadBookDetail(0);
         }
 
         private void searchButton_click(object sender, RoutedEventArgs e)
         {
             _search = tboxSearch.Text;
             _currentPage = 1;
-            loadBookList();
-            loadBookDetail(0);
+            LoadBookList();
+            LoadBookDetail(0);
         }
 
         private void priceButton_Click(object sender, RoutedEventArgs e)
@@ -194,6 +196,7 @@ namespace BookStoreManager
         private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
             refreshPage();
+            MessageBox.Show("Đã tải lại trang");
         }
 
         private void execlButton_Click(object sender, RoutedEventArgs e)
