@@ -28,7 +28,7 @@ namespace BookStoreManager.Database
                 }catch (Exception ex) { }
             }
         }
-        public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category)
+        public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category, int priceFrom, int priceTo)
         {
             var connection = DBConfig.Connection;
             BindingList<BookModel> result = new();
@@ -39,57 +39,19 @@ namespace BookStoreManager.Database
                 try
                 {
                     connection.Open();
-                    if (search != "" && category != "All")
-                    {
-                        sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
-                    from BOOK as B 
-                    join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
-                    join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
-                    where C.CATEGORY_NAME = @Category
-                    and B.BOOK_NAME like @Search
-                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
-                    order by B.BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-
-                    }
-                    else if (search != "" && category == "All")
-                    {
-                        sql = """
-                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
-                    from BOOK
-                    where BOOK_NAME like @Search
-                    order by BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-                    }
-                    else if (search == "" && category != "All")
-                    {
-                        sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
-                    from BOOK as B 
-                    join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
-                    join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
-                    where C.CATEGORY_NAME = @Category
-                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
-                    order by B.BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-                    }
-                    if (search == "" && category == "All")
-                    {
-                        sql = """
-                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
-                    from BOOK
-                    order by BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-                    }
+                    sql = @"
+                        SELECT B.BOOK_ID AS id, B.BOOK_NAME AS name, B.IMG AS image, B.AUTHOR AS author, B.PRICE AS price, COUNT(*) OVER() AS totalItems
+                        FROM BOOK AS B 
+                        JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID
+                        JOIN CATEGORY AS C ON C.CATEGORY_ID = BC.CATEGORY_ID
+                        WHERE (@Category = 'All' OR C.CATEGORY_NAME = @Category)
+                        AND (@Search = '' OR B.BOOK_NAME LIKE @Search)
+                        AND (B.PRICE BETWEEN @PriceFrom AND @PriceTo)
+                        GROUP BY B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
+                        ORDER BY B.BOOK_NAME
+                        OFFSET @Skip ROWS
+                        FETCH NEXT @Take ROWS ONLY
+                        ";
 
                     int skip = (page - 1) * itemsPerPage;
                     int take = itemsPerPage;
@@ -99,6 +61,8 @@ namespace BookStoreManager.Database
                     command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
                     command.Parameters.Add("@Search", System.Data.SqlDbType.NVarChar).Value = "%" + search + "%";
                     command.Parameters.Add("@Category", System.Data.SqlDbType.NVarChar).Value = category;
+                    command.Parameters.Add("@PriceFrom", System.Data.SqlDbType.Int).Value = priceFrom;
+                    command.Parameters.Add("@PriceTo", System.Data.SqlDbType.Int).Value = priceTo;
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())

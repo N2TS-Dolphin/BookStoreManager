@@ -46,7 +46,7 @@ namespace BookStoreManager
             imageNameCB.SelectedItem = DisplayingBook.Image;
 
             DataContext = DisplayingBook;
-            TitleTBL.DataContext = SavedBook.BookID;
+            TitleTBL.DataContext = SavedBook;
             categoryLV.ItemsSource = DisplayingBook.Category;
             addCategoryCB.ItemsSource = UnuseCategories;
         }

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BookStoreManager.Database;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Win32;
 
 namespace BookStoreManager
@@ -108,9 +109,12 @@ namespace BookStoreManager
                     , MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (messbox == MessageBoxResult.OK)
                 {
-                    BookList = BookShell.DeleteBook(selectedBook, BookList);
-                    MessageBox.Show($"Xóa quyển sách {name} thành công.");
-                    Refresh();
+                    try
+                    {
+                        BookList = BookShell.DeleteBook(selectedBook, BookList);
+                        MessageBox.Show($"Xóa quyển sách {name} thành công.");
+                        Refresh();
+                    }catch(Exception ex) { MessageBox.Show($"Xóa quyển sách {name} thất bại."); }
                 }
             }
             else { MessageBox.Show("Chọn quyển sách muốn xóa"); }
@@ -121,11 +125,15 @@ namespace BookStoreManager
             addCategory.ShowDialog();
             if (addCategory.DialogResult == true)
             {
-                var newCategory = addCategory._newCategory;
-                CategoryList = BookShell.AddCategory(newCategory, CategoryList);
-                MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
+                try
+                {
+                    var newCategory = addCategory._newCategory;
+                    CategoryList = BookShell.AddCategory(newCategory, CategoryList);
+                    MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
 
-                Refresh();
+                    Refresh();
+                }
+                catch (Exception ex) { MessageBox.Show($"Thêm danh mục thất bại."); }
             }
         }
         private void updateCategoryButton_Click(object sender, RoutedEventArgs e)
@@ -138,12 +146,16 @@ namespace BookStoreManager
                 updateCategory.ShowDialog();
                 if (updateCategory.DialogResult == true)
                 {
-                    var newCategory = updateCategory._selectedCategory;
-                    CategoryList = BookShell.UpdateCategory(selectedIndex, newCategory, CategoryList);
-                    MessageBox.Show($"Chỉnh sửa danh mục {newCategory.CategoryName} thành công.");
+                    try
+                    {
+                        var newCategory = updateCategory._selectedCategory;
+                        CategoryList = BookShell.UpdateCategory(selectedIndex, newCategory, CategoryList);
+                        MessageBox.Show($"Chỉnh sửa danh mục {newCategory.CategoryName} thành công.");
 
-                    Refresh();
-                } 
+                        Refresh();
+                    }
+                    catch (Exception ex) { MessageBox.Show($"Chỉnh sửa danh mục {CategoryList[selectedIndex].CategoryName} thất bại."); }
+            } 
             }
             else { MessageBox.Show("Chọn danh mục trước khi sửa"); }
         }
@@ -158,10 +170,14 @@ namespace BookStoreManager
                     , MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (messbox == MessageBoxResult.OK)
                 {
-                    CategoryList = BookShell.DeleteCategory(selectedIndex, CategoryList);
-                    MessageBox.Show($"Xóa danh mục {name} thành công.");
+                    try
+                    {
+                        CategoryList = BookShell.DeleteCategory(selectedIndex, CategoryList);
+                        MessageBox.Show($"Xóa danh mục {name} thành công.");
 
-                    Refresh();
+                        Refresh();
+                    }
+                    catch (Exception ex) { MessageBox.Show($"Xóa danh mục {name} thất bại."); }
                 }
             }
             else { MessageBox.Show("Chọn danh mục muốn xóa"); }
@@ -184,7 +200,19 @@ namespace BookStoreManager
 
         private void priceButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var priceFromText = priceFromTB.Text;
+            var priceToText = priceToTB.Text;
+            int priceFrom, priceTo;
+            if (int.TryParse(priceFromText, out priceFrom) && int.TryParse(priceToText, out priceTo))
+            {
+                if(priceFrom >= 0 && priceTo >= priceFrom) { 
+                    BookShell.FilterPrice(priceFrom, priceTo);
+                    LoadBookList();
+                    LoadBookDetail(0);
+                }
+                else{ MessageBox.Show("Vui lòng nhập số hợp lệ."); }
+            }
+            else { MessageBox.Show("Vui lòng nhập số hợp lệ."); }
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)
@@ -201,6 +229,7 @@ namespace BookStoreManager
                 string filePath = openFileDialog.FileName;
                 BookShell.ImportFromExcel(filePath, CategoryList);
                 MessageBox.Show($"Tải dữ liệu thành công.");
+                Refresh();
             }
         }
 

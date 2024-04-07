@@ -31,7 +31,7 @@
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
                 <Grid>
                     <Label Style="{StaticResource InfoLabelStyle}" Content="Tên sách:"/>
-                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding BookName}" Padding="10,7,0,0" d:Text="Book Name">
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding BookName}" d:Text="Book Name">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>
@@ -43,7 +43,7 @@
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
                 <Grid>
                     <Label Style="{StaticResource InfoLabelStyle}" Content="Tác giả:"/>
-                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Author}" Padding="10,7,0,0" d:Text="Author">
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Author}" d:Text="Author">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>
@@ -54,12 +54,9 @@
             </Border>
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,0,0,10">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="197*"/>
-                        <ColumnDefinition Width="226*"/>
-                    </Grid.ColumnDefinitions>
                     <Label Style="{StaticResource InfoLabelStyle}" Content="Giá tiền:"/>
-                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Price}" Padding="10,7,0,0" d:Text="20000" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="84,0,0,0">
+                    <TextBox Style="{StaticResource InfoTextBoxStyle}" Text="{Binding Price}" d:Text="20000" Grid.ColumnSpan="2" 
+                             HorizontalAlignment="Right">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>

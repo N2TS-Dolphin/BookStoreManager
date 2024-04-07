@@ -131,7 +131,6 @@ namespace BookStoreManager.Database
                         {
                             int categoryID = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
                             result = categoryID;
-                            MessageBox.Show($"Get inserted id: {result}");
                         }
                     }
                 }

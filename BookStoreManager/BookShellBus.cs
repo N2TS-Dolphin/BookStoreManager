@@ -1,4 +1,5 @@
 ﻿using BookStoreManager.Database;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Data.SqlClient;
@@ -19,25 +20,27 @@ namespace BookStoreManager
         public int TotalPages { get; set; }
         public string Search { get; set; }
         public string Category { get; set; }
+        public int PriceFrom { get; set; }
+        public int PriceTo { get; set; }
 
         public BookShellBus()
         {
             CurrentPage = 1; TotalPages = 0;
             Search = ""; Category = "All"; 
+            PriceFrom = 0; PriceTo = Int32.MaxValue; 
         }
         public BindingList<CategoryModel> GetAllCategory()
         {
             var list = CategoryDao.GetCategoryListFromDB();
+            list = new BindingList<CategoryModel>(list.OrderBy(x => x.CategoryName).ToList());
             list.Insert(0, new CategoryModel(0, "All"));
-            list.OrderBy(x => x.CategoryName).ToList();
             return list;
         }
         public Tuple<BindingList<BookModel>, int, int, int> GetBookList()
         {
-            var (items, totalItems, totalPages) = BookDao.GetBookListFromDB(CurrentPage, 9, Search, Category);
+            var (items, totalItems, totalPages) = BookDao.GetBookListFromDB(CurrentPage, 9, Search, Category, PriceFrom, PriceTo);
             TotalPages = totalPages;
             CurrentPage = (TotalPages <= 0) ? 0 : CurrentPage;
-            items.OrderBy(x => x.BookName).ToList();
             return new Tuple<BindingList<BookModel>, int, int, int>(items, totalItems, TotalPages, CurrentPage);
         }
         public BindingList<CategoryModel> GetBookCategory(BookModel book)
@@ -111,6 +114,12 @@ namespace BookStoreManager
             Search = search;
             CurrentPage = 1;
         }
+        public void FilterPrice(int priceFrom, int  priceTo)
+        {
+            PriceFrom = priceFrom;
+            PriceTo = priceTo;
+            CurrentPage = 1;
+        }
         public void ImportFromExcel(string filePath, BindingList<CategoryModel> categoryList)
         {
             BindingList<BookModel> books = new();
@@ -141,22 +150,11 @@ namespace BookStoreManager
                 int price = int.Parse(GetCellValue(priceCell, wbPart));
                 string category = GetCellValue(categoryCell, wbPart);
                 string image = GetCellValue(imageCell, wbPart);
-
+                
                 BookModel newBook = new BookModel(bookName, author, price, image);
-                BindingList<CategoryModel> newBookCategories = new();
-
-                string[] categories = category.Split(",");
-                foreach ( string categoryName in categories )
-                {
-                    CategoryModel categoryFound = new();
-                    categoryFound = categoryList.FirstOrDefault(c => c.CategoryName == categoryName);
-                    if(categoryFound != null )
-                    {
-                        newBookCategories.Add(categoryFound);
-                    }
-                }
+                BindingList<CategoryModel> newBookCategories = SplitCategory(category, categoryList);
                 newBook.Category = newBookCategories;
-
+                
                 int bookID = BookDao.InsertNewBookToDB(newBook);
                 newBook.BookID = bookID;
                 CategoryDao.InsertNewBookCategoryToDB(newBook);
@@ -189,6 +187,26 @@ namespace BookStoreManager
         public BookModel GetBookDetail(int id)
         {
             return BookDao.GetBookDetailFromDB(id);
+        }
+
+        public BindingList<CategoryModel> SplitCategory(string category, BindingList<CategoryModel> categoryList)
+        {
+            BindingList<CategoryModel> result = new();
+
+            string[] categories = category.Split(",");
+            categories = categories.Select(c => c.Trim()).ToArray();
+
+            foreach (string categoryName in categories)
+            {
+                CategoryModel categoryFound = categoryList.FirstOrDefault(c => c.CategoryName == categoryName);
+                if (categoryFound != null)
+                {
+                    var temp = new CategoryModel();
+                    temp = categoryFound;
+                    result.Add(temp);
+                }
+            }
+            return result;
         }
     }
 }

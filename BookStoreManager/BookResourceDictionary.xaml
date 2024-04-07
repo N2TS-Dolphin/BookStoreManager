@@ -27,6 +27,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Width" Value="339"/>
         <Setter Property="Height" Value="35"/>
+        <Setter Property="Padding" Value="10,7,0,0"/>
     </Style>
     <Style x:Key="WhiteButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FontSize" Value="15"/>
@@ -58,6 +59,24 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="20">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="GreenDialogButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Background" Value="#006070"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="10">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
