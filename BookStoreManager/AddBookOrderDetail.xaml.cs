@@ -21,15 +21,13 @@ namespace BookStoreManager
     /// </summary>
     public partial class AddBookOrderDetail : Window
     {
-
-        private CategoryDao _categoryDao= new CategoryDao();
-        private BookDao _bookDao= new BookDao();
         private BindingList<CategoryModel> _categories;
         private BindingList<BookModel> _books;
         private BookModel _selectedBook;
         public OrderDetailModel _OrderDetail;
         private int _orderId;
- 
+        private BookShellBus BookShell { get; set; }
+
 
 
         public AddBookOrderDetail(int orderId)
@@ -51,12 +49,12 @@ namespace BookStoreManager
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _categories= _categoryDao.getCategoryList();
+            _categories= BookShell.GetAllCategory();
             categoryCombobox.ItemsSource = _categories;
             categoryCombobox.SelectedIndex = 0;
 
            
-            _books = _bookDao.getBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
+            _books = BookShell.GetBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
             BookListView.ItemsSource = _books;
             
 
@@ -77,7 +75,7 @@ namespace BookStoreManager
         {
             if (categoryCombobox.SelectedIndex >= 0)
             {
-                _books = _bookDao.getBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
+                _books = BookShell.GetBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
                 BookListView.ItemsSource = _books;
             }
             else
