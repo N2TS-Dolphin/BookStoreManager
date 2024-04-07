@@ -156,7 +156,6 @@ namespace BookStoreManager
                     }
                 }
                 newBook.Category = newBookCategories;
-                //books.Add(newBook);
 
                 int bookID = BookDao.InsertNewBookToDB(newBook);
                 newBook.BookID = bookID;
@@ -169,8 +168,6 @@ namespace BookStoreManager
                 categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}");
                 imageCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}");
             }
-
-            //BookDao.ImportBooksFromExcelToDB(books);
         }
         private static string GetCellValue(Cell cell, WorkbookPart workbookPart)
         {
@@ -184,20 +181,14 @@ namespace BookStoreManager
                 return cell.InnerText;
             }
         }
-        public static BindingList<CategoryModel> CopyCategoryList(BindingList<CategoryModel> categories)
+        public BindingList<BookModel> GetBooksByCategory(int categoryId)
         {
-            BindingList<CategoryModel> result = [.. categories];
-            return result;
+            return BookDao.GetBooksByCategoryFromDB(categoryId);
+        }
 
-            public BindingList<BookModel> GetBooksByCategory(int categoryId)
-            {
-                return BookDao.GetBooksByCategoryFromDB(categoryId);
-            }
-
-            public BookModel GetBookDetail(int id)
-            {
-                return BookDao.GetBookDetailFromDB(id);
-            }
+        public BookModel GetBookDetail(int id)
+        {
+            return BookDao.GetBookDetailFromDB(id);
         }
     }
 }
