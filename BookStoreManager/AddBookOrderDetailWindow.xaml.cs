@@ -1,4 +1,5 @@
 ﻿using BookStoreManager.Database;
+using BookStoreManager.Process;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,45 +20,47 @@ namespace BookStoreManager
     /// <summary>
     /// Interaction logic for AddBookOrderDetail.xaml
     /// </summary>
-    public partial class AddBookOrderDetail : Window
+    public partial class AddBookOrderDetailWindow : Window
     {
         private BindingList<CategoryModel> _categories;
         private BindingList<BookModel> _books;
         private BookModel _selectedBook;
         public OrderDetailModel _OrderDetail;
         private int _orderId;
-        private BookShellBus BookShell { get; set; }=new BookShellBus();
+        private OrderDetailBus _orderDetailBus = new OrderDetailBus(); // Create an instance of OrderDetailBus
 
-
-
-        public AddBookOrderDetail(int orderId)
+        public AddBookOrderDetailWindow(int orderId)
         {
             InitializeComponent();
-            _orderId= orderId;
+            _orderId = orderId;
         }
-        public AddBookOrderDetail(int orderId,OrderDetailModel OrderDetail)
+
+        public AddBookOrderDetailWindow(int orderId, OrderDetailModel OrderDetail)
         {
             InitializeComponent();
-            _orderId= orderId;
+            _orderId = orderId;
             this._OrderDetail = OrderDetail;
             this.DataContext = _OrderDetail;
             _selectedBook = OrderDetail.Book;
-
-
         }
-
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _categories= BookShell.GetAllCategory();
+            LoadCategories();
+        }
+
+        private void LoadCategories()
+        {
+            _categories = _orderDetailBus.GetAllCategory(); // Use OrderDetailBus to get all categories
             categoryCombobox.ItemsSource = _categories;
             categoryCombobox.SelectedIndex = 0;
+            LoadBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
+        }
 
-           
-            _books = BookShell.GetBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
+        private void LoadBooksByCategory(int categoryId)
+        {
+            _books = _orderDetailBus.GetBooksByCategory(categoryId); // Use OrderDetailBus to get books by category
             BookListView.ItemsSource = _books;
-            
-
         }
 
         private void BookListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -75,8 +78,7 @@ namespace BookStoreManager
         {
             if (categoryCombobox.SelectedIndex >= 0)
             {
-                _books = BookShell.GetBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
-                BookListView.ItemsSource = _books;
+                LoadBooksByCategory(_categories[categoryCombobox.SelectedIndex].CategoryID);
             }
             else
             {
@@ -100,6 +102,9 @@ namespace BookStoreManager
                             Book = _selectedBook,
                             Quantity = quantity
                         };
+
+                        // Use OrderDetailBus to insert the order detail
+                        _orderDetailBus.InsertOrderItem(_orderId,  _OrderDetail );
 
                         // Close the window and set DialogResult to true
                         DialogResult = true;
@@ -126,6 +131,6 @@ namespace BookStoreManager
             DialogResult = false;
         }
 
-        
+
     }
 }

@@ -21,7 +21,7 @@ namespace BookStoreManager.Database
             _connection.Open();
         }
 
-        public void InsertOrderItems(int orderId, BindingList<OrderDetailModel> orderDetails)
+        public void InsertOrderItemToDB(int orderId, OrderDetailModel orderDetail)
         {
             try
             {
@@ -29,19 +29,18 @@ namespace BookStoreManager.Database
                 {
                     connection.Open();
 
-                    foreach (var orderDetail in orderDetails)
-                    {
-                        // Insert each order detail into the database
-                        string insertQuery = "INSERT INTO ORDER_ITEM (ORDER_ID, BOOK_ID, QUANTITY) VALUES (@OrderId, @BookId, @Quantity)";
+                    
+                    // Insert each order detail into the database
+                    string insertQuery = "INSERT INTO ORDER_ITEM (ORDER_ID, BOOK_ID, QUANTITY) VALUES (@OrderId, @BookId, @Quantity)";
 
-                        using (SqlCommand command = new SqlCommand(insertQuery, connection))
-                        {
-                            command.Parameters.AddWithValue("@OrderId", orderId);
-                            command.Parameters.AddWithValue("@BookId", orderDetail.Book.BookID);
-                            command.Parameters.AddWithValue("@Quantity", orderDetail.Quantity);
-                            command.ExecuteNonQuery();
-                        }
+                    using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@OrderId", orderId);
+                        command.Parameters.AddWithValue("@BookId", orderDetail.Book.BookID);
+                        command.Parameters.AddWithValue("@Quantity", orderDetail.Quantity);
+                        command.ExecuteNonQuery();
                     }
+                    
                 }
             }
             catch (Exception ex)
@@ -50,7 +49,7 @@ namespace BookStoreManager.Database
             }
         }
 
-        public BindingList<OrderDetailModel> GetOrderDetails(int orderId)
+        public BindingList<OrderDetailModel> GetOrderDetailsFromDB(int orderId)
         {
             BindingList<OrderDetailModel> orderDetails = new BindingList<OrderDetailModel>();
             BookShellBus BookShell= new BookShellBus();
@@ -81,7 +80,7 @@ namespace BookStoreManager.Database
             return orderDetails;
         }
 
-        public void DeleteOrderItems(int orderId)
+        public void DeleteOrderItemsFromDB(int orderId)
         {
             try
             {
@@ -102,6 +101,24 @@ namespace BookStoreManager.Database
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while deleting order items: {ex.Message}");
+            }
+        }
+
+        public void DeleteOrderDetailsFromDB(int orderID)
+        {
+            var sql = "delete from ORDER_ITEM where ORDER_ID = @OrderID";
+            SqlCommand sqlCommand = new SqlCommand(sql, _connection);
+
+            sqlCommand.Parameters.AddWithValue("@OrderID", orderID);
+
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine($"Deleted {orderID} Successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Deleted {orderID} Fail: " + ex.Message);
             }
         }
 
