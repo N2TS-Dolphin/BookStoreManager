@@ -133,18 +133,18 @@ VALUES  ('Novel'),
 		('Quest'),
 		('Self-help')
 
-INSERT BOOK(BOOK_NAME, PRICE, AUTHOR)
-VALUES  (N'Đắc nhân tâm', 86000, N'Dale Carnegie'),
-		(N'One Piece', 21250, N'Eiichiro Oda'),
-		(N'Attack On Titan', 144400, N'Isayama Hajime'),
-		(N'Naruto', 21500, N'Masashi Kishimoto'),
-		(N'Cardcaptor Sakura', 25000, N'CLAMP'),
-		(N'Cardcaptor Sakura: Clear Card-hen', 175750, N'CLAMP'),
-		(N'Trốn lên mái nhà để khóc', 72200, N'Lam'),
-		(N'Frieren - Pháp sư tiễn táng', 42750, N'Yamada Kanehito'),
-		(N'Thám tử lừng danh Conan', 23750, N'Gosho Aoyama'),
-		(N'Dược sư tự sự', 44650, N'Natsu Hyuuga'),
-		(N'Nhà giả kim', 61620, N'Paulo Coelho')
+INSERT BOOK(BOOK_NAME, PRICE, AUTHOR, IMG)
+VALUES  (N'Đắc nhân tâm', 86000, N'Dale Carnegie', N'DacNhanTam.jpg'),
+		(N'One Piece', 21250, N'Eiichiro Oda', N'OnePiece.jpg'),
+		(N'Attack On Titan', 144400, N'Isayama Hajime', N'AttackOnTitan.jpg'),
+		(N'Naruto', 21500, N'Masashi Kishimoto', N'Naruto.jpg'),
+		(N'Cardcaptor Sakura', 25000, N'CLAMP', N'CardcaptorSakura.jpg'),
+		(N'Cardcaptor Sakura: Clear Card-hen', 175750, N'CLAMP', N'CardcaptorSakuraClearCard-hen.jpg'),
+		(N'Trốn lên mái nhà để khóc', 72200, N'Lam', N'TronLenMaiNhaDeKhoc.jpg'),
+		(N'Frieren - Pháp sư tiễn táng', 42750, N'Yamada Kanehito', N'Frieren.jpg'),
+		(N'Thám tử lừng danh Conan', 23750, N'Gosho Aoyama', N'Conan.jpg'),
+		(N'Dược sư tự sự', 44650, N'Natsu Hyuuga', N'KusuriyaNoHitorigoto.jpg'),
+		(N'Nhà giả kim', 61620, N'Paulo Coelho', N'NhaGiaKim.jpg')
 
 INSERT BOOK_CATEGORY(BOOK_ID, CATEGORY_ID)
 VALUES  (1, 22),
