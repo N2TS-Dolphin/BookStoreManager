@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BookStoreManager
 {
@@ -16,11 +18,26 @@ namespace BookStoreManager
         }
         public static BindingList<string> GetImageName()
         {
-            BindingList<string> result = new BindingList<string>
+            BindingList<string> result = new BindingList<string>();
+            string projectFilePath = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).FullName).FullName).FullName;
+            string imageFolder = Path.Combine(projectFilePath, "Image");
+
+            // Kiểm tra xem thư mục tồn tại hay không
+            if (Directory.Exists(imageFolder))
             {
-                {"blank_cover.jpg" },
-                {"OnePieceCover.jpg" }
-            };
+                // Lấy tất cả các tên tệp trong thư mục hình ảnh
+                string[] imageFiles = Directory.GetFiles(imageFolder);
+
+                // In tên của từng tệp
+                foreach (string file in imageFiles)
+                {
+                    result.Add(Path.GetFileName(file));
+                }
+            }
+            else
+            {
+                MessageBox.Show("Thư mục hình ảnh không tồn tại.");
+            }
             return result;
         }
         public static int AddNewBook(BookModel newBook)

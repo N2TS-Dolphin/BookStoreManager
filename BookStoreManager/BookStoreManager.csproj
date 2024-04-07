@@ -9,7 +9,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Image\AttackOnTitan.jpg" />
+    <None Remove="Image\Bleach.png" />
+    <None Remove="Image\CardcaptorSakura.jpg" />
+    <None Remove="Image\CardcaptorSakuraClearCard-hen.jpg" />
+    <None Remove="Image\Conan.jpg" />
+    <None Remove="Image\DacNhanTam.jpg" />
+    <None Remove="Image\DeathNote.jpg" />
+    <None Remove="Image\DragonBall.jpg" />
+    <None Remove="Image\FairyTail.jpg" />
+    <None Remove="Image\Frieren.jpg" />
+    <None Remove="Image\FullmetalAlchemist.jpg" />
+    <None Remove="Image\home_icon.jpg" />
+    <None Remove="Image\HunterXHunter.jpg" />
+    <None Remove="Image\KimetsuNoYaiba.jpg" />
+    <None Remove="Image\KusuriyaNoHitorigoto.jpg" />
+    <None Remove="Image\MyHeroAcademia.jpg" />
+    <None Remove="Image\Naruto.jpg" />
+    <None Remove="Image\NhaGiaKim.jpg" />
+    <None Remove="Image\OnePunchMan.jpg" />
+    <None Remove="Image\TokyoGhoul.png" />
+    <None Remove="Image\TronLenMaiNhaDeKhoc.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
@@ -26,8 +51,29 @@
     </Reference>
   </ItemGroup>
 	<ItemGroup>
+	  <Resource Include="Image\AttackOnTitan.jpg" />
 	  <Resource Include="Image\blank_cover.jpg" />
-	  <Resource Include="Image\OnePieceCover.jpg" />
+	  <Resource Include="Image\Bleach.png" />
+	  <Resource Include="Image\CardcaptorSakura.jpg" />
+	  <Resource Include="Image\CardcaptorSakuraClearCard-hen.jpg" />
+	  <Resource Include="Image\Conan.jpg" />
+	  <Resource Include="Image\DacNhanTam.jpg" />
+	  <Resource Include="Image\DeathNote.jpg" />
+	  <Resource Include="Image\DragonBall.jpg" />
+	  <Resource Include="Image\FairyTail.jpg" />
+	  <Resource Include="Image\Frieren.jpg" />
+	  <Resource Include="Image\FullmetalAlchemist.jpg" />
+	  <Resource Include="Image\home_icon.jpg" />
+	  <Resource Include="Image\HunterXHunter.jpg" />
+	  <Resource Include="Image\KimetsuNoYaiba.jpg" />
+	  <Resource Include="Image\KusuriyaNoHitorigoto.jpg" />
+	  <Resource Include="Image\MyHeroAcademia.jpg" />
+	  <Resource Include="Image\Naruto.jpg" />
+	  <Resource Include="Image\NhaGiaKim.jpg" />
+	  <Resource Include="Image\OnePiece.jpg" />
+	  <Resource Include="Image\OnePunchMan.jpg" />
+	  <Resource Include="Image\TokyoGhoul.png" />
+	  <Resource Include="Image\TronLenMaiNhaDeKhoc.jpg" />
 	</ItemGroup>
 
 </Project>

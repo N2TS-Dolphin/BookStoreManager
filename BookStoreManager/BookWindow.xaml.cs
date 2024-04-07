@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BookStoreManager.Database;
+using Microsoft.Win32;
 
 namespace BookStoreManager
 {
@@ -26,12 +27,9 @@ namespace BookStoreManager
         public BindingList<CategoryModel> CategoryList { get; set; }
         public BookModel BookDetail { get; set; }
         public BookShellBus BookShell { get; set; }
-        //int _currentPage = 1, _totalPages = 0;
-        //string _search = "", _category = "";
         public BookWindow()
         {
             InitializeComponent();
-            new BookDao();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -197,7 +195,13 @@ namespace BookStoreManager
 
         private void execlButton_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                BookShell.ImportFromExcel(filePath, CategoryList);
+                MessageBox.Show($"Tải dữ liệu thành công.");
+            }
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)

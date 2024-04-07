@@ -28,10 +28,11 @@ namespace BookStoreManager
             Author = "";
             Image = "";
         }
-        public BookModel(int bookID, string bookName, string image)
+        public BookModel(string bookName, string author, int price, string image)
         {
-            BookID = bookID;
             BookName = bookName;
+            Author = author;
+            Price = price;
             Image = image;
         }
         public BookModel(int bookID, string bookName, int price, string author, string image)

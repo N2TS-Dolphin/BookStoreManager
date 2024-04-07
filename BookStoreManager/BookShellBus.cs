@@ -1,10 +1,13 @@
 ﻿using BookStoreManager.Database;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BookStoreManager
 {
@@ -104,6 +107,84 @@ namespace BookStoreManager
         {
             Search = search;
             CurrentPage = 1;
+        }
+        public void ImportFromExcel(string filePath, BindingList<CategoryModel> categoryList)
+        {
+            BindingList<BookModel> books = new();
+            SpreadsheetDocument document;
+            try
+            {
+                 document = SpreadsheetDocument.Open(filePath, false);
+            }catch(Exception ex) { MessageBox.Show("File excel đang được mở, vui lòng đóng file trước khi Import."); return; }
+            
+            var wbPart = document.WorkbookPart;
+            var sheets = wbPart.Workbook.Descendants<Sheet>();
+
+            var sheet = sheets.FirstOrDefault(s => s.Name == "Book");
+            var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+            var cells = wsPart.Worksheet.Descendants<Cell>();
+
+            int row = 2;
+            Cell bookNameCell = cells.FirstOrDefault(c => c?.CellReference == $"A{row}");
+            Cell authorCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}");
+            Cell priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}");
+            Cell categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}");
+            Cell imageCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}");
+
+            while (bookNameCell != null && authorCell != null && priceCell != null && categoryCell != null && imageCell != null)
+            {
+                string bookName = GetCellValue(bookNameCell, wbPart);
+                string author = GetCellValue(authorCell, wbPart);
+                int price = int.Parse(GetCellValue(priceCell, wbPart));
+                string category = GetCellValue(categoryCell, wbPart);
+                string image = GetCellValue(imageCell, wbPart);
+
+                BookModel newBook = new BookModel(bookName, author, price, image);
+                BindingList<CategoryModel> newBookCategories = new();
+
+                string[] categories = category.Split(",");
+                foreach ( string categoryName in categories )
+                {
+                    CategoryModel categoryFound = new();
+                    categoryFound = categoryList.FirstOrDefault(c => c.CategoryName == categoryName);
+                    if(categoryFound != null )
+                    {
+                        newBookCategories.Add(categoryFound);
+                    }
+                }
+                newBook.Category = newBookCategories;
+                //books.Add(newBook);
+
+                int bookID = BookDao.InsertNewBookToDB(newBook);
+                newBook.BookID = bookID;
+                CategoryDao.InsertNewBookCategoryToDB(newBook);
+
+                row++;
+                bookNameCell = cells.FirstOrDefault(c => c?.CellReference == $"A{row}");
+                authorCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}");
+                priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}");
+                categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}");
+                imageCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}");
+            }
+
+            //BookDao.ImportBooksFromExcelToDB(books);
+        }
+        private static string GetCellValue(Cell cell, WorkbookPart workbookPart)
+        {
+            SharedStringTablePart stringTablePart = workbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString && stringTablePart != null)
+            {
+                return stringTablePart.SharedStringTable.ElementAt(int.Parse(cell.InnerText)).InnerText;
+            }
+            else
+            {
+                return cell.InnerText;
+            }
+        }
+        public static BindingList<CategoryModel> CopyCategoryList(BindingList<CategoryModel> categories)
+        {
+            BindingList<CategoryModel> result = [.. categories];
+            return result;
         }
     }
 }
