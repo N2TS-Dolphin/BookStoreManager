@@ -26,7 +26,7 @@ namespace BookStoreManager
         private BookModel _selectedBook;
         public OrderDetailModel _OrderDetail;
         private int _orderId;
-        private BookShellBus BookShell { get; set; }
+        private BookShellBus BookShell { get; set; }=new BookShellBus();
 
 
 

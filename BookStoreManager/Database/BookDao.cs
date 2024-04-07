@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BookStoreManager.Database
 {
@@ -240,6 +241,8 @@ namespace BookStoreManager.Database
 
         public static BindingList<BookModel> GetBooksByCategoryFromDB(int categoryId)
         {
+            var connection = Connection;
+            connection.Open();
             var sql = "SELECT B.* FROM BOOK AS B " +
                       "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
                       "WHERE BC.CATEGORY_ID = @CategoryID";
@@ -248,7 +251,7 @@ namespace BookStoreManager.Database
             sqlParameter.Value = categoryId;
 
 
-            var connection = Connection;
+            
             var command = new SqlCommand(sql, connection);
 
             command.Parameters.Add(sqlParameter);
@@ -276,6 +279,7 @@ namespace BookStoreManager.Database
                 list.Add(book);
             }
             reader.Close();
+            connection.Close();
             return list;
         }
     }
