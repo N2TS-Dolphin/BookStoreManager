@@ -32,16 +32,16 @@ namespace BookStoreManager
             InitializeComponent();
             SavedBook = (BookModel)SelectedBook.Clone();
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DisplayingBook = (BookModel)SavedBook.Clone();
-            SaveUnuseCategories = ManageBook.GetUnuseCategory(SavedBook);
-            UnuseCategories = SaveUnuseCategories;
+            DisplayingBook = BookManagerBus.CopyBook((BookModel)SavedBook.Clone());
+            DisplayingBook.Category = BookManagerBus.CopyCategoryList(SavedBook.Category);
+            SaveUnuseCategories = BookManagerBus.GetUnuseCategory(SavedBook);
+            UnuseCategories = BookManagerBus.CopyCategoryList(SaveUnuseCategories);
             DeleteCategories = new();
             InsertCategories = new();
 
-            ImageName = ManageBook.GetImageName();
+            ImageName = BookManagerBus.GetImageName();
             imageNameCB.ItemsSource = ImageName;
             imageNameCB.SelectedItem = DisplayingBook.Image;
 
@@ -99,21 +99,30 @@ namespace BookStoreManager
 
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            ManageBook.UpdateBook(DisplayingBook, DeleteCategories, InsertCategories);
-            SavedBook = DisplayingBook;
+            BookManagerBus.UpdateBook(DisplayingBook, DeleteCategories, InsertCategories);
+            SavedBook = BookManagerBus.CopyBook((BookModel)DisplayingBook.Clone());
+            SavedBook.Category = BookManagerBus.CopyCategoryList(DisplayingBook.Category);
+
             DeleteCategories.Clear();
             InsertCategories.Clear();
-            SaveUnuseCategories = UnuseCategories;
+            SaveUnuseCategories = BookManagerBus.CopyCategoryList(UnuseCategories);
             MessageBox.Show("Chỉnh sửa thình công.");
         }
-
         private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
-            DisplayingBook = (BookModel)SavedBook.Clone();
-            imageNameCB.SelectedItem = DisplayingBook.Image;
+            DisplayingBook = BookManagerBus.CopyBook((BookModel)SavedBook.Clone());
+            DisplayingBook.Category = BookManagerBus.CopyCategoryList(SavedBook.Category);
+
             DeleteCategories.Clear();
             InsertCategories.Clear();
-            UnuseCategories = SaveUnuseCategories;
+            UnuseCategories = BookManagerBus.CopyCategoryList(SaveUnuseCategories);
+
+            DataContext = DisplayingBook;
+            imageNameCB.SelectedItem = DisplayingBook.Image;
+
+            categoryLV.ItemsSource = DisplayingBook.Category;
+            addCategoryCB.ItemsSource = UnuseCategories;
+            
             MessageBox.Show("Đã tải lại trang");
         }
 
@@ -124,6 +133,11 @@ namespace BookStoreManager
             {
                 DisplayingBook.Image = selected;
             }
+        }
+
+        private void quitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

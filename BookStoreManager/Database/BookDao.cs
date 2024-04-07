@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,12 +15,18 @@ namespace BookStoreManager.Database
     public class BookDao
     {
         public static SqlConnection Connection = InitializeConnection();
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
         private SqlConnection _connection;
         public BookDao()
         {
             _connection = new SqlConnection(_connectionString);
-            _connection.Open();
+            while(_connection.State != ConnectionState.Open)
+            {
+                try
+                {
+                    _connection.Open();
+                }catch (Exception ex) { }
+            }
         }
         public static SqlConnection InitializeConnection()
         {
@@ -30,14 +37,14 @@ namespace BookStoreManager.Database
         public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category)
         {
             var connection = Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open){try{ connection.Open();} catch (Exception ex) { }}
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
             string sql = "";
-            if (search != "" && category != "")
+            if (search != "" && category != "All")
             {
                 sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price count(*) over() as totalItems
+                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
                     from BOOK as B 
                     join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
                     join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
@@ -50,7 +57,7 @@ namespace BookStoreManager.Database
                     """;
 
             }
-            else if (search != "" && category == "")
+            else if (search != "" && category == "All")
             {
                 sql = """
                     select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
@@ -61,7 +68,7 @@ namespace BookStoreManager.Database
                     fetch next @Take rows only
                     """;
             }
-            else if (search == "" && category != "")
+            else if (search == "" && category != "All")
             {
                 sql = """
                     select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
@@ -75,7 +82,7 @@ namespace BookStoreManager.Database
                     fetch next @Take rows only
                     """;
             }
-            if (search == "" && category == "")
+            if (search == "" && category == "All")
             {
                 sql = """
                     select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
@@ -146,7 +153,7 @@ namespace BookStoreManager.Database
         public static BookModel GetBookDetailFromDB(int id)
         {
             var connection = Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             BookModel result = new();
             string sql = """
                 select * from BOOK
@@ -175,7 +182,7 @@ namespace BookStoreManager.Database
         public static int InsertNewBookToDB(BookModel newBook)
         {
             var connection = Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
 
             int result = -1;
             string sql = "insert into BOOK (BOOK_NAME, PRICE, AUTHOR, IMG) values (@Name, @Price, @Author, @Image)";
@@ -204,7 +211,7 @@ namespace BookStoreManager.Database
         public static void UpdateBookToDB(BookModel book)
         {
             var connection = Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = """
                 update BOOK set 
                 BOOK_NAME = @Name,
@@ -227,7 +234,7 @@ namespace BookStoreManager.Database
         public static void DeleteBookFromDB(BookModel book)
         {
             var connection = Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = """
                 delete from BOOK where BOOK_ID = @Id
                 """;

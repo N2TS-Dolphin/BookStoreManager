@@ -2,22 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BookStoreManager.Database
 {
     public class CategoryDao
     {
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
         private SqlConnection _connection;
         public CategoryDao()
         {
             _connection = new SqlConnection(_connectionString);
-            _connection.Open();
+            while (_connection.State != ConnectionState.Open) { try { _connection.Open(); } catch (Exception ex) { } }
         }
         public BindingList<CategoryModel> getCategoryList()
         {
@@ -42,7 +44,7 @@ namespace BookStoreManager.Database
         public static BindingList<CategoryModel> GetCategoryListFromDB()
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             BindingList<CategoryModel> result = new();
             string sql = """
                 select *
@@ -65,7 +67,7 @@ namespace BookStoreManager.Database
         public static BindingList<CategoryModel> GetBookCategoryFromDB(int bookId)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             BindingList<CategoryModel> result = new();
             string sql = """
                 select *
@@ -92,7 +94,7 @@ namespace BookStoreManager.Database
         {
             var connection = BookDao.Connection;
             int result = -1;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = "insert into CATEGORY (CATEGORY_NAME) values (@Name)";
             var command = new SqlCommand(sql, connection);
             command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = category.CategoryName;
@@ -117,7 +119,7 @@ namespace BookStoreManager.Database
         public static void UpdateACategoryToDB(CategoryModel category)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = """
                 update CATEGORY set CATEGORY_NAME = @Name where CATEGORY_ID = @Id
                 """;
@@ -134,7 +136,7 @@ namespace BookStoreManager.Database
         public static void DeleteACategoryFromDB(int ID)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
 
             string sql1 = """
                 Delete from BOOK_CATEGORY where CATEGORY_ID = @Id
@@ -155,7 +157,7 @@ namespace BookStoreManager.Database
         public static void InsertNewBookCategoryToDB(BookModel book)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             foreach (var category in book.Category)
             {
                 string sql = """
@@ -170,7 +172,7 @@ namespace BookStoreManager.Database
         }
         public static BindingList<CategoryModel> GetUnuseCategoriesFromDB(BookModel book) {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
 
             var result = new BindingList<CategoryModel>();
             string sql = """
@@ -199,7 +201,7 @@ namespace BookStoreManager.Database
         public static void InsertNewBookCategoryToDB(BookModel book, BindingList<CategoryModel> insertCategories)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             foreach (var category in insertCategories)
             {
                 string sql = """
@@ -215,7 +217,7 @@ namespace BookStoreManager.Database
         public static void DeleteOldBookCategoryFromDB(BookModel book, BindingList<CategoryModel> deleteCategories)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             foreach (var category in deleteCategories)
             {
                 string sql = """
@@ -231,7 +233,7 @@ namespace BookStoreManager.Database
         public static void DeleteAllBookCategoryFromDB(BookModel book)
         {
             var connection = BookDao.Connection;
-            connection.Open();
+            while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = """
                 delete from BOOK_CATEGORY where BOOK_ID = @BookID
                 """;
@@ -240,9 +242,5 @@ namespace BookStoreManager.Database
             command.ExecuteNonQuery();
             connection.Close();
         }
-
-
-        
-
     }
 }

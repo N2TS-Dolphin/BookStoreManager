@@ -139,7 +139,7 @@
             <Button x:Name="refreshButton" Content="Tải lại" Style="{StaticResource OtherButtonStyle}"  Background="Yellow"
              HorizontalAlignment="Center" VerticalAlignment="Center" Click="refreshButton_Click"/>
             <Button x:Name="quitButton" Content="Quay về" Style="{StaticResource OtherButtonStyle}"  Background="Red"
-             HorizontalAlignment="Right" VerticalAlignment="Center" IsCancel="True"/>
+             HorizontalAlignment="Right" VerticalAlignment="Center" Click="quitButton_Click"/>
         </Grid>
     </Grid>
 </Window>

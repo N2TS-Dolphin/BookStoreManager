@@ -38,12 +38,12 @@ namespace BookStoreManager
             DataContext = NewBook;
             categoryLV.ItemsSource = NewBook.Category;
 
-            AllCategories = ManageBook.GetCategories();
+            AllCategories = BookManagerBus.GetCategories();
             Categories = new BindingList<CategoryModel>();
             Categories = AllCategories;
             addCategoryCB.ItemsSource = Categories;
 
-            ImageName = ManageBook.GetImageName();
+            ImageName = BookManagerBus.GetImageName();
             imageNameCB.ItemsSource = ImageName;
             imageNameCB.SelectedItem = ImageName[0];
         }
@@ -79,7 +79,7 @@ namespace BookStoreManager
         }
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            int id = ManageBook.AddNewBook(NewBook);
+            int id = BookManagerBus.AddNewBook(NewBook);
             if (id == -1)
             {
                 MessageBox.Show("Thêm thấtt bại");
@@ -107,6 +107,11 @@ namespace BookStoreManager
             {
                 NewBook.Image = selected;
             }
+        }
+
+        private void quitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();    
         }
     }
 }
