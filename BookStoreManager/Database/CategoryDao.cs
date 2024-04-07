@@ -19,6 +19,26 @@ namespace BookStoreManager.Database
             _connection = new SqlConnection(_connectionString);
             _connection.Open();
         }
+        public BindingList<CategoryModel> getCategoryList()
+        {
+            BindingList<CategoryModel> result = new();
+            string sql = """
+                select *
+                from CATEGORY
+                order by CATEGORY_NAME
+                """;
+            var command = new SqlCommand(sql, _connection);
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int categoryID = (reader["CATEGORY_ID"] == DBNull.Value) ? -1 : (int)reader["CATEGORY_ID"];
+                    string categoryName = (reader["CATEGORY_NAME"] == DBNull.Value) ? "" : (string)reader["CATEGORY_NAME"];
+                    result.Add(new CategoryModel(categoryID, categoryName));
+                }
+            }
+            return result;
+        }
         public static BindingList<CategoryModel> GetCategoryListFromDB()
         {
             var connection = BookDao.Connection;
