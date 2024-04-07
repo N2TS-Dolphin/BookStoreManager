@@ -283,7 +283,7 @@ namespace BookStoreManager.Database
         public static BindingList<BookModel> GetBooksByCategoryFromDB(int categoryId)
         {
             var connection = DBConfig.Connection;
-                                                            BindingList<BookModel> list = new BindingList<BookModel>();
+            BindingList<BookModel> list = new BindingList<BookModel>();
             while (connection.State != ConnectionState.Open)
             {
                 try
@@ -303,8 +303,6 @@ namespace BookStoreManager.Database
                     command.Parameters.Add(sqlParameter);
 
                     var reader = command.ExecuteReader();
-
-                    BindingList<BookModel> list = new BindingList<BookModel>();
                     while (reader.Read())
                     {
                         var bookId = (int)reader["BOOK_ID"];
@@ -326,7 +324,7 @@ namespace BookStoreManager.Database
                     }
                     reader.Close();
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) { list.Clear(); }
             }
             connection.Close();
             return list;
