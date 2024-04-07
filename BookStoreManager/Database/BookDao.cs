@@ -14,8 +14,7 @@ namespace BookStoreManager.Database
 {
     public class BookDao
     {
-        public static SqlConnection Connection = InitializeConnection();
-        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = DBConfig.GetConnectionString();
         private SqlConnection _connection;
         public BookDao()
         {
@@ -28,15 +27,9 @@ namespace BookStoreManager.Database
                 }catch (Exception ex) { }
             }
         }
-        public static SqlConnection InitializeConnection()
-        {
-            string connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
-            var connection = new SqlConnection(connectionString);
-            return connection;
-        }
         public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category)
         {
-            var connection = Connection;
+            var connection = DBConfig.Connection;
             while (connection.State != ConnectionState.Open){try{ connection.Open();} catch (Exception ex) { }}
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
@@ -152,7 +145,7 @@ namespace BookStoreManager.Database
         }
         public static BookModel GetBookDetailFromDB(int id)
         {
-            var connection = Connection;
+            var connection = DBConfig.Connection;
             while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             BookModel result = new();
             string sql = """
@@ -181,7 +174,7 @@ namespace BookStoreManager.Database
         }
         public static int InsertNewBookToDB(BookModel newBook)
         {
-            var connection = Connection;
+            var connection = DBConfig.Connection;
             while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
 
             int result = -1;
@@ -210,7 +203,7 @@ namespace BookStoreManager.Database
         }
         public static void UpdateBookToDB(BookModel book)
         {
-            var connection = Connection;
+            var connection = DBConfig.Connection;
             while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = """
                 update BOOK set 
@@ -233,7 +226,7 @@ namespace BookStoreManager.Database
 
         public static void DeleteBookFromDB(BookModel book)
         {
-            var connection = Connection;
+            var connection = DBConfig.Connection;
             while (connection.State != ConnectionState.Open) { try { connection.Open(); } catch (Exception ex) { } }
             string sql = """
                 delete from BOOK where BOOK_ID = @Id
@@ -281,6 +274,45 @@ namespace BookStoreManager.Database
             }
             reader.Close();
             return list;
+        }
+        public static void ImportBooksFromExcelToDB(BindingList<BookModel> books)
+        {
+            var connection = DBConfig.Connection;
+            while (connection.State != ConnectionState.Open)
+            {
+                try
+                {
+                    connection.Open();
+                    foreach (var book in books)
+                    {
+                        int result = -1;
+                        string sql = "insert into BOOK (BOOK_NAME, PRICE, AUTHOR, IMG) values (@Name, @Price, @Author, @Image)";
+                        var command = new SqlCommand(sql, connection);
+                        command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = book.BookName;
+                        command.Parameters.Add("@Price", System.Data.SqlDbType.Int).Value = book.Price;
+                        command.Parameters.Add("@Author", System.Data.SqlDbType.NVarChar).Value = book.Author;
+                        command.Parameters.Add("@Image", System.Data.SqlDbType.NVarChar).Value = book.Image;
+
+                        command.ExecuteNonQuery();
+
+                        string sql2 = "select MAX(BOOK_ID) as id from BOOK";
+                        var command2 = new SqlCommand(sql2, connection);
+
+                        using (var reader = command2.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int bookID = (reader["id"] == DBNull.Value) ? -1 : (int)reader["id"];
+                                result = bookID;
+                            }
+                        }
+                        book.BookID = result;
+                        CategoryDao.InsertNewBookCategoryToDB(book);
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show("Lỗi"); }
+            }
+            connection.Close();
         }
     }
 }

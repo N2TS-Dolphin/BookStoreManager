@@ -11,7 +11,7 @@ namespace BookStoreManager.Database
     class OrderDetailDao
     {
 
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = DBConfig.GetConnectionString();
 
         private SqlConnection _connection;
 
