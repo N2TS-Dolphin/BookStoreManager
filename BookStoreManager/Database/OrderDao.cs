@@ -16,7 +16,7 @@ namespace BookStoreManager.Database
     {
         public List<OrderModel> OrderInfo = new List<OrderModel>();
 
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;"; //Change Server
 
         private SqlConnection _connection;
 

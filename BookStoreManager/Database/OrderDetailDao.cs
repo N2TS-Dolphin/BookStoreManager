@@ -11,7 +11,7 @@ namespace BookStoreManager.Database
     class OrderDetailDao
     {
 
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;"; //Change Server
 
         private SqlConnection _connection;
 
@@ -53,7 +53,7 @@ namespace BookStoreManager.Database
         public BindingList<OrderDetailModel> GetOrderDetails(int orderId)
         {
             BindingList<OrderDetailModel> orderDetails = new BindingList<OrderDetailModel>();
-            BookDao _bookDao = new BookDao();
+            BookShellBus BookShell= new BookShellBus();
 
             string query = "SELECT ORDER_ID, BOOK_ID, QUANTITY FROM ORDER_ITEM WHERE ORDER_ID = @OrderId ORDER BY BOOK_ID";
 
@@ -70,7 +70,7 @@ namespace BookStoreManager.Database
                         {
 
                             OrderID = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
-                            Book = _bookDao.getBookDetail(reader.GetInt32(reader.GetOrdinal("BOOK_ID"))),
+                            Book = BookShell.GetBookDetail(reader.GetInt32(reader.GetOrdinal("BOOK_ID"))),
                             Quantity = reader.GetInt32(reader.GetOrdinal("QUANTITY"))
                         };
                         orderDetails.Add(orderDetail);

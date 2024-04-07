@@ -14,7 +14,7 @@ namespace BookStoreManager.Database
     public class BookDao
     {
         public static SqlConnection Connection = InitializeConnection();
-        private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;"; //Change Server
         private SqlConnection _connection;
         public BookDao()
         {
@@ -238,7 +238,7 @@ namespace BookStoreManager.Database
             connection.Close();
         }
 
-        public BindingList<BookModel> getBooksByCategory(int categoryId)
+        public static BindingList<BookModel> GetBooksByCategoryFromDB(int categoryId)
         {
             var sql = "SELECT B.* FROM BOOK AS B " +
                       "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
@@ -247,7 +247,10 @@ namespace BookStoreManager.Database
             var sqlParameter = new SqlParameter("@CategoryID", System.Data.SqlDbType.Int);
             sqlParameter.Value = categoryId;
 
-            var command = new SqlCommand(sql, _connection);
+
+            var connection = Connection;
+            var command = new SqlCommand(sql, connection);
+
             command.Parameters.Add(sqlParameter);
 
             var reader = command.ExecuteReader();
