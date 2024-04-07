@@ -137,7 +137,7 @@ namespace BookStoreManager
 
         private void Order_Click(object sender, RoutedEventArgs e)
         {
-            var orderWindow = new ManageOrder();
+            var orderWindow = new ManageOrderWindow();
             orderWindow.Show();
         }
 

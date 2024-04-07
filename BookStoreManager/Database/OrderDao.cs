@@ -30,29 +30,9 @@ namespace BookStoreManager.Database
         /// Đọc dữ liệu đơn hàng
         /// </summary>
         /// <returns>Danh sách đơn hàng</returns>
-        public List<OrderModel> getOrders()
-        {
-            var sqlOrder = "SELECT * FROM ORDER_LIST";
-            var commandOrder = new SqlCommand(sqlOrder, _connection);
-            var reader = commandOrder.ExecuteReader();
 
-            while (reader.Read())
-            {
-                var newOrder = new OrderModel()
-                {
-                    OrderId = (int)reader["ORDER_ID"],
-                    CustomerName = (string)reader["CUSTOMER_NAME"],
-                    OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
-                    Price = (int)reader["PRICE"]
-                };
-                OrderInfo.Add(newOrder);
-            }
-            OrderInfo = OrderInfo.OrderBy(o => o.OrderDate).ToList();
 
-            return OrderInfo;
-        }
-
-        public BindingList<OrderModel> GetAllOrders()
+        public BindingList<OrderModel> GetAllOrdersFromDB()
         {
             BindingList<OrderModel> orders = new BindingList<OrderModel>();
 
@@ -79,7 +59,7 @@ namespace BookStoreManager.Database
             return orders;
         }
 
-        public Tuple<BindingList<OrderModel>, int, int> GetAllPaging(int page, int rowsPerPage, DateTime? fromDate, DateTime? toDate)
+        public Tuple<BindingList<OrderModel>, int, int> GetAllPagingFromDB(int page, int rowsPerPage, DateTime? fromDate, DateTime? toDate)
         {
             BindingList<OrderModel> orders = new BindingList<OrderModel>();
             int totalItems = -1;
@@ -144,25 +124,29 @@ namespace BookStoreManager.Database
             return new Tuple<BindingList<OrderModel>, int, int>(orders, totalItems, totalPages);
         }
 
-        public void DeleteOrder(int orderID)
+        public void DeleteOrderFromDB(int orderId)
         {
-            var sql = "delete from ORDER_LIST where ORDER_ID = @OrderID";
-            SqlCommand sqlCommand = new SqlCommand(sql, _connection);
-
-            sqlCommand.Parameters.AddWithValue("@OrderID", orderID);
-
-            try
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                sqlCommand.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine($"Deleted {orderID} Successfully");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Deleted {orderID} Fail: " + ex.Message);
+                connection.Open();
+                string deleteOrderItemSql = "DELETE FROM ORDER_ITEM WHERE ORDER_ID = @OrderId";
+                string deleteOrderListSql = "DELETE FROM ORDER_LIST WHERE ORDER_ID = @OrderId";
+
+                using (SqlCommand deleteOrderItemCommand = new SqlCommand(deleteOrderItemSql, connection))
+                {
+                    deleteOrderItemCommand.Parameters.AddWithValue("@OrderId", orderId);
+                    deleteOrderItemCommand.ExecuteNonQuery();
+                }
+
+                using (SqlCommand deleteOrderListCommand = new SqlCommand(deleteOrderListSql, connection))
+                {
+                    deleteOrderListCommand.Parameters.AddWithValue("@OrderId", orderId);
+                    deleteOrderListCommand.ExecuteNonQuery();
+                }
             }
         }
 
-        public void AddOrder(string customerName, DateTime orderDate)
+        public void AddOrderToDB(string customerName, DateTime orderDate)
         {
             string query = "INSERT INTO ORDER_LIST (CUSTOMER_NAME, ORDER_DATE) VALUES (@CustomerName, @OrderDate)";
 
@@ -185,7 +169,7 @@ namespace BookStoreManager.Database
 
 
 
-        public OrderModel GetOrderById(int orderId)
+        public OrderModel GetOrderByIdFromDB(int orderId)
         {
             string query = "SELECT ORDER_ID, CUSTOMER_NAME, ORDER_DATE, PRICE FROM ORDER_LIST WHERE ORDER_ID = @OrderId";
 
@@ -212,7 +196,7 @@ namespace BookStoreManager.Database
             return null; // Return null if order with the provided orderId is not found
         }
 
-        public void UpdateOrder(int orderId, string newCustomerName, DateTime newOrderDate, int newPrice)
+        public void UpdateOrderToDB(int orderId, string newCustomerName, DateTime newOrderDate, int newPrice)
         {
             try
             {

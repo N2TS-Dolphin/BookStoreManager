@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BookStoreManager.Database
 {
@@ -238,8 +239,10 @@ namespace BookStoreManager.Database
             connection.Close();
         }
 
-        public BindingList<BookModel> getBooksByCategory(int categoryId)
+        public static BindingList<BookModel> GetBooksByCategoryFromDB(int categoryId)
         {
+            var connection = Connection;
+            connection.Open();
             var sql = "SELECT B.* FROM BOOK AS B " +
                       "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
                       "WHERE BC.CATEGORY_ID = @CategoryID";
@@ -247,7 +250,10 @@ namespace BookStoreManager.Database
             var sqlParameter = new SqlParameter("@CategoryID", System.Data.SqlDbType.Int);
             sqlParameter.Value = categoryId;
 
-            var command = new SqlCommand(sql, _connection);
+
+            
+            var command = new SqlCommand(sql, connection);
+
             command.Parameters.Add(sqlParameter);
 
             var reader = command.ExecuteReader();
@@ -273,6 +279,7 @@ namespace BookStoreManager.Database
                 list.Add(book);
             }
             reader.Close();
+            connection.Close();
             return list;
         }
         public static void ImportBooksFromExcelToDB(BindingList<BookModel> books)

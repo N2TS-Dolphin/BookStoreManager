@@ -1,6 +1,7 @@
 ﻿using BookStoreManager.Database;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,17 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BookStoreManager
 {
     public class BookShellBus
     {
-        public int CurrentPage {  get; set; }
+        public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
-        public string Search {  get; set; }
+        public string Search { get; set; }
         public string Category { get; set; }
-        
-        public BookShellBus() {
+
+        public BookShellBus()
+        {
             CurrentPage = 1; TotalPages = 0;
             Search = ""; Category = "All"; 
         }
@@ -185,6 +188,16 @@ namespace BookStoreManager
         {
             BindingList<CategoryModel> result = [.. categories];
             return result;
+
+            public BindingList<BookModel> GetBooksByCategory(int categoryId)
+            {
+                return BookDao.GetBooksByCategoryFromDB(categoryId);
+            }
+
+            public BookModel GetBookDetail(int id)
+            {
+                return BookDao.GetBookDetailFromDB(id);
+            }
         }
     }
 }
