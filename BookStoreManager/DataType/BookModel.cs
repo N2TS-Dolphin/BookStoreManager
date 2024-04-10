@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BookStoreManager
 {
-    public class BookModel: INotifyPropertyChanged
+    public class BookModel: INotifyPropertyChanged, ICloneable
     {
         public int BookID{ get; set; }
         public string BookName { get; set; }
@@ -17,11 +20,19 @@ namespace BookStoreManager
         public string Author { get; set; }
         public string Image { get; set; }
         public BindingList<CategoryModel>? Category { get; set; }
-        public BookModel() { }
-        public BookModel(int bookID, string bookName, string image)
+        public BookModel() {
+            BookID = -1;
+            BookName = "";
+            Price = 0;
+            Category = new BindingList<CategoryModel>();
+            Author = "";
+            Image = "";
+        }
+        public BookModel(string bookName, string author, int price, string image)
         {
-            BookID = bookID;
             BookName = bookName;
+            Author = author;
+            Price = price;
             Image = image;
         }
         public BookModel(int bookID, string bookName, int price, string author, string image)
@@ -32,17 +43,27 @@ namespace BookStoreManager
             Author = author;
             Image = image;
         }
-        public BookModel clearBook()
+        public BookModel ClearBook()
         {
             BookID = -1;
             BookName = "";
             Price = 0;
             Author = "";
             Image = "";
-            Category = null;
+            Category.Clear();
             return this;
         }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
+    }
+    public class ImageItem
+    {
+        public string ImageName { get; set; }
     }
     class CreditToVNDConverter : IValueConverter
     {
@@ -55,9 +76,18 @@ namespace BookStoreManager
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            string strValue = value as string;
+            if (string.IsNullOrWhiteSpace(strValue))
+                return 0; // or throw exception if empty string is not allowed
+
+            string cleanedValue = Regex.Replace(strValue, @"[^\d]", "");
+            if (int.TryParse(cleanedValue, out int result))
+                return result;
+            else
+                return 0;
         }
     }
+ 
     class CategoryToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -78,5 +108,17 @@ namespace BookStoreManager
             throw new NotImplementedException();
         }
     }
-
+    class ImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string name = (string)value;
+            string result = $"/Image/{name}";
+            return result;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

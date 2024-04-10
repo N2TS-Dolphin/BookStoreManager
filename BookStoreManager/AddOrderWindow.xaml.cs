@@ -1,4 +1,5 @@
 ﻿using BookStoreManager.Database;
+using BookStoreManager.Process;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,20 +39,16 @@ namespace BookStoreManager
                 return;
             }
 
-            // Call a method to add the order to the database
-            AddOrderToDatabase(customerName, orderDate.Value);
+            // Create an instance of OrderBus
+            OrderBus orderBus = new OrderBus();
+
+            // Call the AddOrder method on the OrderBus instance
+            orderBus.AddOrder(customerName, orderDate.Value);
 
             MessageBox.Show("New Order added successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             // Close the AddOrderWindow
             this.Close();
-        }
-
-        private void AddOrderToDatabase(string customerName, DateTime orderDate)
-        {
-            OrderDao orderDao = new OrderDao();
-
-            orderDao.AddOrder(customerName, orderDate);
         }
     }
 }

@@ -136,27 +136,27 @@ VALUES  ('Novel'),					--1--
 		('Dark Fantasy'),			--44--
 		('Econimics')				--45--
 
-INSERT BOOK(BOOK_NAME, PRICE, AUTHOR)
-VALUES  (N'Đắc nhân tâm', 86000, N'Dale Carnegie'),							--1--
-		(N'One Piece', 21250, N'Eiichiro Oda'),								--2--
-		(N'Attack On Titan', 144400, N'Isayama Hajime'),					--3--
-		(N'Naruto', 21500, N'Masashi Kishimoto'),							--4--
-		(N'Cardcaptor Sakura', 25000, N'CLAMP'),							--5--
-		(N'Cardcaptor Sakura: Clear Card-hen', 175750, N'CLAMP'),			--6--
-		(N'Trốn lên mái nhà để khóc', 72200, N'Lam'),						--7--
-		(N'Frieren - Pháp sư tiễn táng', 42750, N'Yamada Kanehito'),		--8--
-		(N'Thám tử lừng danh Conan', 23750, N'Gosho Aoyama'),				--9--
-		(N'Dược sư tự sự', 44650, N'Natsu Hyuuga'),							--10--
-		(N'Nhà giả kim', 61620, N'Paulo Coelho'),							--11--
-		(N'7 thói quen để thành đạt', 96000, N'Stephen R Covey'),			--12--
-		(N'Jujutsu Kaisen', 58500, N'Akutami Gege'),						--13--
-		(N'13 nguyên tắc nghĩ giàu làm giàu', 100080, N'Napoleon Hill'),	--14--
-		(N'Bí quyết gây dựng cơ nghiệp bạc tỷ', 116000, N'Adam Khoo'),		--15--
-		(N'Những tấm lòng cao cả', 135000, N'Edmondo De Amicis'),			--16--
-		(N'Những cuộc phiêu lưu của Pinocchio', 162000, N'Carlo Collodi'),	--17--
-		(N'Đồi thỏ', 145000, N'Richard Adams'),								--18--
-		(N'Combo Harry Potter (7 cuốn)', 1540000, N'J.K.Rowling'),			--19--
-		(N'Trên đường băng', 80000, N'Tony Buổi Sáng')						--20--
+INSERT BOOK(BOOK_NAME, PRICE, AUTHOR, IMG)
+VALUES  (N'Đắc nhân tâm', 86000, N'Dale Carnegie', N'DacNhanTam.jpg'),									--1--
+		(N'One Piece', 21250, N'Eiichiro Oda', N'OnePiece.jpg'),										--2--
+		(N'Attack On Titan', 144400, N'Isayama Hajime', N'AttackOnTitan.jpg'),							--3--
+		(N'Naruto', 21500, N'Masashi Kishimoto', N'Naruto.jpg'),										--4--
+		(N'Cardcaptor Sakura', 25000, N'CLAMP', N'CardcaptorSakura.jpg'),								--5--
+		(N'Cardcaptor Sakura: Clear Card-hen', 175750, N'CLAMP', N'CardcaptorSakuraClearCard-hen.jpg'),	--6--
+		(N'Trốn lên mái nhà để khóc', 72200, N'Lam', N'TronLenMaiNhaDeKhoc.jpg'),						--7--
+		(N'Frieren - Pháp sư tiễn táng', 42750, N'Yamada Kanehito', N'Frieren.jpg'),					--8--
+		(N'Thám tử lừng danh Conan', 23750, N'Gosho Aoyama', N'Conan.jpg'),								--9--
+		(N'Dược sư tự sự', 44650, N'Natsu Hyuuga', N'KusuriyaNoHitorigoto.jpg'),						--10--
+		(N'Nhà giả kim', 61620, N'Paulo Coelho', N'NhaGiaKim.jpg'),										--11--
+		(N'7 thói quen để thành đạt', 96000, N'Stephen R Covey', N''),									--12--
+		(N'Jujutsu Kaisen', 58500, N'Akutami Gege', N''),												--13--
+		(N'13 nguyên tắc nghĩ giàu làm giàu', 100080, N'Napoleon Hill', N''),							--14--
+		(N'Bí quyết gây dựng cơ nghiệp bạc tỷ', 116000, N'Adam Khoo', N''),								--15--
+		(N'Những tấm lòng cao cả', 135000, N'Edmondo De Amicis', N''),									--16--
+		(N'Những cuộc phiêu lưu của Pinocchio', 162000, N'Carlo Collodi', N''),							--17--
+		(N'Đồi thỏ', 145000, N'Richard Adams', N''),													--18--
+		(N'Combo Harry Potter (7 cuốn)', 1540000, N'J.K.Rowling', N''),									--19--
+		(N'Trên đường băng', 80000, N'Tony Buổi Sáng', N'')												--20--
 
 INSERT BOOK_CATEGORY(BOOK_ID, CATEGORY_ID)
 VALUES  (1, 22),

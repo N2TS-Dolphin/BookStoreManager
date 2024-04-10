@@ -5,90 +5,217 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="BookWindow" Height="450" Width="800"
+        Title="BookWindow" Height="730" Width="1000"
         Loaded="Window_Loaded">
     <Window.Resources>
-        <local:CreditToVNDConverter x:Key="VndConverter"/>
-        <local:CategoryToStringConverter x:Key="CategoryConverter"/>
+        <ResourceDictionary>
+            <local:CreditToVNDConverter x:Key="VndConverter"/>
+            <local:CategoryToStringConverter x:Key="CategoryConverter"/>
+            <local:ImageConverter x:Key="ImageConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="BookResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,5,0">
-            <Button x:Name="addCategoryButton" Content="Add" FontSize="10" Width="45" Height="25" Click="addCategoryButton_Click" Margin="0,0,5,0"/>
-            <Button x:Name="updateCategoryButton" Content="Update" FontSize="10" Width="45" Height="25" Click="updateCategoryButton_Click"/>
-            <Button x:Name="deteleCategoryButton" Content="Detele" FontSize="10" Width="45" Height="25" Click="deteleCategoryButton_Click" Margin="5,0,0,0"/>
+        <Border Background="#006070" Grid.RowSpan="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="refreshButton" Content="Tải lại trang" Style="{StaticResource WhiteButtonStyle}" 
+                        FontSize="20" Grid.Row="0" Grid.Column="0" Width="160" Height="40" Click="refreshButton_Click"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" 
+                            HorizontalAlignment="Center" Margin="10,0,5,0">
+                    <Button x:Name="addCategoryButton" Content="Add" Style="{StaticResource OtherButtonStyle}" 
+                            Background="LightGreen" FontSize="10" Width="45" Height="25" Click="addCategoryButton_Click" Margin="0,0,5,0"/>
+                    <Button x:Name="updateCategoryButton" Content="Update" Style="{StaticResource OtherButtonStyle}" 
+                            Background="Yellow" FontSize="10" Width="45" Height="25" Click="updateCategoryButton_Click"/>
+                    <Button x:Name="deteleCategoryButton" Content="Detele" Style="{StaticResource OtherButtonStyle}" 
+                            Background="Red" FontSize="10" Width="45" Height="25" Click="deteleCategoryButton_Click" Margin="5,0,0,0"/>
+                </StackPanel>
+                <ListView x:Name="categoryListView" Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Background="#006070"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="categoryListView_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding CategoryName}" Foreground="White" FontWeight="DemiBold" 
+                                           FontSize="15" Margin="10" TextWrapping="Wrap"/>
+                                <Line Stroke="White" StrokeThickness="1" X1="0" X2="200"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+        <Border Style="{StaticResource InfoBorderStyle}" Width="480" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
+                Padding="2,0,2,0" Margin="10,0,0,0" HorizontalAlignment="Left">
+            <Grid>
+                <TextBox x:Name="tboxSearch" Style="{StaticResource InfoTextBoxStyle}" Width="390" Padding="10,7,0,0" 
+                         Grid.Column="0" HorizontalAlignment="Left">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <Button x:Name="searchButton" Style="{StaticResource WhiteButtonStyle}" Width="80" Content="Search" 
+                        Margin="0,2,0,2" HorizontalAlignment="Right" Click="searchButton_click"/>
+            </Grid>
+        </Border>
+        <Border Style="{StaticResource InfoBorderStyle}" Width="300" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                Margin="10,0,0,0" HorizontalAlignment="Left" Padding="2,0,2,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="priceFromTB" Style="{StaticResource InfoTextBoxStyle}" Width="100" Padding="10,7,0,0" 
+                             Grid.Column="0" HorizontalAlignment="Left">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <TextBlock Text=":" FontSize="15" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox x:Name="priceToTB" Style="{StaticResource InfoTextBoxStyle}" Width="100" Padding="10,7,0,0" 
+                             Grid.Column="0" HorizontalAlignment="Left">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </StackPanel>
+                <Button x:Name="priceButton" Style="{StaticResource WhiteButtonStyle}" Width="80" Content="Lọc giá" 
+                        Margin="0,2,0,2" HorizontalAlignment="Right" Click="priceButton_Click"/>
+            </Grid>
+        </Border>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
+            <Border BorderBrush="#006070" BorderThickness="3" CornerRadius="5" Width="85" Height="40" Margin="0,0,5,0">
+                <Button x:Name="execlButton" Content="Excel" Style="{StaticResource OtherButtonStyle}" Background="White"
+                    Width="80" Height="35" Click="execlButton_Click"/>
+            </Border>
+            <Border BorderBrush="#006070" BorderThickness="3" CornerRadius="5" Width="85" Height="40" Grid.Row="1"
+                    Grid.Column="2" HorizontalAlignment="Right">
+                <Button x:Name="addButton" Content="Thêm" Style="{StaticResource OtherButtonStyle}" Background="LightGreen"
+                    Width="80" Height="35" Click="addButton_Click"/>
+            </Border>
         </StackPanel>
-        <ListView x:Name="categoryListView" Grid.Row="2" Grid.Column="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                  Margin="10,0,5,0" SelectionChanged="categoryListView_SelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding CategoryName}" FontSize="10" Margin="10"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5">
-            <TextBox x:Name="tboxSearch" FontSize="15" Width="325"/>
-            <Button x:Name="searchButton" Content="Search" FontSize="15" Padding="5,0,5,0" Click="searchButton_click"/>
-        </StackPanel>
-        <ListView x:Name="bookListView" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" 
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="20"
-                  SelectionChanged="bookListView_SelectionChanged">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Margin="0" />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical" Width="90" Height="140" Margin="5">
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <Image Source="{Binding Image}" Width="90" Height="120"/>
-                        </Border>
-                        <TextBlock Text="{Binding BookName}" FontSize="10" TextWrapping="NoWrap" Margin="5" 
-                                   TextAlignment="Center" VerticalAlignment="Center"/>
+
+        <Border Style="{StaticResource CategoryBorderStyle}" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" 
+                Padding="20,0,20,0" Margin="10,0,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <ListView x:Name="bookListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="20" 
+                          Margin="0,20,0,0" Background="White" SelectionChanged="bookListView_SelectionChanged">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="0" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Width="100" Height="140" Margin="5">
+                                <Image Source="{Binding Image, Converter={StaticResource ImageConverter}}" Width="auto" Height="120"/>
+                                <TextBlock Text="{Binding BookName}" FontSize="10" TextWrapping="NoWrap" Margin="5" 
+                                    TextAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock x:Name="txtItemsCount" Text="Kết quả: 30" Foreground="White" FontSize="20" FontWeight="DemiBold" 
+                           Grid.Row="1" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <Border Background="White" CornerRadius="20" Grid.Row="1" Height="40" VerticalAlignment="Center" 
+                        HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="prevButton" Content="Prev" Style="{StaticResource GreenButtonStyle}" Width="55" 
+                                Height="35" Margin="3,0,0,0" Click="prevButton_click"/>
+                        <TextBlock x:Name="txtItemPage" Text="1/1" FontSize="20" FontWeight="DemiBold" Foreground="#006070" 
+                                   Width="50" TextAlignment="Center" VerticalAlignment="Center"/>
+                        <Button x:Name="nextButton" Content="Next" Style="{StaticResource GreenButtonStyle}" Width="55" 
+                                Height="35" Margin="0,0,3,0" Click="nextButton_click"/>
                     </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <TextBlock x:Name="txtItemsCount" Text="Item count: 30" FontSize="15" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right">
-            <Button x:Name="prevButton" Content="Prev" FontSize="15" Width="55" Height="25" Margin="5" Click="prevButton_click"/>
-            <TextBlock x:Name="txtItemPage" Text="1/1" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button x:Name="nextButton" Content="Next" FontSize="15" Width="55" Height="25" Margin="5" Click="nextButton_click"/>
-        </StackPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2" Grid.Column="3">
-            <StackPanel x:Name="bookDetail" Orientation="Vertical">
-                <Border BorderBrush="Black" BorderThickness="1" Width="140" Height="190" Margin="20,0,20,20">
-                    <Image x:Name="bookImg" Source="{Binding Image}" Width="140" Height="190"/>
                 </Border>
-                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
-                    <Run Text="Name: "/><Run x:Name="txtBookName" Text="{Binding BookName}"/>
-                </TextBlock>
-                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
-                    <Run Text="Author: "/><Run x:Name="txtBookAuthor" Text="{Binding Author}"/>
-                </TextBlock>
-                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
-                    <Run Text="Price: "/><Run x:Name="txtBookPrice" Text="{Binding Price, Converter={StaticResource VndConverter}}"/>
-                </TextBlock>
-                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="5">
-                    <Run Text="Category: "/><Run x:Name="txtBookCategory" Text="{Binding Category, Converter={StaticResource CategoryConverter}}"/>
-                </TextBlock>
-            </StackPanel>
-        </ScrollViewer>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button x:Name="updateBookButton" Content="Update" FontSize="15" Width="55" Height="25" Click="updateBookButton_Click" Margin="0,0,5,0"/>
-            <Button x:Name="deteleBookButton" Content="Detele" FontSize="15" Width="55" Height="25" Click="deteleBookButton_Click" Margin="5,0,0,0"/>
-        </StackPanel>
+            </Grid>
+        </Border>
+        <Border Style="{StaticResource CategoryBorderStyle}" Grid.Row="2" Grid.Column="3" Grid.RowSpan="2" Margin="10,0,10,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10,20,10,0">
+                    <StackPanel x:Name="bookDetail" Orientation="Vertical">
+                        <Image x:Name="bookImg" Source="{Binding Image, Converter={StaticResource ImageConverter}}" 
+                               RenderOptions.BitmapScalingMode="HighQuality" 
+                               Width="Auto" Height="271" Margin="20,0,20,5"/>
+                        <TextBlock x:Name="txtBookName" d:Text="Book name" Text="{Binding BookName}" FontSize="20" 
+                                   FontWeight="DemiBold" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" 
+                                   HorizontalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="txtBookAuthor" d:Text="Author" Text="{Binding Author}" FontSize="10" 
+                                   FontWeight="DemiBold" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" 
+                                   HorizontalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="txtBookPrice" d:Text="200.000 VNĐ" 
+                                   Text="{Binding Price, Converter={StaticResource VndConverter}}" FontSize="15" 
+                                   FontWeight="DemiBold" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" 
+                                   HorizontalAlignment="Center" Margin="0,0,5,0"/>
+                        <ListView x:Name="lvCategory" Height="90" VerticalAlignment="Bottom" Background="White"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListView.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Margin="0" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#006070" CornerRadius="10" Height="20">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="White" 
+                                                       TextAlignment="Center" Padding="10,0,10,0" TextWrapping="NoWrap"
+                                                       d:Text="Action" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </ScrollViewer>
+                <StackPanel Orientation="Horizontal" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button x:Name="upadteBookButton" Content="Chỉnh sửa" Style="{StaticResource WhiteButtonStyle}" 
+                            Width="90" Height="35"  Margin="0,0,5,0" Click="updateBookButton_Click"/>
+                    <Button x:Name="deleteBookButton" Content="Xóa bỏ" Style="{StaticResource WhiteButtonStyle}" 
+                            Width="90" Height="35"  Margin="5,0,0,0" Click="deteleBookButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

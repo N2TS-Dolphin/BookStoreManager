@@ -10,8 +10,13 @@ namespace BookStoreManager.Database
 {
     public class ProductRankingDao
     {
+<<<<<<< HEAD
         public List<ProductRankingModel> data = new List<ProductRankingModel>();
         private string _connectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;";
+=======
+        public List<ProductRankingModel> Ranking = new List<ProductRankingModel>();
+        private string _connectionString = DBConfig.GetConnectionString();
+>>>>>>> master
 
         public List<ProductRankingModel> getRankingList()
         {
