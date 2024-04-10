@@ -28,11 +28,6 @@ namespace BookStoreManager
         private OrderBus orderBus;
         BindingList<OrderModel> orders = new BindingList<OrderModel>();
 
-        int _currentPage = 1;
-        int _totalPages = -1;
-        DateTime? fromDate = null;
-        DateTime? toDate = null;
-
         public ManageOrderWindow()
         {
             InitializeComponent();
@@ -41,29 +36,50 @@ namespace BookStoreManager
             LoadPage();
         }
 
-        private void LoadAllOrders()
+        private void LoadPage()
         {
-            // Call the GetAllOrders method from OrderBus to retrieve orders
-            BindingList<OrderModel> orders = orderBus.GetAllOrders();
+            var (items, totalItems, totalPages, current) = orderBus.GetAllPaging(orderBus.FromDate, orderBus.ToDate);
+            orders = items;
+            orderBus.TotalPages = totalPages;
 
-            // Bind the retrieved orders to the DataGrid
+         
+
+            if (totalPages == 0)
+            {
+                OrderDataGrid.ItemsSource = orders;
+                txtItemPage.Text = $"{current}/1";
+                return;
+            }
             OrderDataGrid.ItemsSource = orders;
+            txtItemPage.Text = $"{current}/{totalPages}";
+        }
+
+        private void PrevBtn_Click(object sender, RoutedEventArgs e)
+        {
+          
+            orderBus.MoveToPreviousPage();
+            LoadPage();
+        }
+
+        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        {
+          
+            orderBus.MoveToNextPage();
+            LoadPage();
         }
 
         private void FilterBtn_Click(object sender, RoutedEventArgs e)
         {
-            fromDate = FromDatePicker.SelectedDate;
-            toDate = ToDatePicker.SelectedDate;
-            _currentPage = 1;
-
-            LoadPage(fromDate, toDate);
+            orderBus.FromDate = FromDatePicker.SelectedDate;
+            orderBus.ToDate = ToDatePicker.SelectedDate;
+            LoadPage();
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             AddOrderWindow addOrderWindow = new AddOrderWindow();
             addOrderWindow.ShowDialog();
-            LoadPage(fromDate, toDate);
+            LoadPage();
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
@@ -77,7 +93,7 @@ namespace BookStoreManager
                 var result = orderDetailWindow.ShowDialog();
                 if (result == true)
                 {
-                    LoadPage(fromDate, toDate);
+                    LoadPage();
                 }
             }
             else
@@ -97,25 +113,13 @@ namespace BookStoreManager
                 {
                     int orderId = selectedOrder.OrderId;
                     orderBus.DeleteOrder(orderId);
-                    LoadPage(fromDate, toDate);
+                    LoadPage();
                 }
             }
             else
             {
                 MessageBox.Show("Please select an order to delete.");
             }
-        }
-
-        private void PrevBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _currentPage = (_currentPage-- <= 1) ? 1 : _currentPage;
-            LoadPage(fromDate, toDate);
-        }
-
-        private void NextBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _currentPage = (_currentPage++ >= _totalPages) ? _totalPages : _currentPage;
-            LoadPage(fromDate, toDate);
         }
 
         private void DetailBtn_Click(object sender, RoutedEventArgs e)
@@ -127,7 +131,7 @@ namespace BookStoreManager
 
                 OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
                 orderDetailWindow.ShowDialog();
-                LoadPage(fromDate, toDate);
+                LoadPage();
             }
             else
             {
@@ -135,27 +139,12 @@ namespace BookStoreManager
             }
         }
 
-        private void LoadPage(DateTime? fromDate = null, DateTime? toDate = null)
-        {
-            var (items, totalItems, totalPages) = orderBus.GetAllPaging(_currentPage, 10, fromDate, toDate);
-            orders = items;
-            _totalPages = totalPages;
-            if (totalPages == 0)
-            {
-                OrderDataGrid.ItemsSource = orders;
-                txtItemPage.Text = $"{_currentPage}/1";
-                return;
-            }
-            OrderDataGrid.ItemsSource = orders;
-            txtItemPage.Text = $"{_currentPage}/{totalPages}";
-        }
-
         private void ReloadPage(object sender, MouseButtonEventArgs e)
         {
             FromDatePicker.SelectedDate = null;
             ToDatePicker.SelectedDate = null;
-            fromDate = null;
-            toDate = null;
+            orderBus.FromDate = null;
+            orderBus.ToDate = null;
             LoadPage();
         }
     }

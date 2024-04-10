@@ -15,6 +15,7 @@ namespace BookStoreManager.Database
 
         public List<ProductRankingModel> getRankingList()
         {
+            List<ProductRankingModel> data = new List<ProductRankingModel>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();

@@ -5,16 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="AddBookOrderDetailWindow" Height="500" Width="550"
+        Title="AddBookOrderDetailWindow" Height="500" Width="600"
         Loaded="Window_Loaded">
 
     <Window.Resources>
         <local:PriceConverter x:Key="VndConverter"/>
+        <local:ImageConverter x:Key="ImageConverter"/>
     </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1.3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -30,18 +31,24 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-
-        <ListView Grid.Row="1" Grid.Column="0" x:Name="BookListView" SelectionChanged="BookListView_SelectionChanged" Height="400" Margin="10,5" Width="250">
+        
+        <ListView Grid.Row="1" Grid.Column="0" x:Name="BookListView" SelectionChanged="BookListView_SelectionChanged" Height="400" Margin="10,5" Width="Auto">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock>
-                        <Run Text="{Binding BookName}" FontWeight="DemiBold"/>
-                        <LineBreak/>
-                        <Run Text="{Binding Price,Converter={StaticResource VndConverter}}" FontStyle="Italic"/>
-                       
-                        <LineBreak/>
-                    </TextBlock>
-                    </DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{Binding Image, Converter={StaticResource ImageConverter}}" Width="120" Height="120"/>
+
+                        <StackPanel Grid.Column="1" Orientation="Vertical" MaxWidth="120">
+                            <TextBlock Text="{Binding BookName}" FontWeight="DemiBold" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding Price, Converter={StaticResource VndConverter}}" FontStyle="Italic"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
