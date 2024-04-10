@@ -105,38 +105,43 @@
                 </Grid>
             </StackPanel>
 
-            <DataGrid x:Name="RankingTable" Height="200" CanUserAddRows="False" AutoGenerateColumns="False" Sorting="RankingTable_Sorting">
+            <DataGrid x:Name="RankingTable" ItemsSource="{Binding collectionView}" CanUserSortColumns="True" CanUserResizeColumns="True" CanUserResizeRows="True" IsReadOnly="True" AutoGenerateColumns="False" Sorting="RankingTable_Sorting">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="ID">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Id}" FontSize="10" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Id}" FontSize="16" FontWeight="Bold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Tên sản phẩm">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Name}" FontSize="10" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Số lượng" SortMemberPath="Quantity">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Quantity}" FontSize="10" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Quantity}" FontSize="16" FontWeight="Bold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Doanh thu" SortMemberPath="Revenue">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Revenue}" FontSize="10" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding RevenueFormatted}" FontSize="16" FontWeight="Bold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="prevButton" Content="Prev" FontSize="15" Width="55" Height="25" Margin="5" Click="prevButton_click"/>
+                <TextBlock x:Name="txtItemPage" Text="1/1" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Button x:Name="nextButton" Content="Next" FontSize="15" Width="55" Height="25" Margin="5" Click="nextButton_click"/>
+            </StackPanel>
 
         </StackPanel>
 
