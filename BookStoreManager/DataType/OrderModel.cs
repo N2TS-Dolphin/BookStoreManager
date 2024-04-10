@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace BookStoreManager
 {
-    class OrderModel : INotifyPropertyChanged
+    public class OrderModel : INotifyPropertyChanged
     {
         public int OrderId { get; set; }
         public string CustomerName { get; set; }

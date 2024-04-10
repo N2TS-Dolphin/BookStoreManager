@@ -1,5 +1,6 @@
 ﻿using BookStoreManager.Database;
 using BookStoreManager.DataType;
+using BookStoreManager.Process;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,11 +21,11 @@ using System.Windows.Shapes;
 namespace BookStoreManager
 {
     /// <summary>
-    /// Interaction logic for ManageOrder.xaml
+    /// Interaction logic for ManageOrderWindow.xaml
     /// </summary>
-    public partial class ManageOrder : Window
+    public partial class ManageOrderWindow : Window
     {
-        private OrderDao _orderDao;
+        private OrderBus orderBus;
         BindingList<OrderModel> orders = new BindingList<OrderModel>();
 
         int _currentPage = 1;
@@ -32,18 +33,18 @@ namespace BookStoreManager
         DateTime? fromDate = null;
         DateTime? toDate = null;
 
-        public ManageOrder()
+        public ManageOrderWindow()
         {
             InitializeComponent();
             this.Language = XmlLanguage.GetLanguage("vi-VN");
-            _orderDao = new OrderDao();
+            orderBus = new OrderBus();
             LoadPage();
         }
 
         private void LoadAllOrders()
         {
-            // Call the GetOrders method from OrderDao to retrieve orders
-            BindingList<OrderModel> orders = _orderDao.GetAllOrders();
+            // Call the GetAllOrders method from OrderBus to retrieve orders
+            BindingList<OrderModel> orders = orderBus.GetAllOrders();
 
             // Bind the retrieved orders to the DataGrid
             OrderDataGrid.ItemsSource = orders;
@@ -65,7 +66,6 @@ namespace BookStoreManager
             LoadPage(fromDate, toDate);
         }
 
-
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
             if (OrderDataGrid.SelectedItem != null)
@@ -73,17 +73,12 @@ namespace BookStoreManager
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
                 int orderId = selectedOrder.OrderId;
 
-               
                 OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
-                var result=orderDetailWindow.ShowDialog();
-                if (result == true) {
+                var result = orderDetailWindow.ShowDialog();
+                if (result == true)
+                {
                     LoadPage(fromDate, toDate);
                 }
-                else
-                {
-                    //Do nothing
-                }
-                
             }
             else
             {
@@ -95,27 +90,19 @@ namespace BookStoreManager
         {
             if (OrderDataGrid.SelectedItem != null)
             {
-
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
-
-
-                var res = System.Windows.MessageBox.Show($"Are you sure to delete this order: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
+                var res = MessageBox.Show($"Are you sure to delete this order: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (res == MessageBoxResult.Yes)
                 {
-
                     int orderId = selectedOrder.OrderId;
-
-                    _orderDao.DeleteOrder(orderId);
-
+                    orderBus.DeleteOrder(orderId);
                     LoadPage(fromDate, toDate);
                 }
             }
             else
             {
-                // If no item is selected, display a message or handle it accordingly
-                System.Windows.MessageBox.Show("Please select an order to delete.");
+                MessageBox.Show("Please select an order to delete.");
             }
         }
 
@@ -131,21 +118,12 @@ namespace BookStoreManager
             LoadPage(fromDate, toDate);
         }
 
-
-        private TargetType GetParent<TargetType>(DependencyObject o) where TargetType : DependencyObject
-        {
-            if (o == null || o is TargetType) return (TargetType)o;
-            return GetParent<TargetType>(VisualTreeHelper.GetParent(o));
-        }
         private void DetailBtn_Click(object sender, RoutedEventArgs e)
         {
-            var row = GetParent<DataGridRow>((Button)sender);
-            int index = OrderDataGrid.Items.IndexOf(row.Item);
-            if (index != -1)
+            if (OrderDataGrid.SelectedItem != null)
             {
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
                 int orderId = selectedOrder.OrderId;
-
 
                 OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
                 orderDetailWindow.ShowDialog();
@@ -153,16 +131,13 @@ namespace BookStoreManager
             }
             else
             {
-                // If no order is selected, display a message or handle it accordingly
-                MessageBox.Show("Please select an order to update.");
+                MessageBox.Show("Please select an order to view details.");
             }
         }
 
-
         private void LoadPage(DateTime? fromDate = null, DateTime? toDate = null)
         {
-
-            var (items, totalItems, totalPages) = _orderDao.GetAllPaging(_currentPage, 10, fromDate, toDate);
+            var (items, totalItems, totalPages) = orderBus.GetAllPaging(_currentPage, 10, fromDate, toDate);
             orders = items;
             _totalPages = totalPages;
             if (totalPages == 0)
@@ -175,7 +150,6 @@ namespace BookStoreManager
             txtItemPage.Text = $"{_currentPage}/{totalPages}";
         }
 
-
         private void ReloadPage(object sender, MouseButtonEventArgs e)
         {
             FromDatePicker.SelectedDate = null;
@@ -186,5 +160,5 @@ namespace BookStoreManager
         }
     }
 
-    
+
 }
