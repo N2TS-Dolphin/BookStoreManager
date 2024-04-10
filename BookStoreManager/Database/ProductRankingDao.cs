@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
         public List<ProductRankingModel> Ranking = new List<ProductRankingModel>();
         private string _connectionString = DBConfig.GetConnectionString();
 
-        public List<ProductRankingModel> rankingList()
+        public List<ProductRankingModel> getRankingList()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -33,15 +33,15 @@ namespace BookStoreManager.Database
                         Revenue = (int)reader["REVENUE"]
                     };
 
-                    Ranking.Add(newRanking);
+                    data.Add(newRanking);
                 }
 
                 reader.Close();
                 connection.Close();
-            }    
-            Ranking = Ranking.OrderBy(x => x.Id).ToList();
+            }
+            data = data.OrderBy(x => x.Id).ToList();
 
-            return Ranking;
+            return data;
         }
     }
 }
