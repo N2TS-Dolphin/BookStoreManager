@@ -139,13 +139,23 @@ namespace BookStoreManager
             }
         }
 
-        private void ReloadPage(object sender, MouseButtonEventArgs e)
+        //private void ReloadPage(object sender, MouseButtonEventArgs e)
+        //{
+        //    FromDatePicker.SelectedDate = null;
+        //    ToDatePicker.SelectedDate = null;
+        //    orderBus.FromDate = null;
+        //    orderBus.ToDate = null;
+        //    LoadPage();
+        //}
+
+        private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
             FromDatePicker.SelectedDate = null;
             ToDatePicker.SelectedDate = null;
             orderBus.FromDate = null;
             orderBus.ToDate = null;
             LoadPage();
+            MessageBox.Show("Refresh Page Successfully");
         }
     }
 

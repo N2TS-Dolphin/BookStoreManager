@@ -5,7 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="AddOrderWindow" Height="450" Width="800">
+        Title="AddOrderWindow" Height="400" Width="500">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="OrderResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15"/>
@@ -22,20 +31,20 @@
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="ADD ORDER" FontWeight="Bold" FontSize="20" Margin="5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" Margin="5" VerticalAlignment="Center">
+        <TextBlock Text="ADD ORDER" Foreground="#006070" FontWeight="Bold" FontSize="20" Margin="5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
             <!-- StackPanel for Customer Name -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Label Width="100" Content="Customer Name:" VerticalAlignment="Center"/>
+                <Label Width="100" Content="Customer Name:" FontWeight="DemiBold" VerticalAlignment="Center"/>
                 <TextBox x:Name="txtCustomerName" Width="200" Margin="5" VerticalAlignment="Center"/>
             </StackPanel>
             <!-- StackPanel for Order Date -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Label Width="100" Content="Order Date:" VerticalAlignment="Center"/>
+                <Label Width="100" Content="Order Date:" FontWeight="DemiBold" VerticalAlignment="Center"/>
                 <DatePicker x:Name="dpOrderDate" Width="200" Margin="5" VerticalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
 
-        <Button x:Name="AddOrderBtn"  Grid.Row="3" Grid.Column="2" Width="55" Height="25" Content="Add" Click="AddOrderBtn_Click"/>
+        <Button x:Name="AddOrderBtn" Style="{StaticResource GreenButtonStyle}"  Grid.Row="3" Grid.Column="2" Width="55" Height="35" Content="Add" Click="AddOrderBtn_Click"/>
     </Grid>
 </Window>
