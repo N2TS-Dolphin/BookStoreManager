@@ -6,9 +6,15 @@
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
         Title="ManageOrderWindow" Height="600" Width="800">
+
     <Window.Resources>
-        <local:PriceConverter x:Key="VndConverter"/>
-        <local:OrderDateConverter x:Key="orderDateConverter"/>
+        <ResourceDictionary>
+            <local:PriceConverter x:Key="VndConverter"/>
+            <local:OrderDateConverter x:Key="orderDateConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="OrderResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
@@ -22,34 +28,37 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="15"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition Height="10*"/>
             <RowDefinition Height="1.2*"/>
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="txtBlockOrder" MouseLeftButtonDown="ReloadPage"  Text="Manage Order" Grid.Row="1" Grid.Column="1" FontWeight="Bold" FontSize="20"></TextBlock>
 
+        <Button x:Name="refreshButton" Content="Refresh Page" Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Left" Margin="10,0,0,0"
+         FontSize="15" Grid.Row="1" Grid.Column="1" Width="100" Height="30" Click="refreshButton_Click"/>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
-            <Button x:Name="AddBtn" Content="Add" FontSize="15" Width="55" Height="25" Click="AddBtn_Click" Margin="0,0,10,0"/>
-            <Button x:Name="UpdateBtn" Content="Update" FontSize="15" Width="55"  Height="25"  Click="UpdateBtn_Click" Margin="0,0,0,0"/>
-            <Button x:Name="DeleteBtn" Content="Delete" FontSize="15" Width="55"  Height="25"  Click="DeleteBtn_Click" Margin="10,0,0,0"/>
+            <Button x:Name="AddBtn" Content="Add"  Style="{StaticResource OtherButtonStyle}" Background="LightGreen" FontSize="12" Width="55" Height="35" Click="AddBtn_Click" Margin="0,0,10,0"/>
+            <Button x:Name="UpdateBtn" Content="Update"  Style="{StaticResource OtherButtonStyle}" Background="Yellow" FontSize="12" Width="55"  Height="35"  Click="UpdateBtn_Click" Margin="0,0,0,0"/>
+            <Button x:Name="DeleteBtn" Content="Delete"  Style="{StaticResource OtherButtonStyle}" Background="Red" FontSize="12" Width="55"  Height="35"  Click="DeleteBtn_Click" Margin="10,0,0,0"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
-            <TextBlock Text="From" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
-            <DatePicker Name="FromDatePicker" Height="25"  IsTodayHighlighted="True" AutomationProperties.IsOffscreenBehavior="Onscreen"/>
+            <TextBlock Text="From" Foreground="#006070" FontSize="15" VerticalAlignment="Center" FontWeight="DemiBold" Margin="10,0"/>
+            <DatePicker Name="FromDatePicker" VerticalAlignment="Center" Height="25"  IsTodayHighlighted="True" AutomationProperties.IsOffscreenBehavior="Onscreen"/>
 
-            <TextBlock Text="To" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
-            <DatePicker Name="ToDatePicker" Height="25" IsTodayHighlighted="True"/>
+            <TextBlock Text="To" Foreground="#006070" FontSize="15" VerticalAlignment="Center" FontWeight="DemiBold" Margin="10,0"/>
+            <DatePicker Name="ToDatePicker" VerticalAlignment="Center" Height="25" IsTodayHighlighted="True"/>
 
-            <Button Content="Filter" FontSize="15" Width="55"  Height="25" Name="FilterBtn" Click="FilterBtn_Click" Margin="10,0"/>
+            <Button Content="Filter" Style="{StaticResource WhiteButtonStyle}"  VerticalAlignment="Center" FontSize="15" Width="55"  Height="25" Name="FilterBtn" Click="FilterBtn_Click" Margin="10,0"/>
 
         </StackPanel>
 
 
 
         <DataGrid x:Name="OrderDataGrid" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" 
+              CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+              ColumnHeaderStyle="{StaticResource OrderDataGridColumnHeader}"
               AutoGenerateColumns="False"
               CanUserResizeColumns="False" 
               BorderThickness="1"
@@ -60,14 +69,8 @@
               SelectionMode="Single"
               SelectedIndex="-1"
               CanUserDeleteRows="False"
-              IsReadOnly="True">
-
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="FontSize" Value="15"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
+              IsReadOnly="True"
+              RowHeight="35" HeadersVisibility="Column">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
@@ -77,7 +80,7 @@
                 <DataGridTemplateColumn Header="Detail" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Detail" Click="DetailBtn_Click"/>
+                            <Button Content="Detail" HorizontalAlignment="Left" Style="{StaticResource WhiteButtonStyle}" Width="50" Height="25" Click="DetailBtn_Click"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -85,9 +88,9 @@
         </DataGrid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center">
-            <Button x:Name="PrevBtn" Content="Prev" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
-            <TextBlock x:Name="txtItemPage" Text="1/1" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button x:Name="NextBtn" Content="Next" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
+            <Button x:Name="PrevBtn" Content="Prev"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
+            <TextBlock x:Name="txtItemPage" Text="1/1" Foreground="#006070" FontWeight="DemiBold"  FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button x:Name="NextBtn" Content="Next"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
         </StackPanel>
 
 
