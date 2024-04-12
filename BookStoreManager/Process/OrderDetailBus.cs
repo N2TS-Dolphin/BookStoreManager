@@ -55,6 +55,8 @@ namespace BookStoreManager.Process
         public BindingList<CategoryModel> GetAllCategory()
         {
             var list = CategoryDao.GetCategoryListFromDB();
+            list.Insert(0, new CategoryModel(0, "All"));
+            list.OrderBy(x => x.CategoryName).ToList();
             return list;
         }
 

@@ -66,63 +66,71 @@ namespace BookStoreManager.Database
             int totalPages = 0;
             string where = "";
 
-            if (fromDate != null && toDate != null)
+            try
             {
-                where += " WHERE ORDER_DATE BETWEEN @FromDate AND @ToDate";
-            }
-
-            // Calculate skip and take values for pagination
-            int skip = (page - 1) * rowsPerPage;
-            int take = rowsPerPage;
-
-            // SQL query for retrieving orders with pagination and optional filtering
-            string query = $@"
-                SELECT ORDER_ID, CUSTOMER_NAME, ORDER_DATE, PRICE, 
-                       COUNT(*) OVER() AS TotalItems
-                FROM ORDER_LIST
-                {where}
-                ORDER BY ORDER_ID
-                OFFSET @Skip ROWS
-                FETCH NEXT @Take ROWS ONLY";
-
-            using (SqlCommand command = new SqlCommand(query, _connection))
-            {
-                // Add parameters for pagination
-                command.Parameters.Add("@Skip", System.Data.SqlDbType.Int).Value = skip;
-                command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
-
-                // Add parameter for the keyword if provided
                 if (fromDate != null && toDate != null)
                 {
-                    command.Parameters.Add("@FromDate", SqlDbType.DateTime).Value = fromDate.Value;
-                    command.Parameters.Add("@ToDate", SqlDbType.DateTime).Value = toDate.Value;
+                    where += " WHERE ORDER_DATE BETWEEN @FromDate AND @ToDate";
                 }
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        // If totalItems is not set yet, retrieve it from the first row
-                        if (totalItems == -1)
-                        {
-                            totalItems = (int)reader["TotalItems"];
-                            totalPages = (totalItems / rowsPerPage) + ((totalItems % rowsPerPage == 0) ? 0 : 1);
-                        }
+                // Calculate skip and take values for pagination
+                int skip = (page - 1) * rowsPerPage;
+                int take = rowsPerPage;
 
-                        OrderModel order = new OrderModel
+                // SQL query for retrieving orders with pagination and optional filtering
+                string query = $@"
+            SELECT ORDER_ID, CUSTOMER_NAME, ORDER_DATE, PRICE, 
+                   COUNT(*) OVER() AS TotalItems
+            FROM ORDER_LIST
+            {where}
+            ORDER BY ORDER_ID
+            OFFSET @Skip ROWS
+            FETCH NEXT @Take ROWS ONLY";
+
+                using (SqlCommand command = new SqlCommand(query, _connection))
+                {
+                    // Add parameters for pagination
+                    command.Parameters.Add("@Skip", System.Data.SqlDbType.Int).Value = skip;
+                    command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
+
+                    // Add parameter for the keyword if provided
+                    if (fromDate != null && toDate != null)
+                    {
+                        command.Parameters.Add("@FromDate", SqlDbType.DateTime).Value = fromDate.Value;
+                        command.Parameters.Add("@ToDate", SqlDbType.DateTime).Value = toDate.Value;
+                    }
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
-                            CustomerName = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME")),
-                            OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
-                            Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
-                        };
-                        orders.Add(order);
+                            // If totalItems is not set yet, retrieve it from the first row
+                            if (totalItems == -1)
+                            {
+                                totalItems = (int)reader["TotalItems"];
+                                totalPages = (totalItems / rowsPerPage) + ((totalItems % rowsPerPage == 0) ? 0 : 1);
+                            }
+
+                            OrderModel order = new OrderModel
+                            {
+                                OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
+                                CustomerName = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME")),
+                                OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
+                                Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
+                            };
+                            orders.Add(order);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while retrieving orders: {ex.Message}");
             }
 
             return new Tuple<BindingList<OrderModel>, int, int>(orders, totalItems, totalPages);
         }
+
 
         public void DeleteOrderFromDB(int orderId)
         {
