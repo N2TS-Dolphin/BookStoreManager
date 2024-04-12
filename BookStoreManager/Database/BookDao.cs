@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace BookStoreManager.Database
     {
         private string _connectionString = DBConfig.GetConnectionString();
         private SqlConnection _connection;
+
         public BookDao()
         {
             _connection = new SqlConnection(_connectionString);
@@ -28,11 +30,33 @@ namespace BookStoreManager.Database
                 }catch (Exception ex) { }
             }
         }
-        public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category, int priceFrom, int priceTo)
+
+        public static Tuple<string, string> GetSortValue(int sort)
+        {
+            var sortList = new List<string>
+            {
+                {"B.BOOK_ID,ASC"},
+                {"B.BOOK_ID,DESC"},
+                {"B.BOOK_NAME,ASC"},
+                {"B.BOOK_NAME,DESC"},
+                {"B.AUTHOR,ASC"},
+                {"B.AUTHOR,DESC"},
+                {"B.PRICE,ASC"},
+                {"B.PRICE,DESC"},
+            };
+            var temp = sortList[sort].Split(",");
+            string orderby = temp[0];
+            string order = temp[1];
+            return new Tuple<string, string>(orderby, order);
+        }
+
+        public static Tuple<BindingList<BookModel>, int> GetBookListFromDB(int page, int itemsPerPage, 
+            string search, string category, int priceFrom, int priceTo, int sort)
         {
             var connection = DBConfig.Connection;
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
+            var (orderby, order) = GetSortValue(sort);
             string sql = "";
             while (connection.State != ConnectionState.Open)
             {
@@ -48,13 +72,14 @@ namespace BookStoreManager.Database
                         AND (@Search = '' OR B.BOOK_NAME LIKE @Search)
                         AND (B.PRICE BETWEEN @PriceFrom AND @PriceTo)
                         GROUP BY B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
-                        ORDER BY B.BOOK_NAME
+                        ORDER BY " + orderby + " " + order + @"
                         OFFSET @Skip ROWS
                         FETCH NEXT @Take ROWS ONLY
                         ";
 
                     int skip = (page - 1) * itemsPerPage;
                     int take = itemsPerPage;
+                    
 
                     var command = new SqlCommand(sql, connection);
                     command.Parameters.Add("@Skip", System.Data.SqlDbType.Int).Value = skip;
@@ -87,8 +112,9 @@ namespace BookStoreManager.Database
                 catch (Exception ex) { }
             }
             connection.Close();
-            return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
+            return new Tuple<BindingList<BookModel>, int>(result, totalPages);
         }
+
         public BookModel getBookDetail(int id)
         {
             BookModel result = new();
@@ -123,6 +149,7 @@ namespace BookStoreManager.Database
             }
             return result;
         }
+
         public static BookModel GetBookDetailFromDB(int id)
         {
             var connection = DBConfig.Connection;
@@ -159,6 +186,7 @@ namespace BookStoreManager.Database
             connection.Close();
             return result;
         }
+
         public static int InsertNewBookToDB(BookModel newBook)
         {
             var connection = DBConfig.Connection;
@@ -194,6 +222,7 @@ namespace BookStoreManager.Database
             connection.Close();
             return result;
         }
+
         public static void UpdateBookToDB(BookModel book)
         {
             var connection = DBConfig.Connection;

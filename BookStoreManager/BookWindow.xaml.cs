@@ -28,6 +28,7 @@ namespace BookStoreManager
         public BindingList<CategoryModel> CategoryList { get; set; }
         public BookModel BookDetail { get; set; }
         public BookShellBus BookShell { get; set; }
+        public BindingList<string> SortName { get; set; }
         public BookWindow()
         {
             InitializeComponent();
@@ -38,25 +39,29 @@ namespace BookStoreManager
             BookShell = new BookShellBus();
             CategoryList = BookShell.GetAllCategory();
             categoryListView.ItemsSource = CategoryList;
+            
+            itemCountTB.Text = "9";
+
+            SortName = BookShell.GetSortName();
+            sortCB.ItemsSource = SortName;
+            sortCB.SelectedIndex = 0;
 
             LoadBookList();
             LoadBookDetail(0);            
         }
         public void LoadBookList()
         {
-            var (items, totalItems, totalPages, currentPage) = BookShell.GetBookList();
+            var (items, totalPages, currentPage) = BookShell.GetBookList();
             BookList = items;
             bookListView.ItemsSource = BookList;
 
-            txtItemsCount.Text = $"Kết quả: {totalItems}";
             txtItemPage.Text = $"{currentPage}/{totalPages}";
-            
         }
         public void LoadBookDetail(int index)
         {
             if (BookList.Count == 0)
             {
-                BookDetail.ClearBook();
+                if (BookDetail != null) { BookDetail.ClearBook(); }
                 return;
             }
             BookDetail = (BookModel)BookList[index].Clone();
@@ -113,8 +118,10 @@ namespace BookStoreManager
                     {
                         BookList = BookShell.DeleteBook(selectedBook, BookList);
                         MessageBox.Show($"Xóa quyển sách {name} thành công.");
-                        Refresh();
-                    }catch(Exception ex) { MessageBox.Show($"Xóa quyển sách {name} thất bại."); }
+                        LoadBookList();
+                        LoadBookDetail(0);
+                    }
+                    catch(Exception ex) { MessageBox.Show($"Xóa quyển sách {name} thất bại."); }
                 }
             }
             else { MessageBox.Show("Chọn quyển sách muốn xóa"); }
@@ -210,9 +217,9 @@ namespace BookStoreManager
                     LoadBookList();
                     LoadBookDetail(0);
                 }
-                else{ MessageBox.Show("Vui lòng nhập số hợp lệ."); }
+                else{ MessageBox.Show("Giá đầu phải nhỏ hơn giá cuối"); }
             }
-            else { MessageBox.Show("Vui lòng nhập số hợp lệ."); }
+            else { MessageBox.Show("Giá tiền đang lọc không phải số. Vui lòng nhập số hợp lệ."); }
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)
@@ -242,6 +249,26 @@ namespace BookStoreManager
         private void ManageBookWindow_Closed(object sender, EventArgs e)
         {
             Refresh();
+        }
+        private void itemCountButton_Click(object sender, RoutedEventArgs e)
+        {
+            var itemPerPageText = itemCountTB.Text;
+            int itemPerPage;
+            if (int.TryParse(itemPerPageText, out itemPerPage))
+            {
+                BookShell.ChangeItemPerPage(itemPerPage);
+                LoadBookList();
+                LoadBookDetail(0);
+            }
+            else { MessageBox.Show("Số sản phẩm mỗi phải là số. Vui lòng nhập lại"); }
+        }
+        private void sortCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int sort = sortCB.SelectedIndex;
+            BookShell.SortBook(sort);
+
+            LoadBookList();
+            LoadBookDetail(0);
         }
     }
 }

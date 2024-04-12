@@ -22,12 +22,15 @@ namespace BookStoreManager
         public string Category { get; set; }
         public int PriceFrom { get; set; }
         public int PriceTo { get; set; }
+        public int Sort { get; set; }
+        public int ItemPerPage { get; set; }
 
         public BookShellBus()
         {
             CurrentPage = 1; TotalPages = 0;
             Search = ""; Category = "All"; 
             PriceFrom = 0; PriceTo = Int32.MaxValue; 
+            Sort = 0; ItemPerPage = 9;
         }
         public BindingList<CategoryModel> GetAllCategory()
         {
@@ -36,12 +39,12 @@ namespace BookStoreManager
             list.Insert(0, new CategoryModel(0, "All"));
             return list;
         }
-        public Tuple<BindingList<BookModel>, int, int, int> GetBookList()
+        public Tuple<BindingList<BookModel>, int, int> GetBookList()
         {
-            var (items, totalItems, totalPages) = BookDao.GetBookListFromDB(CurrentPage, 9, Search, Category, PriceFrom, PriceTo);
+            var (items, totalPages) = BookDao.GetBookListFromDB(CurrentPage, ItemPerPage, Search, Category, PriceFrom, PriceTo, Sort);
             TotalPages = totalPages;
             CurrentPage = (TotalPages <= 0) ? 0 : CurrentPage;
-            return new Tuple<BindingList<BookModel>, int, int, int>(items, totalItems, TotalPages, CurrentPage);
+            return new Tuple<BindingList<BookModel>, int, int>(items, TotalPages, CurrentPage);
         }
         public BindingList<CategoryModel> GetBookCategory(BookModel book)
         {
@@ -51,8 +54,9 @@ namespace BookStoreManager
         }
         public void RefreshPage(BindingList<CategoryModel> categories)
         {
-            CurrentPage = 1;
+            CurrentPage = 1; PriceFrom = 0; PriceTo = Int32.MaxValue;
             Search = ""; Category = categories[0].CategoryName;
+            Sort = 0; ItemPerPage = 9;
         }
         public void MoveToPreviousPage()
         {
@@ -120,6 +124,11 @@ namespace BookStoreManager
             PriceTo = priceTo;
             CurrentPage = 1;
         }
+        public void ChangeItemPerPage(int itemPerPage)
+        {
+            ItemPerPage = itemPerPage;
+        }
+        public void SortBook(int sort) { Sort = sort; }
         public void ImportFromExcel(string filePath, BindingList<CategoryModel> categoryList)
         {
             BindingList<BookModel> books = new();
@@ -207,6 +216,20 @@ namespace BookStoreManager
                 }
             }
             return result;
+        }
+        public BindingList<string> GetSortName()
+        {
+            return new BindingList<string>
+            {
+                {"ID: Thấp -> Cao"},
+                {"ID: Cao -> Thấp"},
+                {"Tên sản phẩm: A->Z"},
+                {"Tên sản phẩm: Z->A"},
+                {"Tên tác giả: A->Z"},
+                {"Tên tác giả: Z->A"},
+                {"Giá: Thấp -> Cao"},
+                {"Giá: Cao -> Thấp"},
+            };
         }
     }
 }
