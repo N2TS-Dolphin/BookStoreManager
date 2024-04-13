@@ -68,6 +68,7 @@ namespace BookStoreManager
                 Panel_01.FontSize = 20;
                 Panel_02.FontSize = 20;
                 Panel_03.FontSize = 20;
+                Panel_04.FontSize = 20;
                 txtLogout.FontSize = 20;
                 txtCreate.FontSize = 20;
             }
@@ -77,6 +78,7 @@ namespace BookStoreManager
                 Panel_01.FontSize = 15;
                 Panel_02.FontSize = 15;
                 Panel_03.FontSize = 15;
+                Panel_04.FontSize = 15;
                 txtLogout.FontSize = 15;
                 txtCreate.FontSize = 15;
             }
@@ -86,6 +88,7 @@ namespace BookStoreManager
                 Panel_01.FontSize = newSize;
                 Panel_02.FontSize = newSize;
                 Panel_03.FontSize = newSize;
+                Panel_04.FontSize = newSize;
                 txtLogout.FontSize = newSize;
                 txtCreate.FontSize = newSize;
             }
@@ -144,6 +147,12 @@ namespace BookStoreManager
         private void Product_Click(object sender, RoutedEventArgs e)
         {
             var window = new BookWindow();
+            window.Show();
+        }
+
+        private void Customer_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new CustomerWindow();
             window.Show();
         }
     }
