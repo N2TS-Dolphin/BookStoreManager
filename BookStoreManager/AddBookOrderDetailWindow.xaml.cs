@@ -68,9 +68,18 @@ namespace BookStoreManager
             _selectedBook = (BookModel)BookListView.SelectedItem;
             if (_selectedBook != null)
             {
-                // Display the selected book details
-                BookTextBox.Text = _selectedBook.BookName;
-                QuantityTextBox.Text = "0"; // Set default quantity
+                // Create a new OrderDetailModel with the selected book and quantity set to 0
+                 _OrderDetail = new OrderDetailModel
+                {
+                    OrderID = _orderId,
+                    Book = _selectedBook,
+                    Quantity = 0
+                };
+
+                // Set the newly created OrderDetailModel as the DataContext
+                this.DataContext = _OrderDetail;
+
+              
             }
         }
 
@@ -95,17 +104,7 @@ namespace BookStoreManager
                 {
                     if (quantity > 0)
                     {
-                        // Create a new OrderDetailModel with the selected book and quantity
-                        _OrderDetail = new OrderDetailModel
-                        {
-                            OrderID = _orderId,
-                            Book = _selectedBook,
-                            Quantity = quantity
-                        };
-
-                        // Use OrderDetailBus to insert the order detail
-                        _orderDetailBus.InsertOrderItem(_orderId,  _OrderDetail );
-
+                      
                         // Close the window and set DialogResult to true
                         DialogResult = true;
                     }

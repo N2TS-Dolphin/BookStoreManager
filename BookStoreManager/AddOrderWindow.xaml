@@ -33,16 +33,36 @@
 
         <TextBlock Text="ADD ORDER" Foreground="#006070" FontWeight="Bold" FontSize="20" Margin="5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <!-- StackPanel for Customer Name -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Label Width="100" Content="Customer Name:" FontWeight="DemiBold" VerticalAlignment="Center"/>
-                <TextBox x:Name="txtCustomerName" Width="200" Margin="5" VerticalAlignment="Center"/>
-            </StackPanel>
-            <!-- StackPanel for Order Date -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Label Width="100" Content="Order Date:" FontWeight="DemiBold" VerticalAlignment="Center"/>
-                <DatePicker x:Name="dpOrderDate" Width="200" Margin="5" VerticalAlignment="Center"/>
-            </StackPanel>
+
+
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="300">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Customer Name:"/>
+                    <TextBox Width="170" x:Name="txtCustomerName" FontWeight="DemiBold" Margin="10,10" >
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="30"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <StaticResource ResourceKey="InfoTextBoxStyle"/>
+                        </TextBox.Style>
+                    </TextBox>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="300">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Order Date:"/>
+                    <DatePicker x:Name="dpOrderDate" Style="{StaticResource InfoDatePickerStyle}" FontWeight="DemiBold" Width="170" Margin="10,10" VerticalAlignment="Center">
+                        <DatePicker.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="30"/>
+                            </Style>
+                        </DatePicker.Resources>
+                    </DatePicker>
+                </Grid>
+            </Border>
         </StackPanel>
 
         <Button x:Name="AddOrderBtn" Style="{StaticResource GreenButtonStyle}"  Grid.Row="3" Grid.Column="2" Width="55" Height="35" Content="Add" Click="AddOrderBtn_Click"/>

@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="OrderDetailWindow" Height="450" Width="1000">
+        Title="OrderDetailWindow" Height="600" Width="700">
+
     <Window.Resources>
-        <local:PriceConverter x:Key="VndConverter"/>
+        <ResourceDictionary>
+            <local:PriceConverter x:Key="VndConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="OrderResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
@@ -21,83 +27,98 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="15"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="10*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
         <StackPanel  Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="ORDER DETAIL #" FontWeight="Bold" FontSize="20"/>
-            <TextBlock Text="{Binding OrderId}" FontWeight="Bold" FontSize="20"/>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-            <!-- StackPanel for Customer Name -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Label Width="100" Content="Customer Name:" VerticalAlignment="Center"/>
-                <TextBox x:Name="txtCustomerName" Text="{Binding CustomerName}" Width="200" Margin="5" VerticalAlignment="Center" />
-            </StackPanel>
-            <!-- StackPanel for Order Date -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Label Width="100" Content="Order Date:" VerticalAlignment="Center"/>
-                <DatePicker x:Name="dpOrderDate" SelectedDate="{Binding OrderDate}" Width="200" Margin="5" VerticalAlignment="Center"/>
-            </StackPanel>
+            <TextBlock Text="ORDER DETAIL #" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
+            <TextBlock Text="{Binding OrderId}" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
         </StackPanel>
 
-        <DataGrid x:Name="productDataGrid" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5"
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Customer Name:"/>
+                    <TextBox Width="220" x:Name="txtCustomerName" Text="{Binding CustomerName}" FontWeight="DemiBold" Margin="10,10" >
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="30"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <StaticResource ResourceKey="InfoTextBoxStyle"/>
+                        </TextBox.Style>
+                    </TextBox>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Order Date:"/>
+                    <DatePicker x:Name="dpOrderDate" SelectedDate="{Binding OrderDate}" Style="{StaticResource InfoDatePickerStyle}" 
+                                FontWeight="DemiBold" Width="220" Margin="10,10" VerticalAlignment="Center">
+                        <DatePicker.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="30"/>
+                            </Style>
+                        </DatePicker.Resources>
+                    </DatePicker>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
+            <Button x:Name="AddBtn" Content="Add"  Style="{StaticResource OtherButtonStyle}" Background="LightGreen" FontSize="12" Width="55" Height="35" Click="AddProductBtn_Click" Margin="0,0,10,0"/>
+            <Button x:Name="UpdateBtn" Content="Update"  Style="{StaticResource OtherButtonStyle}" Background="Yellow" FontSize="12" Width="55"  Height="35"  Click="UpdateProductBtn_Click" Margin="0,0,0,0"/>
+            <Button x:Name="DeleteBtn" Content="Delete"  Style="{StaticResource OtherButtonStyle}" Background="Red" FontSize="12" Width="55"  Height="35"  Click="DeleteProductBtn_Click" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <DataGrid x:Name="productDataGrid" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Margin="5"
+        MouseRightButtonDown="productDataGrid_MouseRightButtonDown"
+        MouseDoubleClick="productDataGrid_MouseDoubleClick"
+        CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+        ColumnHeaderStyle="{StaticResource OrderDataGridColumnHeader}"
         AutoGenerateColumns="False"
         CanUserResizeColumns="False" 
         BorderThickness="1"
-        VerticalScrollBarVisibility="Hidden" 
+        
         HorizontalScrollBarVisibility="Hidden" 
         GridLinesVisibility="None" 
         CanUserAddRows="False"
         SelectionMode="Single"
         SelectedIndex="-1"
         CanUserDeleteRows="False"
-        IsReadOnly="True">
+        IsReadOnly="True"
+        RowHeight="35" HeadersVisibility="Column">
 
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="FontSize" Value="15"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
+
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Book ID" Binding="{Binding Path=Book.BookID}" Width="*"/>
-                <DataGridTextColumn Header="Book Name" Binding="{Binding Path=Book.BookName}" Width="2.5*"/>
+                <DataGridTextColumn Header="Book ID" Binding="{Binding Path=Book.BookID}" Width="0.7*"/>
+                <DataGridTextColumn Header="Book Name" Binding="{Binding Path=Book.BookName}" Width="2*"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Unit Price" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="1.5*"/>
-                <DataGridTemplateColumn Header="Operation" Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="Update" Click="UpdateProductBtn_Click"  Margin="0,0,5,0"/>
-                                <Button Content="Delete" Click="DeleteProductBtn_Click"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Unit Price" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="1*"/>
+
             </DataGrid.Columns>
         </DataGrid>
 
-
-        <StackPanel Grid.Row="3" Grid.Column="3" Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-            <Button x:Name="AddProductBtn" Click="AddProductBtn_Click" Width="70" Height="40" Content="Add Product"></Button>
+        <StackPanel Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="Total Price: " FontWeight="DemiBold" FontSize="20" Margin="5"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Foreground="#006070" x:Name="TotalPriceTxtBlock" Text="{Binding Price,Converter={StaticResource VndConverter}}"  VerticalAlignment="Center"  FontWeight="Bold" FontSize="20"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center">
-            <TextBlock Text="Total Price: " FontWeight="Bold" FontSize="20" Margin="5"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Foreground="Green" x:Name="TotalPriceTxtBlock" Text="{Binding Price,Converter={StaticResource VndConverter}}"  VerticalAlignment="Center"  FontWeight="Bold" FontSize="20"/>
+        <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="6" HorizontalAlignment="Center">
+            <Button Content="Save" x:Name="SaveOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
+                    Width="70" Height="40" Click="SaveOrderDetailBtn_Click" Margin="0,0 5,0"/>
+            <Button Content="Cancel" x:Name="CancelOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
+                    Width="70" Height="40" Click="CancelOrderDetailBtn_Click"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal"  Grid.Column="3" Grid.Row="4" HorizontalAlignment="Center">
-            <Button Content="Save" x:Name="SaveOrderDetailBtn" Width="70" Height="40" Click="SaveOrderDetailBtn_Click" Margin="0,0 5,0"/>
-            <Button Content="Cancel" x:Name="CancelOrderDetailBtn" Width="70" Height="40" Click="CancelOrderDetailBtn_Click"/>
-        </StackPanel>
-        
 
 
     </Grid>

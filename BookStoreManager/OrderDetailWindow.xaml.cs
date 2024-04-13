@@ -92,6 +92,7 @@ namespace BookStoreManager
             }
         }
 
+        
         private void UpdateProductBtn_Click(object sender, RoutedEventArgs e)
         {
             var selectedOrderDetail = (OrderDetailModel)productDataGrid.SelectedItem;
@@ -117,6 +118,110 @@ namespace BookStoreManager
                 }
             }
         }
+
+        private void productDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Get the selected item from the DataGrid
+            OrderDetailModel selectedOrderDetail = (OrderDetailModel)productDataGrid.SelectedItem;
+
+            // Check if an item is selected
+            if (selectedOrderDetail != null)
+            {
+                var screen = new AddBookOrderDetailWindow(orderId, selectedOrderDetail);
+                var result = screen.ShowDialog();
+
+                if (result == true)
+                {
+                    var existingOrderDetail = orderDetails.FirstOrDefault(detail => detail.Book.BookID == screen._OrderDetail.Book.BookID);
+                    if (existingOrderDetail != null && existingOrderDetail != selectedOrderDetail)
+                    {
+                        MessageBox.Show("This book already exists in the Order Detail, please edit the quantity if needed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        orderDetails.Remove(selectedOrderDetail);
+                        orderDetails.Add(screen._OrderDetail);
+                        UpdateTotalPrice();
+                    }
+                }
+            }
+        }
+
+
+        private void productDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Find the DataGridRow under the mouse
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row != null)
+            {
+                // Select the item
+                row.IsSelected = true;
+
+                // Create a context menu
+                ContextMenu contextMenu = new ContextMenu();
+
+                // Add Update option
+                MenuItem updateMenuItem = new MenuItem();
+                updateMenuItem.Header = "Update";
+                updateMenuItem.Click += UpdateMenuItem_Click;
+                contextMenu.Items.Add(updateMenuItem);
+
+                // Add Delete option
+                MenuItem deleteMenuItem = new MenuItem();
+                deleteMenuItem.Header = "Delete";
+                deleteMenuItem.Click += DeleteMenuItem_Click;
+                contextMenu.Items.Add(deleteMenuItem);
+
+                // Show the context menu
+                contextMenu.IsOpen = true;
+            }
+        }
+
+        private void UpdateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedOrderDetail = (OrderDetailModel)productDataGrid.SelectedItem;
+
+            if (selectedOrderDetail != null)
+            {
+                var screen = new AddBookOrderDetailWindow(orderId, selectedOrderDetail);
+                var result = screen.ShowDialog();
+
+                if (result == true)
+                {
+                    var existingOrderDetail = orderDetails.FirstOrDefault(detail => detail.Book.BookID == screen._OrderDetail.Book.BookID);
+                    if (existingOrderDetail != null && existingOrderDetail != selectedOrderDetail)
+                    {
+                        MessageBox.Show("This book already exists in the Order Detail, please edit the quantity if needed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        orderDetails.Remove(selectedOrderDetail);
+                        orderDetails.Add(screen._OrderDetail);
+                        UpdateTotalPrice();
+                    }
+                }
+            }
+        }
+
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedOrderDetail = (OrderDetailModel)productDataGrid.SelectedItem;
+
+            if (selectedOrderDetail != null)
+            {
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete this item: " +
+                    $"{selectedOrderDetail.Book.BookID} - {selectedOrderDetail.Book.BookName} ?",
+                    "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    orderDetails.Remove(selectedOrderDetail);
+                    UpdateTotalPrice();
+                }
+            }
+        }
+
 
         private void UpdateTotalPrice()
         {
