@@ -57,6 +57,8 @@
 
 
         <DataGrid x:Name="OrderDataGrid" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" 
+              MouseRightButtonDown="OrderDataGrid_MouseRightButtonDown"
+              MouseDoubleClick="OrderDataGrid_MouseDoubleClick"
               CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
               ColumnHeaderStyle="{StaticResource OrderDataGridColumnHeader}"
               AutoGenerateColumns="False"
@@ -77,13 +79,7 @@
                 <DataGridTextColumn Header="Customer Name" Binding="{Binding CustomerName}" Width="3*"/>
                 <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
                 <DataGridTextColumn Header="Total Price" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
-                <DataGridTemplateColumn Header="Detail" Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Detail" HorizontalAlignment="Left" Style="{StaticResource WhiteButtonStyle}" Width="50" Height="25" Click="DetailBtn_Click"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
         </DataGrid>
 

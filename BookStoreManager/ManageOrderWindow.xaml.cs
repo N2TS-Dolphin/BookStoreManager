@@ -122,7 +122,77 @@ namespace BookStoreManager
             }
         }
 
-        private void DetailBtn_Click(object sender, RoutedEventArgs e)
+        //private void DetailBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (OrderDataGrid.SelectedItem != null)
+        //    {
+        //        OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
+        //        int orderId = selectedOrder.OrderId;
+
+        //        OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
+        //        orderDetailWindow.ShowDialog();
+        //        LoadPage();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Please select an order to view details.");
+        //    }
+        //}
+
+        private void OrderDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Get the selected item from the DataGrid
+            OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
+
+            // Check if an item is selected
+            if (selectedOrder != null)
+            {
+                int orderId = selectedOrder.OrderId;
+
+                // Open the OrderDetailWindow for updating
+                OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
+                var result = orderDetailWindow.ShowDialog();
+
+                // Reload the page if the window was closed successfully
+                if (result == true)
+                {
+                    LoadPage();
+                }
+            }
+        }
+
+
+        private void OrderDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Find the DataGridRow under the mouse
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row != null)
+            {
+                // Select the item
+                row.IsSelected = true;
+
+                // Create a context menu
+                ContextMenu contextMenu = new ContextMenu();
+
+                // Add Update option
+                MenuItem updateMenuItem = new MenuItem();
+                updateMenuItem.Header = "Update";
+                updateMenuItem.Click += UpdateMenuItem_Click;
+                contextMenu.Items.Add(updateMenuItem);
+
+                // Add Delete option
+                MenuItem deleteMenuItem = new MenuItem();
+                deleteMenuItem.Header = "Delete";
+                deleteMenuItem.Click += DeleteMenuItem_Click;
+                contextMenu.Items.Add(deleteMenuItem);
+
+                // Show the context menu
+                contextMenu.IsOpen = true;
+            }
+        }
+
+        private void UpdateMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (OrderDataGrid.SelectedItem != null)
             {
@@ -136,6 +206,26 @@ namespace BookStoreManager
             else
             {
                 MessageBox.Show("Please select an order to view details.");
+            }
+        }
+
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (OrderDataGrid.SelectedItem != null)
+            {
+                OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
+                var res = MessageBox.Show($"Are you sure to delete this order: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (res == MessageBoxResult.Yes)
+                {
+                    int orderId = selectedOrder.OrderId;
+                    orderBus.DeleteOrder(orderId);
+                    LoadPage();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an order to delete.");
             }
         }
 
