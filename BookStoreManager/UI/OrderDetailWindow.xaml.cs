@@ -250,7 +250,26 @@ namespace BookStoreManager.UI
 
         private void updateCustomerInfo_Click(object sender, RoutedEventArgs e)
         {
-            //Mở window edit thông tin của customer
+            var selectedCustomer = order.Customer;
+
+            // Check if a customer is selected
+            if (selectedCustomer == null)
+            {
+                MessageBox.Show("Vui lòng chọn một khách hàng.");
+                return;
+            }
+
+            // Open the update customer window with the selected customer
+            var updateCustomerWindow = new UpdateCustomerWindow(selectedCustomer);
+            updateCustomerWindow.Closed += UpdateCustomerWindow_Closed;
+            updateCustomerWindow.ShowDialog();
         }
+
+    
+        private void UpdateCustomerWindow_Closed(object sender, EventArgs e)
+        {
+            LoadOrderDetails();
+        }
+
     }
 }

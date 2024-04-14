@@ -90,6 +90,10 @@ namespace BookStoreManager.UI
                 {
                     LoadPage();
                 }
+                else
+                {
+                    LoadPage();
+                }
             }
             else
             {
