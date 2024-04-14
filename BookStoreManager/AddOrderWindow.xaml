@@ -19,7 +19,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15"/>
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="15"/>
         </Grid.ColumnDefinitions>
@@ -31,13 +31,13 @@
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="ADD ORDER" Foreground="#006070" FontWeight="Bold" FontSize="20" Margin="5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="THÊM ĐƠN HÀNG" Foreground="#006070" FontWeight="Bold" FontSize="20" Margin="5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
 
 
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="300">
                 <Grid>
-                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Customer Name:"/>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Tên khách hàng:"/>
                     <TextBox Width="170" x:Name="txtCustomerName" FontWeight="DemiBold" Margin="10,10" >
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
@@ -53,7 +53,7 @@
 
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="300">
                 <Grid>
-                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Order Date:"/>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Ngày đặt hàng:"/>
                     <DatePicker x:Name="dpOrderDate" Style="{StaticResource InfoDatePickerStyle}" FontWeight="DemiBold" Width="170" Margin="10,10" VerticalAlignment="Center">
                         <DatePicker.Resources>
                             <Style TargetType="{x:Type Border}">
@@ -65,6 +65,6 @@
             </Border>
         </StackPanel>
 
-        <Button x:Name="AddOrderBtn" Style="{StaticResource GreenButtonStyle}"  Grid.Row="3" Grid.Column="2" Width="55" Height="35" Content="Add" Click="AddOrderBtn_Click"/>
+        <Button x:Name="AddOrderBtn" Style="{StaticResource GreenButtonStyle}"  Grid.Row="3" Grid.Column="2" Width="55" Height="35" Content="Thêm" Click="AddOrderBtn_Click"/>
     </Grid>
 </Window>

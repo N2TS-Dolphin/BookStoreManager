@@ -35,7 +35,7 @@ namespace BookStoreManager
 
             if (string.IsNullOrWhiteSpace(customerName) || !orderDate.HasValue)
             {
-                MessageBox.Show("Please enter the required information.", "Missing Information", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Vui lòng nhập đủ thông tin.", "Thiếu Thông Tin", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
 
@@ -45,7 +45,7 @@ namespace BookStoreManager
             // Call the AddOrder method on the OrderBus instance
             orderBus.AddOrder(customerName, orderDate.Value);
 
-            MessageBox.Show("New Order added successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Thêm đơn hàng thành công.", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
 
             // Close the AddOrderWindow
             this.Close();

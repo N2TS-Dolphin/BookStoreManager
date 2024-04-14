@@ -64,7 +64,7 @@ namespace BookStoreManager
                 var existingOrderDetail = orderDetails.FirstOrDefault(detail => detail.Book.BookID == newOrderDetail.Book.BookID);
                 if (existingOrderDetail != null)
                 {
-                    MessageBox.Show("This book already exists in the Order Detail, please edit the quantity if needed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Sách này đã có trong Chi tiết Đơn hàng, vui lòng chỉnh sửa số lượng nếu cần.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
@@ -80,9 +80,9 @@ namespace BookStoreManager
 
             if (selectedOrderDetail != null)
             {
-                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete this item: " +
+                MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xóa mục này: " +
                     $"{selectedOrderDetail.Book.BookID} - {selectedOrderDetail.Book.BookName} ?",
-                    "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -92,7 +92,8 @@ namespace BookStoreManager
             }
         }
 
-        
+
+
         private void UpdateProductBtn_Click(object sender, RoutedEventArgs e)
         {
             var selectedOrderDetail = (OrderDetailModel)productDataGrid.SelectedItem;
@@ -107,7 +108,7 @@ namespace BookStoreManager
                     var existingOrderDetail = orderDetails.FirstOrDefault(detail => detail.Book.BookID == screen._OrderDetail.Book.BookID);
                     if (existingOrderDetail != null && existingOrderDetail != selectedOrderDetail)
                     {
-                        MessageBox.Show("This book already exists in the Order Detail, please edit the quantity if needed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Sách này đã có trong Chi tiết Đơn hàng, vui lòng chỉnh sửa số lượng nếu cần.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
@@ -121,10 +122,10 @@ namespace BookStoreManager
 
         private void productDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Get the selected item from the DataGrid
+            // Lấy mục đã chọn từ DataGrid
             OrderDetailModel selectedOrderDetail = (OrderDetailModel)productDataGrid.SelectedItem;
 
-            // Check if an item is selected
+            // Kiểm tra nếu có mục được chọn
             if (selectedOrderDetail != null)
             {
                 var screen = new AddBookOrderDetailWindow(orderId, selectedOrderDetail);
@@ -135,7 +136,7 @@ namespace BookStoreManager
                     var existingOrderDetail = orderDetails.FirstOrDefault(detail => detail.Book.BookID == screen._OrderDetail.Book.BookID);
                     if (existingOrderDetail != null && existingOrderDetail != selectedOrderDetail)
                     {
-                        MessageBox.Show("This book already exists in the Order Detail, please edit the quantity if needed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Sách này đã có trong Chi tiết Đơn hàng, vui lòng chỉnh sửa số lượng nếu cần.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
@@ -192,7 +193,7 @@ namespace BookStoreManager
                     var existingOrderDetail = orderDetails.FirstOrDefault(detail => detail.Book.BookID == screen._OrderDetail.Book.BookID);
                     if (existingOrderDetail != null && existingOrderDetail != selectedOrderDetail)
                     {
-                        MessageBox.Show("This book already exists in the Order Detail, please edit the quantity if needed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Sách này đã có trong Chi tiết Đơn hàng, vui lòng chỉnh sửa số lượng nếu cần.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
@@ -210,9 +211,9 @@ namespace BookStoreManager
 
             if (selectedOrderDetail != null)
             {
-                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete this item: " +
+                MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xóa mục này: " +
                     $"{selectedOrderDetail.Book.BookID} - {selectedOrderDetail.Book.BookName} ?",
-                    "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -221,7 +222,6 @@ namespace BookStoreManager
                 }
             }
         }
-
 
         private void UpdateTotalPrice()
         {

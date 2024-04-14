@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="OrderDetailWindow" Height="600" Width="700">
+        Title="OrderDetailWindow" Height="600" Width="750">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -36,14 +36,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel  Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="ORDER DETAIL #" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
+            <TextBlock Text="CHI TIẾT ĐƠN HÀNG #" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
             <TextBlock Text="{Binding OrderId}" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
                 <Grid>
-                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Customer Name:"/>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Tên khách hàng:"/>
                     <TextBox Width="220" x:Name="txtCustomerName" Text="{Binding CustomerName}" FontWeight="DemiBold" Margin="10,10" >
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
@@ -59,7 +59,7 @@
 
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
                 <Grid>
-                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Order Date:"/>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Ngày đặt hàng:"/>
                     <DatePicker x:Name="dpOrderDate" SelectedDate="{Binding OrderDate}" Style="{StaticResource InfoDatePickerStyle}" 
                                 FontWeight="DemiBold" Width="220" Margin="10,10" VerticalAlignment="Center">
                         <DatePicker.Resources>
@@ -99,23 +99,23 @@
 
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Book ID" Binding="{Binding Path=Book.BookID}" Width="0.7*"/>
-                <DataGridTextColumn Header="Book Name" Binding="{Binding Path=Book.BookName}" Width="2*"/>
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Unit Price" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="1*"/>
+                <DataGridTextColumn Header="ID Sách" Binding="{Binding Path=Book.BookID}" Width="0.7*"/>
+                <DataGridTextColumn Header="Tên Sách" Binding="{Binding Path=Book.BookName}" Width="2*"/>
+                <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="*"/>
+                <DataGridTextColumn Header="Đơn Giá" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="1*"/>
 
             </DataGrid.Columns>
         </DataGrid>
 
         <StackPanel Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
-            <TextBlock Text="Total Price: " FontWeight="DemiBold" FontSize="20" Margin="5"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="Giá Tổng: " FontWeight="DemiBold" FontSize="20" Margin="5"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBlock Foreground="#006070" x:Name="TotalPriceTxtBlock" Text="{Binding Price,Converter={StaticResource VndConverter}}"  VerticalAlignment="Center"  FontWeight="Bold" FontSize="20"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="6" HorizontalAlignment="Center">
-            <Button Content="Save" x:Name="SaveOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
+            <Button Content="Lưu" x:Name="SaveOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
                     Width="70" Height="40" Click="SaveOrderDetailBtn_Click" Margin="0,0 5,0"/>
-            <Button Content="Cancel" x:Name="CancelOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
+            <Button Content="Quay về" x:Name="CancelOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
                     Width="70" Height="40" Click="CancelOrderDetailBtn_Click"/>
         </StackPanel>
 
