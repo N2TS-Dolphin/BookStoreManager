@@ -26,7 +26,6 @@ namespace BookStoreManager
     {
         private Button selectedButton = null;
         AccountDao account = new AccountDao();
-        OrderDao order = new OrderDao();
 
         public Dashboard()
         {

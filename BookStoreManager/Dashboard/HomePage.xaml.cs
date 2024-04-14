@@ -36,11 +36,10 @@ namespace BookStoreManager
         HomePageBus bus = new HomePageBus();
 
         private List<string> _months = new List<string>() { "January", "Febrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        private int _MonthSelected, _YearSelected, _currentPage = 0, _totalPage = 0;
+        private int _MonthSelected, _YearSelected, _typeViewSelected, _columnSelected, _currentPage = 0, _totalPage = 0;
         private const int _pageSize = 10;
-        private DataGridColumn _currentSortColumn;
-        private ListSortDirection _currentSortDirection = ListSortDirection.Ascending;
         private List<ProductRankingModel> _originalData;
+        private List<ProductRankingModel> _dataForCurPage = new List<ProductRankingModel>();
 
         public string CompareOrder { get; set; }
         public string CompareRevenue { get; set; }
@@ -58,7 +57,6 @@ namespace BookStoreManager
         {
             InitializeComponent();
 
-
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -67,14 +65,15 @@ namespace BookStoreManager
             RevenueSeriesCollection = new SeriesCollection();
             OrderSeriesCollection = new SeriesCollection();
             Labels = new List<string>();
-            _originalData = productDao.getRankingList();
+            _originalData = productDao.getDescList(0, 3);
 
+            _currentPage = 0;
+            _totalPage = _originalData.Count() / _pageSize;
             // Format dữ liệu doanh thu theo định dạng
             foreach (var item in _originalData)
             {
                 item.RevenueFormatted = item.Revenue.ToString("#,##0"); // Format dạng số nguyên có dấu phân cách ngàn
             }
-            _totalPage = _originalData.Count() / _pageSize;
 
             // Format dữ liệu só lượng và doanh thu theo tháng theo định dạng
             foreach (var data in revenueDao.GetRevenuesByMonth())
@@ -265,24 +264,6 @@ namespace BookStoreManager
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        private void IncomeCurMonth(List<RevenueModel> data)
-        {
-            for (int i = 0; i < data.Count; i++)
-            {
-                if (data[i].Month == DateTime.Now.Month && data[i].Year == DateTime.Now.Year)
-                {
-                    TotalOrderCurMonth = data[i].Quantity.ToString("#,##0");
-                    TotalRevenueCurMonth = data[i].Revenue.ToString("#,##0");
-                }
-            }
-
-            DataContext = this;
-        }
-
-        /// <summary>
         /// So sánh dữ liệu tháng hiện tại với tháng trước nó
         /// </summary>
         private void CompareData()
@@ -291,6 +272,40 @@ namespace BookStoreManager
             CompareRevenue = bus.CompareRevenue();
 
             DataContext = this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TitleColumn_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _columnSelected = TitleColumn.SelectedIndex;
+
+            _originalData = productDao.getDescList(_columnSelected, _typeViewSelected);
+            foreach (var item in _originalData)
+            {
+                item.RevenueFormatted = item.Revenue.ToString("#,##0"); // Format dạng số nguyên có dấu phân cách ngàn
+            }
+            UpdatePagination();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TypeView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _typeViewSelected = TypeView.SelectedIndex;
+
+            _originalData = productDao.getDescList(_columnSelected, _typeViewSelected);
+            foreach (var item in _originalData)
+            {
+                item.RevenueFormatted = item.Revenue.ToString("#,##0"); // Format dạng số nguyên có dấu phân cách ngàn
+            }
+            UpdatePagination();
         }
 
         /// <summary>
@@ -327,78 +342,21 @@ namespace BookStoreManager
         private void UpdatePagination()
         {
             int startIndex = _currentPage * _pageSize;
-            var dataForCurPage = _originalData.Skip(startIndex).Take(_pageSize).ToList();
-            txtItemPage.Text = $"{_currentPage + 1}/{_totalPage + 1}";
+            txtItemPage.Text = $"{_currentPage + 1}/{_originalData.Count / _pageSize + 1}";
+            _dataForCurPage = _originalData.Skip(startIndex).Take(_pageSize).ToList();
+
 
             if (_currentPage == _totalPage)
                 nextButton.IsEnabled = false;
             else
                 nextButton.IsEnabled = true;
+
             if (_currentPage == 0)
                 prevButton.IsEnabled = false;
             else
                 prevButton.IsEnabled = true;
 
-            RankingTable.ItemsSource = dataForCurPage;
-        }
-
-        /// <summary>
-        /// Chức năng sắp xếp của bảng
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RankingTable_Sorting(object sender, DataGridSortingEventArgs e)
-        {
-            DataGridColumn column = e.Column;
-
-            bool isSameColumn = _currentSortColumn == column;
-
-            // Đảo hướng sắp xếp nếu cùng một cột đang được sắp xếp lại
-            if (isSameColumn)
-            {
-                _currentSortDirection = _currentSortDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
-            }
-            else
-            {
-                _currentSortDirection = ListSortDirection.Ascending;
-            }
-
-            _currentSortColumn = column;
-
-            // Xóa sắp xếp trước đó
-            foreach (var col in RankingTable.Columns)
-            {
-                col.SortDirection = null;
-            }
-
-            // Thiết lập cột và hướng sắp xếp mới
-            column.SortDirection = _currentSortDirection;
-
-            // Sắp xếp dữ liệu
-            if (column.Header.ToString() == "Doanh thu")
-            {
-                if (_currentSortDirection == ListSortDirection.Ascending)
-                {
-                    _originalData.Sort((x, y) => x.Revenue.CompareTo(y.Revenue));
-                }
-                else
-                {
-                    _originalData.Sort((x, y) => y.Revenue.CompareTo(x.Revenue));
-                }
-            }
-            else if (column.Header.ToString() == "Số lượng")
-            {
-                if (_currentSortDirection == ListSortDirection.Ascending)
-                {
-                    _originalData.Sort((x, y) => x.Quantity.CompareTo(y.Quantity));
-                }
-                else
-                {
-                    _originalData.Sort((x, y) => y.Quantity.CompareTo(x.Quantity));
-                }
-            }
-
-            UpdatePagination();
+            RankingTable.ItemsSource = _dataForCurPage;
         }
     }
 }

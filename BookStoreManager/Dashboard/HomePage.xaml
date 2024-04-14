@@ -16,6 +16,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
+            <!-- Số liệu tháng này -->
             <StackPanel>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -36,7 +37,7 @@
                             <TextBlock Text="{Binding CompareOrder}"/>
                         </StackPanel>
                     </Grid>
-                    
+
                     <!-- Lợi nhuận tháng -->
                     <Grid Grid.Column="1" Margin="10, 0, 10, 0">
                         <Grid.ColumnDefinitions>
@@ -72,11 +73,11 @@
                         <ComboBoxItem>Tháng 11</ComboBoxItem>
                         <ComboBoxItem>Tháng 12</ComboBoxItem>
                     </ComboBox>
-                    
+
                     <!-- Chọn năm -->
                     <TextBox x:Name="Year" Width="100" Margin="0,0,10,0" Visibility="Collapsed" />
                     <Button x:Name="btn_Year" Content="Done" Width="40" Margin="0,0,10,0" Visibility="Collapsed" Click="btn_Year_Click"/>
-                    
+
                     <!-- Chọn kiểu xem -->
                     <ComboBox x:Name="MonthYear" Width="100" SelectionChanged="MonthYear_SelectionChanged" SelectedIndex="0">
                         <ComboBoxItem>Theo tháng</ComboBoxItem>
@@ -112,11 +113,26 @@
                 </Grid>
             </StackPanel>
 
+            <!-- Bảng top doanh thu -->
             <StackPanel Margin="10, 10, 0, 0">
                 <TextBlock Text="Thống kê số lượng và doanh số của từng sản phẩm" FontSize="20px" FontWeight="Bold"/>
-                
+                <!-- Ô chọn cách xem -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                    <ComboBox x:Name="TitleColumn" Width="100" Margin="0,0,10,0" SelectionChanged="TitleColumn_SelectionChanged">
+                        <ComboBoxItem>Số lượng</ComboBoxItem>
+                        <ComboBoxItem>Doanh thu</ComboBoxItem>
+                    </ComboBox>
+                    
+                    <ComboBox x:Name="TypeView" Width="100" Margin="0,0,10,0" SelectionChanged="TypeView_SelectionChanged">
+                        <ComboBoxItem>Ngày</ComboBoxItem>
+                        <ComboBoxItem>Tháng</ComboBoxItem>
+                        <ComboBoxItem>Năm</ComboBoxItem>
+                        <ComboBoxItem>Tất cả</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
                 <!-- Bảng thống kê doanh thu -->
-                <DataGrid x:Name="RankingTable" ItemsSource="{Binding collectionView}" IsReadOnly="True" AutoGenerateColumns="False" Sorting="RankingTable_Sorting" MinHeight="275px" RowHeight="25">
+                <DataGrid x:Name="RankingTable" ItemsSource="{Binding collectionView}" IsReadOnly="True" AutoGenerateColumns="False" MinHeight="275px" RowHeight="25">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="ID">
                             <DataGridTemplateColumn.CellTemplate>
@@ -132,14 +148,14 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Số lượng" SortMemberPath="Quantity">
+                        <DataGridTemplateColumn Header="Số lượng">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Quantity}" FontSize="16" FontWeight="Bold"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Doanh thu" SortMemberPath="Revenue">
+                        <DataGridTemplateColumn Header="Doanh thu">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding RevenueFormatted}" FontSize="16" FontWeight="Bold"/>
@@ -148,17 +164,14 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                
+
                 <!-- Điều khiển bảng -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="prevButton" Content="Prev" FontSize="15" Width="55" Height="25" Margin="5" Click="prevButton_click"/>
-                    <TextBlock x:Name="txtItemPage" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="txtItemPage" Text="{Binding Pages}" FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     <Button x:Name="nextButton" Content="Next" FontSize="15" Width="55" Height="25" Margin="5" Click="nextButton_click"/>
                 </StackPanel>
             </StackPanel>
-
-
         </StackPanel>
-
     </Grid>
 </UserControl>
