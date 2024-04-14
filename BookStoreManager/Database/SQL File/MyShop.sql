@@ -247,7 +247,7 @@ VALUES  (N'Nguyễn Văn Anh', '03/05/2024', 476500),					--1--
 		(N'Kim Trân', '12/03/2023', 229770),						--23--
 		(N'Phương Phương', '05/10/2023', 386740),					--24--
 		(N'Quỳnh Quỳnh', '09/02/2023', 386500),						--25--
-		(N'David', '11/11/2024', 1029700),							--26--
+		(N'David', '04/11/2024', 1029700),							--26--
 		(N'Jeon Jungkook', '09/12/2023', 1391250),					--27--
 		(N'Nguyễn Thúc Thuỳ Tiên', '03/23/2024', 801760),			--28--
 		(N'Đông Mẫn', '06/13/2023', 607870)							--29--
@@ -364,8 +364,3 @@ VALUES  (1, 5, 5),
 		(29, 8, 10),
 		(29, 9, 5),	
 		(29, 11, 1)
-
-SELECT BOOK.BOOK_ID, BOOK.BOOK_NAME,SUM(ORDER_ITEM.QUANTITY) AS QUANTITY , SUM(ORDER_ITEM.QUANTITY)*BOOK.PRICE AS REVENUE
-FROM BOOK JOIN ORDER_ITEM ON BOOK.BOOK_ID = ORDER_ITEM.BOOK_ID
-GROUP BY BOOK.BOOK_ID, BOOK.BOOK_NAME, BOOK.PRICE
-ORDER BY QUANTITY

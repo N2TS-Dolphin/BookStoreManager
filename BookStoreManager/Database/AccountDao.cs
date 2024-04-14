@@ -13,7 +13,7 @@ namespace BookStoreManager.Database
     {
         public List<AccountModel> accounts = new List<AccountModel>();
 
-        private string _connectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;"; //Change Server
+        private string _connectionString = DBConfig.GetConnectionString();
 
         private SqlConnection _connection;
 

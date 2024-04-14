@@ -36,7 +36,7 @@ namespace BookStoreManager
         HomePageBus bus = new HomePageBus();
 
         private List<string> _months = new List<string>() { "January", "Febrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        private int _MonthSelected, _YearSelected, _currentPage = 0;
+        private int _MonthSelected, _YearSelected, _currentPage = 0, _totalPage = 0;
         private const int _pageSize = 10;
         private DataGridColumn _currentSortColumn;
         private ListSortDirection _currentSortDirection = ListSortDirection.Ascending;
@@ -58,25 +58,46 @@ namespace BookStoreManager
         {
             InitializeComponent();
 
+
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Set dữ liệu cho các biến toàn cục
             RevenueSeriesCollection = new SeriesCollection();
             OrderSeriesCollection = new SeriesCollection();
             Labels = new List<string>();
             _originalData = productDao.getRankingList();
+
+            // Format dữ liệu doanh thu theo định dạng
             foreach (var item in _originalData)
             {
-                item.RevenueFormatted = item.Revenue.ToString("#,0"); // Format dạng số nguyên có dấu phân cách ngàn
+                item.RevenueFormatted = item.Revenue.ToString("#,##0"); // Format dạng số nguyên có dấu phân cách ngàn
+            }
+            _totalPage = _originalData.Count() / _pageSize;
+
+            // Format dữ liệu só lượng và doanh thu theo tháng theo định dạng
+            foreach (var data in revenueDao.GetRevenuesByMonth())
+            {
+                if (data.Month == DateTime.Now.Month && data.Year == DateTime.Now.Year)
+                {
+                    TotalOrderCurMonth = data.Quantity.ToString("#,##0");
+                    TotalRevenueCurMonth = data.Revenue.ToString("#,##0");
+                }
             }
 
             UpdatePagination();
             CompareData();
-            IncomeCurMonth(revenueDao.GetRevenuesByMonth());
+
+            DataContext = this;
         }
 
         /// <summary>
         /// Truyền dữ liệu doanh thu từ Database vào Chart
         /// </summary>
+        /// <param name="Quantity">Danh sách số lượng theo ngày</param>
         /// <param name="Revenue">Danh sách doanh thu theo ngày</param>
-        /// <param name="days">Danh sách ngày</param>
+        /// <param name="Temps">Danh sách ngày</param>
         private void LoadChart(List<int> Quantity, List<int> Revenue, List<string> Temps)
         {
             // Thêm dữ liệu vào Chart
@@ -243,6 +264,10 @@ namespace BookStoreManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         private void IncomeCurMonth(List<RevenueModel> data)
         {
             for (int i = 0; i < data.Count; i++)
@@ -251,7 +276,7 @@ namespace BookStoreManager
                 {
                     TotalOrderCurMonth = data[i].Quantity.ToString("#,##0");
                     TotalRevenueCurMonth = data[i].Revenue.ToString("#,##0");
-                }    
+                }
             }
 
             DataContext = this;
@@ -268,6 +293,11 @@ namespace BookStoreManager
             DataContext = this;
         }
 
+        /// <summary>
+        /// Chức năng quay lại trang trước
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void prevButton_click(object sender, RoutedEventArgs e)
         {
             if (_currentPage > 0)
@@ -277,22 +307,46 @@ namespace BookStoreManager
             }
         }
 
+        /// <summary>
+        /// Chức năng qua trang tiếp theo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void nextButton_click(object sender, RoutedEventArgs e)
         {
-            if (_currentPage < _originalData.Count/_pageSize)
-            { 
+            if (_currentPage < _originalData.Count / _pageSize)
+            {
                 _currentPage++;
                 UpdatePagination();
             }
         }
 
+        /// <summary>
+        /// Cập nhật bảng theo trang
+        /// </summary>
         private void UpdatePagination()
         {
             int startIndex = _currentPage * _pageSize;
             var dataForCurPage = _originalData.Skip(startIndex).Take(_pageSize).ToList();
+            txtItemPage.Text = $"{_currentPage + 1}/{_totalPage + 1}";
+
+            if (_currentPage == _totalPage)
+                nextButton.IsEnabled = false;
+            else
+                nextButton.IsEnabled = true;
+            if (_currentPage == 0)
+                prevButton.IsEnabled = false;
+            else
+                prevButton.IsEnabled = true;
+
             RankingTable.ItemsSource = dataForCurPage;
         }
 
+        /// <summary>
+        /// Chức năng sắp xếp của bảng
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RankingTable_Sorting(object sender, DataGridSortingEventArgs e)
         {
             DataGridColumn column = e.Column;
@@ -340,13 +394,11 @@ namespace BookStoreManager
                 }
                 else
                 {
-                    _originalData.Sort((x,y)=>y.Quantity.CompareTo(x.Quantity));
+                    _originalData.Sort((x, y) => y.Quantity.CompareTo(x.Quantity));
                 }
             }
 
-            int startIndex = _currentPage * _pageSize;
-            var dataForCurPage = _originalData.Skip(startIndex).Take(_pageSize).ToList();
-            RankingTable.ItemsSource = dataForCurPage;
+            UpdatePagination();
         }
     }
 }

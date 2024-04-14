@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="Dashboard" Height="630" Width="1120">
+        Title="Dashboard" Height="750" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- Định nghĩa hai cột với độ rộng tỷ lệ -->
