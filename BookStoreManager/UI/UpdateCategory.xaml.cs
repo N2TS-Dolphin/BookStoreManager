@@ -13,30 +13,29 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BookStoreManager
+namespace BookStoreManager.UI
 {
     /// <summary>
-    /// Interaction logic for AddCategory.xaml
+    /// Interaction logic for UpdateCategory.xaml
     /// </summary>
-    public partial class AddCategory : Window
+    public partial class UpdateCategory : Window
     {
-        public CategoryModel _newCategory {  get; set; }
+        public CategoryModel _selectedCategory { get; set; }
         CategoryDao _categoryDao = new CategoryDao();
-        public AddCategory()
+        public UpdateCategory(CategoryModel selectedCategory)
         {
             InitializeComponent();
+            _selectedCategory = selectedCategory;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _newCategory = new CategoryModel();
-            tbox.DataContext = _newCategory;
+            DataContext = _selectedCategory;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //int insertedID = _categoryDao.InsertNewCategory((CategoryModel)_newCategory.Clone());
-            //_newCategory.CategoryID = insertedID;
+            //_categoryDao.UpdateACategory((CategoryModel)_selectedCategory.Clone());
             DialogResult = true;
         }
     }

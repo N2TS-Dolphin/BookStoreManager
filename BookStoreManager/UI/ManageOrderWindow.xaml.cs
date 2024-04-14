@@ -18,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BookStoreManager
+namespace BookStoreManager.UI
 {
     /// <summary>
     /// Interaction logic for ManageOrderWindow.xaml

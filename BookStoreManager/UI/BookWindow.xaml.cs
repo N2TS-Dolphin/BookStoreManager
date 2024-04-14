@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using BookStoreManager.Process;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,7 +18,7 @@ using BookStoreManager.Database;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Win32;
 
-namespace BookStoreManager
+namespace BookStoreManager.UI
 {
     /// <summary>
     /// Interaction logic for BookWindow.xaml

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 
 using BookStoreManager.Database;
 using BookStoreManager.DataType;
+using BookStoreManager.UI;
 
 namespace BookStoreManager
 {

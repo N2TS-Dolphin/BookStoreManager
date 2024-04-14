@@ -1,8 +1,6 @@
 ﻿using BookStoreManager.Database;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,9 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace BookStoreManager
+namespace BookStoreManager.Process
 {
     public class BookShellBus
     {
@@ -28,8 +25,8 @@ namespace BookStoreManager
         public BookShellBus()
         {
             CurrentPage = 1; TotalPages = 0;
-            Search = ""; Category = "All"; 
-            PriceFrom = 0; PriceTo = Int32.MaxValue; 
+            Search = ""; Category = "All";
+            PriceFrom = 0; PriceTo = Int32.MaxValue;
             Sort = 0; ItemPerPage = 9;
         }
         public BindingList<CategoryModel> GetAllCategory()
@@ -77,7 +74,7 @@ namespace BookStoreManager
         }
         public BindingList<CategoryModel> AddCategory(CategoryModel category, BindingList<CategoryModel> categories)
         {
-            BindingList <CategoryModel> result = categories;
+            BindingList<CategoryModel> result = categories;
             CategoryModel newCategory = (CategoryModel)category.Clone();
             int insertedID = CategoryDao.InsertNewCategoryToDB((CategoryModel)newCategory.Clone());
             newCategory.CategoryID = insertedID;
@@ -118,7 +115,7 @@ namespace BookStoreManager
             Search = search;
             CurrentPage = 1;
         }
-        public void FilterPrice(int priceFrom, int  priceTo)
+        public void FilterPrice(int priceFrom, int priceTo)
         {
             PriceFrom = priceFrom;
             PriceTo = priceTo;
@@ -135,9 +132,10 @@ namespace BookStoreManager
             SpreadsheetDocument document;
             try
             {
-                 document = SpreadsheetDocument.Open(filePath, false);
-            }catch(Exception ex) { MessageBox.Show("File excel đang được mở, vui lòng đóng file trước khi Import."); return; }
-            
+                document = SpreadsheetDocument.Open(filePath, false);
+            }
+            catch (Exception ex) { MessageBox.Show("File excel đang được mở, vui lòng đóng file trước khi Import."); return; }
+
             var wbPart = document.WorkbookPart;
             var sheets = wbPart.Workbook.Descendants<Sheet>();
 
@@ -159,11 +157,11 @@ namespace BookStoreManager
                 int price = int.Parse(GetCellValue(priceCell, wbPart));
                 string category = GetCellValue(categoryCell, wbPart);
                 string image = GetCellValue(imageCell, wbPart);
-                
+
                 BookModel newBook = new BookModel(bookName, author, price, image);
                 BindingList<CategoryModel> newBookCategories = SplitCategory(category, categoryList);
                 newBook.Category = newBookCategories;
-                
+
                 int bookID = BookDao.InsertNewBookToDB(newBook);
                 newBook.BookID = bookID;
                 CategoryDao.InsertNewBookCategoryToDB(newBook);

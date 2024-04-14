@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace BookStoreManager
+namespace BookStoreManager.Process
 {
-    class BookManagerBus
+    public class BookManagerBus
     {
         public static BindingList<CategoryModel> GetCategories()
         {
@@ -49,7 +49,7 @@ namespace BookStoreManager
         }
         public static BindingList<CategoryModel> GetUnuseCategory(BookModel book)
         {
-            BindingList <CategoryModel> result = CategoryDao.GetUnuseCategoriesFromDB(book);
+            BindingList<CategoryModel> result = CategoryDao.GetUnuseCategoriesFromDB(book);
             result.OrderBy(x => x.CategoryName).ToList();
             return result;
         }
