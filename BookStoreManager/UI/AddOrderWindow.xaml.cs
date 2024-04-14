@@ -1,54 +1,69 @@
 ﻿using BookStoreManager.Database;
+using BookStoreManager.DataType;
 using BookStoreManager.Process;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace BookStoreManager.UI
 {
-    /// <summary>
-    /// Interaction logic for AddOrderWindow.xaml
-    /// </summary>
     public partial class AddOrderWindow : Window
     {
+        private OrderBus _orderBus = new OrderBus();
+        private string _search = "";
+
         public AddOrderWindow()
         {
             InitializeComponent();
             this.Language = XmlLanguage.GetLanguage("vi-VN");
+            Loaded += AddOrderWindow_Loaded;
+        }
+
+        private void AddOrderWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Set the text of customerSearchTB
+            customerSearchTB.Text = _search;
+
+            // Load customers into the DataGrid
+            CustomerDataGrid.ItemsSource = _orderBus.GetAllCustomers(_search);
         }
 
         private void AddOrderBtn_Click(object sender, RoutedEventArgs e)
         {
-            string customerName = txtCustomerName.Text;
-            DateTime? orderDate = dpOrderDate.SelectedDate;
+            CustomerModel selectedCustomer = (CustomerModel)CustomerDataGrid.SelectedItem;
 
-            if (string.IsNullOrWhiteSpace(customerName) || !orderDate.HasValue)
+            if (selectedCustomer == null)
             {
-                MessageBox.Show("Vui lòng nhập đủ thông tin.", "Thiếu Thông Tin", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Vui lòng chọn khách hàng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Create an instance of OrderBus
-            OrderBus orderBus = new OrderBus();
+            // Get the selected order date from the DatePicker
+            DateTime? orderDate = dpOrderDate.SelectedDate;
 
-            // Call the AddOrder method on the OrderBus instance
-            orderBus.AddOrder(customerName, orderDate.Value);
+            if (!orderDate.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn ngày đặt đơn.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Add the order using the OrderBus
+            _orderBus.AddOrder(selectedCustomer.CustomerID, orderDate.Value);
 
             MessageBox.Show("Thêm đơn hàng thành công.", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            // Close the AddOrderWindow
             this.Close();
+        }
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string searchText = customerSearchTB.Text;
+
+            // Search for customers using the OrderBus
+            BindingList<CustomerModel> searchResults = _orderBus.SearchCustomers(searchText);
+
+            // Update the DataGrid with the search results
+            CustomerDataGrid.ItemsSource = searchResults;
         }
     }
 }

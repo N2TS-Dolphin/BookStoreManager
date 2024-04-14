@@ -1,4 +1,5 @@
 ﻿using BookStoreManager.Database;
+using BookStoreManager.DataType;
 using BookStoreManager.Process;
 using System;
 using System.Collections.Generic;
@@ -233,11 +234,11 @@ namespace BookStoreManager.UI
 
         private void SaveOrderDetailBtn_Click(object sender, RoutedEventArgs e)
         {
-            string newCustomerName = order.CustomerName;
+            CustomerModel newCustomer = order.Customer;
             DateTime newOrderDate = order.OrderDate;
             int newTotalPrice = order.Price;
 
-            orderDetailBus.UpdateOrder(orderId, newCustomerName, newOrderDate, newTotalPrice);
+            orderDetailBus.UpdateOrder(orderId, newCustomer.CustomerID, newOrderDate, newTotalPrice);
             orderDetailBus.SaveNewOrderItems(orderId, orderDetails);
             DialogResult = true;
         }
@@ -245,6 +246,11 @@ namespace BookStoreManager.UI
         private void CancelOrderDetailBtn_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void updateCustomerInfo_Click(object sender, RoutedEventArgs e)
+        {
+            //Mở window edit thông tin của customer
         }
     }
 }

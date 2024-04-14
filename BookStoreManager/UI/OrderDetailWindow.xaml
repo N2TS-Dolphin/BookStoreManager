@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="OrderDetailWindow" Height="600" Width="750">
+        Title="OrderDetailWindow" Height="800" Width="750">
 
     <Window.Resources>
         <ResourceDictionary>
             <local:PriceConverter x:Key="VndConverter"/>
+            <local:OrderDateConverter x:Key="orderDateConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../ResourceDictionary/OrderResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -40,37 +41,43 @@
             <TextBlock Text="{Binding OrderId}" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
-            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+            
+            <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
+                    <Grid>
+                        <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Tên khách hàng:"/>
+                        <TextBlock Width="220" x:Name="txtCustomerName" Text="{Binding Customer.CustomerName}" FontWeight="DemiBold" Margin="10,10" Style="{StaticResource InfoTextBlockStyle}">
+
+                        </TextBlock>
+
+                    </Grid>
+                </Border>
+                <Button x:Name="updateCustomerInfo" Grid.Column="3" Grid.Row="2" Style="{StaticResource WhiteButtonStyle}" Width="120" Height="30" 
+                        HorizontalAlignment="Left" Margin="5,0,0,0" Content="Sửa thông tin" Click="updateCustomerInfo_Click"></Button>
+            </StackPanel>
+           
+
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350" HorizontalAlignment="Left">
                 <Grid>
-                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Tên khách hàng:"/>
-                    <TextBox Width="220" x:Name="txtCustomerName" Text="{Binding CustomerName}" FontWeight="DemiBold" Margin="10,10" >
-                        <TextBox.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="30"/>
-                            </Style>
-                        </TextBox.Resources>
-                        <TextBox.Style>
-                            <StaticResource ResourceKey="InfoTextBoxStyle"/>
-                        </TextBox.Style>
-                    </TextBox>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Email:"/>
+                    <TextBlock Width="220" x:Name="txtCustomerEmail" Text="{Binding Customer.CustomerEmail}" FontWeight="DemiBold" Margin="10,10" Style="{StaticResource InfoTextBlockStyle}">
+                    </TextBlock>
+
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350"  HorizontalAlignment="Left">
                 <Grid>
                     <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Ngày đặt hàng:"/>
-                    <DatePicker x:Name="dpOrderDate" SelectedDate="{Binding OrderDate}" Style="{StaticResource InfoDatePickerStyle}" 
-                                FontWeight="DemiBold" Width="220" Margin="10,10" VerticalAlignment="Center">
-                        <DatePicker.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="30"/>
-                            </Style>
-                        </DatePicker.Resources>
-                    </DatePicker>
+            
+                    <TextBlock Width="220" x:Name="dpOrderDate" Text="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" FontWeight="DemiBold" Margin="10,10" Style="{StaticResource InfoTextBlockStyle}">
+                    </TextBlock>
                 </Grid>
             </Border>
         </StackPanel>
+
+       
 
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
             <Button x:Name="AddBtn" Content="Add"  Style="{StaticResource OtherButtonStyle}" Background="LightGreen" FontSize="12" Width="55" Height="35" Click="AddProductBtn_Click" Margin="0,0,10,0"/>
