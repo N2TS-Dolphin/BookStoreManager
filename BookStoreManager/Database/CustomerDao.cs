@@ -76,7 +76,76 @@ namespace BookStoreManager.Database
             return new Tuple<BindingList<CustomerModel>, int>(result, totalPages);
         }
 
-        public CustomerModel GetCustomerDetailFromDB(int customerId)
+
+        public void InsertCustomerIntoDB(CustomerModel customer)
+        {
+            while (_connection.State != ConnectionState.Open)
+            {
+                try
+                {
+                    _connection.Open();
+                    string sql = """
+                        insert into CUSTOMER (CUSTOMER_NAME, CUSTOMER_EMAIL, CUSTOMER_PHONE)
+                        values (@Name, @Email, @Phone)
+                        """;
+                    var command = new SqlCommand(sql, _connection);
+                    command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = customer.CustomerName;
+                    command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar).Value = customer.CustomerEmail;
+                    command.Parameters.Add("@Phone", System.Data.SqlDbType.VarChar).Value = customer.CustomerPhone;
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex) { }
+            }
+            _connection.Close();
+        }
+
+        public void UpdateCustomerToDB(CustomerModel customer)
+        {
+            while (_connection.State != ConnectionState.Open)
+            {
+                try
+                {
+                    _connection.Open();
+                    string sql = """
+                        update CUSTOMER set CUSTOMER_NAME = @Name, CUSTOMER_EMAIL = @Email, CUSTOMER_PHONE = @Phone
+                        where CUSTOMER_ID = @Id
+                        """;
+                    var command = new SqlCommand(sql, _connection);
+                    command.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = customer.CustomerID;
+                    command.Parameters.Add("@Name", System.Data.SqlDbType.NVarChar).Value = customer.CustomerName;
+                    command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar).Value = customer.CustomerEmail;
+                    command.Parameters.Add("@Phone", System.Data.SqlDbType.VarChar).Value = customer.CustomerPhone;
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex) { }
+            }
+            _connection.Close();
+        }
+
+        public void DeleteCustomerFromDB(CustomerModel customer)
+        {
+            while (_connection.State != ConnectionState.Open)
+            {
+                //try
+                //{
+                    _connection.Open();
+                    string sql = """
+                        delete from CUSTOMER
+                        where CUSTOMER_ID = @Id
+                        """;
+                    var command = new SqlCommand(sql, _connection);
+                    command.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = customer.CustomerID;
+
+                    command.ExecuteNonQuery();
+                //}
+                //catch (Exception ex) { }
+            }
+            _connection.Close();
+        }
+      
+       public CustomerModel GetCustomerDetailFromDB(int customerId)
         {
             CustomerModel customer = null;
 

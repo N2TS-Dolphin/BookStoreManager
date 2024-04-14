@@ -49,8 +49,8 @@
             </Border>
             <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10"> 
                 <Button x:Name="addButton" Content="Thêm" Style="{StaticResource ManageButton}" Background="LightGreen" Click="addButton_Click"/>
-                <Button x:Name="updateButton" Content="Xóa" Style="{StaticResource ManageButton}" Background="Yellow" Click="updateButton_Click"/>
-                <Button x:Name="deleteButton" Content="Sửa" Style="{StaticResource ManageButton}" Background="Red" Click="deleteButton_Click"/>
+                <Button x:Name="updateButton" Content="Sửa" Style="{StaticResource ManageButton}" Background="Yellow" Click="updateButton_Click"/>
+                <Button x:Name="deleteButton" Content="Xóa" Style="{StaticResource ManageButton}" Background="Red" Click="deleteButton_Click"/>
             </StackPanel>
         </Grid>
         <DataGrid x:Name="CustomerDataGrid" Grid.Row="2" Margin="10"
