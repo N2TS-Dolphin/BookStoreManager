@@ -35,7 +35,7 @@
         </Grid.RowDefinitions>
 
 
-        <Button x:Name="refreshButton" Content="Refresh Page" Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Left" Margin="10,0,0,0"
+        <Button x:Name="refreshButton" Content="Tải lại trang" Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Left" Margin="10,0,0,0"
          FontSize="15" Grid.Row="1" Grid.Column="1" Width="100" Height="30" Click="refreshButton_Click"/>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
             <Button x:Name="AddBtn" Content="Add"  Style="{StaticResource OtherButtonStyle}" Background="LightGreen" FontSize="12" Width="55" Height="35" Click="AddBtn_Click" Margin="0,0,10,0"/>
@@ -44,13 +44,14 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
-            <TextBlock Text="From" Foreground="#006070" FontSize="15" VerticalAlignment="Center" FontWeight="DemiBold" Margin="10,0"/>
+            <TextBlock Text="Từ ngày:" Foreground="#006070" FontSize="15" VerticalAlignment="Center" FontWeight="DemiBold" Margin="10,0"/>
             <DatePicker Name="FromDatePicker" VerticalAlignment="Center" Height="25"  IsTodayHighlighted="True" AutomationProperties.IsOffscreenBehavior="Onscreen"/>
 
-            <TextBlock Text="To" Foreground="#006070" FontSize="15" VerticalAlignment="Center" FontWeight="DemiBold" Margin="10,0"/>
+            <TextBlock Text="Đến ngày:" Foreground="#006070" FontSize="15" VerticalAlignment="Center" FontWeight="DemiBold" Margin="10,0"/>
             <DatePicker Name="ToDatePicker" VerticalAlignment="Center" Height="25" IsTodayHighlighted="True"/>
 
-            <Button Content="Filter" Style="{StaticResource WhiteButtonStyle}"  VerticalAlignment="Center" FontSize="15" Width="55"  Height="25" Name="FilterBtn" Click="FilterBtn_Click" Margin="10,0"/>
+            <Button Content="Lọc" Style="{StaticResource WhiteButtonStyle}"  VerticalAlignment="Center" 
+                    FontSize="15" Width="55"  Height="25" Name="FilterBtn" Click="FilterBtn_Click" Margin="10,0"/>
 
         </StackPanel>
 
@@ -76,17 +77,17 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
-                <DataGridTextColumn Header="Customer Name" Binding="{Binding CustomerName}" Width="3*"/>
-                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
-                <DataGridTextColumn Header="Total Price" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
+                <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding CustomerName}" Width="3*"/>
+                <DataGridTextColumn Header="Ngày đặt đơn" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
+                <DataGridTextColumn Header="Giá tổng" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
                 
             </DataGrid.Columns>
         </DataGrid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center">
-            <Button x:Name="PrevBtn" Content="Prev"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
+            <Button x:Name="PrevBtn" Content="Sau"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
             <TextBlock x:Name="txtItemPage" Text="1/1" Foreground="#006070" FontWeight="DemiBold"  FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button x:Name="NextBtn" Content="Next"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
+            <Button x:Name="NextBtn" Content="Trước"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
         </StackPanel>
 
 

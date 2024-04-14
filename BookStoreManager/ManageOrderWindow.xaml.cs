@@ -98,7 +98,7 @@ namespace BookStoreManager
             }
             else
             {
-                MessageBox.Show("Please select an order to update.");
+                MessageBox.Show("Vui lòng chọn đơn hàng để cập nhật.");
             }
         }
 
@@ -107,7 +107,7 @@ namespace BookStoreManager
             if (OrderDataGrid.SelectedItem != null)
             {
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
-                var res = MessageBox.Show($"Are you sure to delete this order: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var res = MessageBox.Show($"Bạn có chắc muốn xóa đơn hàng: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (res == MessageBoxResult.Yes)
                 {
@@ -118,7 +118,7 @@ namespace BookStoreManager
             }
             else
             {
-                MessageBox.Show("Please select an order to delete.");
+                MessageBox.Show("Vui lòng chọn đơn hàng để xóa.");
             }
         }
 
@@ -205,7 +205,7 @@ namespace BookStoreManager
             }
             else
             {
-                MessageBox.Show("Please select an order to view details.");
+                MessageBox.Show("Vui lòng chọn đơn hàng để xem chi tiết.");
             }
         }
 
@@ -214,7 +214,7 @@ namespace BookStoreManager
             if (OrderDataGrid.SelectedItem != null)
             {
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
-                var res = MessageBox.Show($"Are you sure to delete this order: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var res = MessageBox.Show($"Bạn có chắc muốn xóa đơn hàng: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (res == MessageBoxResult.Yes)
                 {
@@ -225,7 +225,7 @@ namespace BookStoreManager
             }
             else
             {
-                MessageBox.Show("Please select an order to delete.");
+                MessageBox.Show("Vui lòng chọn đơn hàng để xóa.");
             }
         }
 
@@ -245,7 +245,7 @@ namespace BookStoreManager
             orderBus.FromDate = null;
             orderBus.ToDate = null;
             LoadPage();
-            MessageBox.Show("Refresh Page Successfully");
+            MessageBox.Show("Tải lại trang thành công");
         }
     }
 
