@@ -76,7 +76,7 @@
           RowHeight="35" HeadersVisibility="Column">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
+                <DataGridTextColumn Header="OrderID" Binding="{Binding OrderId}" Width="1.2*"/>
                 <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding Customer.CustomerName}" Width="3*"/>
                 <DataGridTextColumn Header="Email" Binding="{Binding Customer.CustomerEmail}" Width="3*"/>
                 <DataGridTextColumn Header="Ngày đặt đơn" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
