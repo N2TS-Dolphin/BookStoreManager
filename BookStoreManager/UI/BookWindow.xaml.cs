@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using BookStoreManager.Process;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,9 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BookStoreManager.Database;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Win32;
 
-namespace BookStoreManager
+namespace BookStoreManager.UI
 {
     /// <summary>
     /// Interaction logic for BookWindow.xaml
@@ -27,6 +29,7 @@ namespace BookStoreManager
         public BindingList<CategoryModel> CategoryList { get; set; }
         public BookModel BookDetail { get; set; }
         public BookShellBus BookShell { get; set; }
+        public BindingList<string> SortName { get; set; }
         public BookWindow()
         {
             InitializeComponent();
@@ -37,25 +40,29 @@ namespace BookStoreManager
             BookShell = new BookShellBus();
             CategoryList = BookShell.GetAllCategory();
             categoryListView.ItemsSource = CategoryList;
+            
+            itemCountTB.Text = "9";
+
+            SortName = BookShell.GetSortName();
+            sortCB.ItemsSource = SortName;
+            sortCB.SelectedIndex = 0;
 
             LoadBookList();
             LoadBookDetail(0);            
         }
         public void LoadBookList()
         {
-            var (items, totalItems, totalPages, currentPage) = BookShell.GetBookList();
+            var (items, totalPages, currentPage) = BookShell.GetBookList();
             BookList = items;
             bookListView.ItemsSource = BookList;
 
-            txtItemsCount.Text = $"Kết quả: {totalItems}";
             txtItemPage.Text = $"{currentPage}/{totalPages}";
-            
         }
         public void LoadBookDetail(int index)
         {
             if (BookList.Count == 0)
             {
-                BookDetail.ClearBook();
+                if (BookDetail != null) { BookDetail.ClearBook(); }
                 return;
             }
             BookDetail = (BookModel)BookList[index].Clone();
@@ -108,9 +115,14 @@ namespace BookStoreManager
                     , MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (messbox == MessageBoxResult.OK)
                 {
-                    BookList = BookShell.DeleteBook(selectedBook, BookList);
-                    MessageBox.Show($"Xóa quyển sách {name} thành công.");
-                    Refresh();
+                    try
+                    {
+                        BookList = BookShell.DeleteBook(selectedBook, BookList);
+                        MessageBox.Show($"Xóa quyển sách {name} thành công.");
+                        LoadBookList();
+                        LoadBookDetail(0);
+                    }
+                    catch(Exception ex) { MessageBox.Show($"Xóa quyển sách {name} thất bại."); }
                 }
             }
             else { MessageBox.Show("Chọn quyển sách muốn xóa"); }
@@ -121,11 +133,15 @@ namespace BookStoreManager
             addCategory.ShowDialog();
             if (addCategory.DialogResult == true)
             {
-                var newCategory = addCategory._newCategory;
-                CategoryList = BookShell.AddCategory(newCategory, CategoryList);
-                MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
+                try
+                {
+                    var newCategory = addCategory._newCategory;
+                    CategoryList = BookShell.AddCategory(newCategory, CategoryList);
+                    MessageBox.Show($"Thêm danh mục {newCategory.CategoryName} thành công.");
 
-                Refresh();
+                    Refresh();
+                }
+                catch (Exception ex) { MessageBox.Show($"Thêm danh mục thất bại."); }
             }
         }
         private void updateCategoryButton_Click(object sender, RoutedEventArgs e)
@@ -138,12 +154,16 @@ namespace BookStoreManager
                 updateCategory.ShowDialog();
                 if (updateCategory.DialogResult == true)
                 {
-                    var newCategory = updateCategory._selectedCategory;
-                    CategoryList = BookShell.UpdateCategory(selectedIndex, newCategory, CategoryList);
-                    MessageBox.Show($"Chỉnh sửa danh mục {newCategory.CategoryName} thành công.");
+                    try
+                    {
+                        var newCategory = updateCategory._selectedCategory;
+                        CategoryList = BookShell.UpdateCategory(selectedIndex, newCategory, CategoryList);
+                        MessageBox.Show($"Chỉnh sửa danh mục {newCategory.CategoryName} thành công.");
 
-                    Refresh();
-                } 
+                        Refresh();
+                    }
+                    catch (Exception ex) { MessageBox.Show($"Chỉnh sửa danh mục {CategoryList[selectedIndex].CategoryName} thất bại."); }
+            } 
             }
             else { MessageBox.Show("Chọn danh mục trước khi sửa"); }
         }
@@ -158,10 +178,14 @@ namespace BookStoreManager
                     , MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (messbox == MessageBoxResult.OK)
                 {
-                    CategoryList = BookShell.DeleteCategory(selectedIndex, CategoryList);
-                    MessageBox.Show($"Xóa danh mục {name} thành công.");
+                    try
+                    {
+                        CategoryList = BookShell.DeleteCategory(selectedIndex, CategoryList);
+                        MessageBox.Show($"Xóa danh mục {name} thành công.");
 
-                    Refresh();
+                        Refresh();
+                    }
+                    catch (Exception ex) { MessageBox.Show($"Xóa danh mục {name} thất bại."); }
                 }
             }
             else { MessageBox.Show("Chọn danh mục muốn xóa"); }
@@ -184,7 +208,19 @@ namespace BookStoreManager
 
         private void priceButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var priceFromText = priceFromTB.Text;
+            var priceToText = priceToTB.Text;
+            int priceFrom, priceTo;
+            if (int.TryParse(priceFromText, out priceFrom) && int.TryParse(priceToText, out priceTo))
+            {
+                if(priceFrom >= 0 && priceTo >= priceFrom) { 
+                    BookShell.FilterPrice(priceFrom, priceTo);
+                    LoadBookList();
+                    LoadBookDetail(0);
+                }
+                else{ MessageBox.Show("Giá đầu phải nhỏ hơn giá cuối"); }
+            }
+            else { MessageBox.Show("Giá tiền đang lọc không phải số. Vui lòng nhập số hợp lệ."); }
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)
@@ -201,6 +237,7 @@ namespace BookStoreManager
                 string filePath = openFileDialog.FileName;
                 BookShell.ImportFromExcel(filePath, CategoryList);
                 MessageBox.Show($"Tải dữ liệu thành công.");
+                Refresh();
             }
         }
 
@@ -213,6 +250,26 @@ namespace BookStoreManager
         private void ManageBookWindow_Closed(object sender, EventArgs e)
         {
             Refresh();
+        }
+        private void itemCountButton_Click(object sender, RoutedEventArgs e)
+        {
+            var itemPerPageText = itemCountTB.Text;
+            int itemPerPage;
+            if (int.TryParse(itemPerPageText, out itemPerPage))
+            {
+                BookShell.ChangeItemPerPage(itemPerPage);
+                LoadBookList();
+                LoadBookDetail(0);
+            }
+            else { MessageBox.Show("Số sản phẩm mỗi phải là số. Vui lòng nhập lại"); }
+        }
+        private void sortCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int sort = sortCB.SelectedIndex;
+            BookShell.SortBook(sort);
+
+            LoadBookList();
+            LoadBookDetail(0);
         }
     }
 }

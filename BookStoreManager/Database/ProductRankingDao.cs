@@ -10,11 +10,12 @@ namespace BookStoreManager.Database
 {
     public class ProductRankingDao
     {
-        public List<ProductRankingModel> data = new List<ProductRankingModel>();
+        public List<ProductRankingModel> Ranking = new List<ProductRankingModel>();
         private string _connectionString = DBConfig.GetConnectionString();
 
         public List<ProductRankingModel> getRankingList()
         {
+            List<ProductRankingModel> data = new List<ProductRankingModel>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();

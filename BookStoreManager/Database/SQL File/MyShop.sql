@@ -60,12 +60,27 @@ CREATE TABLE BOOK_CATEGORY
 	PRIMARY KEY (BOOK_ID, CATEGORY_ID)
 )
 
+CREATE TABLE CUSTOMER
+(
+	CUSTOMER_ID INT NOT NULL IDENTITY,
+	CUSTOMER_NAME NVARCHAR(50) NOT NULL,
+	CUSTOMER_EMAIL VARCHAR(50),
+	CUSTOMER_PHONE VARCHAR(50),
+
+	CONSTRAINT PK_CUSTOMER
+	PRIMARY KEY (CUSTOMER_ID)
+)
+
 CREATE TABLE ORDER_LIST
 (
 	ORDER_ID INT NOT NULL IDENTITY,
-	CUSTOMER_NAME NVARCHAR(50) NOT NULL,
+	CUSTOMER_ID INT NOT NULL,
 	ORDER_DATE DATE NOT NULL,
 	PRICE INT DEFAULT(0),
+
+	CONSTRAINT FK_CUSTOMER_ORDER_LIST 
+	FOREIGN KEY (CUSTOMER_ID) 
+	REFERENCES CUSTOMER(CUSTOMER_ID),
 
 	CONSTRAINT PK_ORDER_LIST
 	PRIMARY KEY (ORDER_ID)
@@ -86,8 +101,9 @@ CREATE TABLE ORDER_ITEM
 	REFERENCES BOOK(BOOK_ID),
 )
 
+
 INSERT ACCOUNT(USERNAME, PASS, ENTROPY, FULLNAME)
-VALUES	( 'admin', 'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAERQX5xOj8EWQKUBLmg+3JgAAAAACAAAAAAAQZgAAAAEAACAAAAAIYJ1RdaqoENndp+RZ7OCxf9afuyTmev+ukmvtVbbm/gAAAAAOgAAAAAIAACAAAAAo5Ee4hx8Hv4xbzyqnJ676165sN8+VtmduEXa7PCURkhAAAADCWUhQt6tjsZ2Wogn50vV1QAAAAIvgSs/NROoPcLKtOoWmaoouWvAfHEcw8/6G3686oUXBOJPG0b4RqW3NaIoCT6P2S0cUlh3cq3PTyX7AMaMa5Qo=', 'iBwdigFSr3tVbqx0hg7NYRLFOa8XhQNHCZ8zfBzpLvo=', 'admin')
+VALUES	( 'admin', 'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAIbsY3sNk70+KH1UKBcHORAAAAAACAAAAAAAQZgAAAAEAACAAAAC+GWd4ceX/Uji+13vgF/biat/Ot/H/zDuc70FnJGQfOwAAAAAOgAAAAAIAACAAAABEXGoq44YwnXVobW1EioJg3KLHwcIXRuoHRxWjoVKgPhAAAAA8LJz/edBFw9KBhUOcfJ4DQAAAAN8Liz1UDz7hunKCRPD7KOlME4ZbynP5V4L3xByX0Mpn3YB+XBedTsvvlrQIVBZFtMOXyIeeko8L8SxZocSsOmk=', '0igOTSlnJ+wn3ofDq41p+y7y02NEJhaUrPiTkO6xsl8=', 'admin')
 
 INSERT CATEGORY(CATEGORY_NAME)
 VALUES  ('Novel'),					--1--
@@ -221,36 +237,67 @@ VALUES  (1, 22),
 		(20, 22),
 		(20, 43)
 
-INSERT ORDER_LIST(CUSTOMER_NAME, ORDER_DATE, PRICE)
-VALUES  (N'Nguyễn Văn Anh', '03/05/2024', 476500),					--1--
-		(N'Trần Chí Hào', '03/10/2024', 235750),					--2--
-		(N'Trần Thái Sơn', '03/03/2024', 941500),					--3--
-		(N'Vương Huỳnh Phúc Tịnh', '03/09/2024', 966400),			--4--
-		(N'Ngô Toàn Trung', '03/10/2024', 885150),					--5--
-		(N'Đào Nguyễn Nhật Minh', '04/02/2024', 685100),			--6--
-		(N'Nguyễn Phùng Tài', '10/20/2023', 738250),				--7--
-		(N'Đào Nhật Minh', '04/01/2024', 685100),					--8--
-		(N'Huỳnh Phúc Tịnh', '04/05/2024', 399000),					--9--
-		(N'Lê Quốc An', '04/03/2024', 453970),						--10--
-		(N'Trần Ngọc Mến', '04/02/2024', 401550),					--11--
-		(N'Nguyễn Thank Kiều', '03/24/2024', 555520),				--12--
-		(N'Phương Quỳnh', '03/09/2024', 158200),					--13--
-		(N'Chu Thị Hồng Thương', '04/14/2023', 4495050),			--14--
-		(N'Nguyễn Thanh', '03/01/2024', 1359250),					--15--
-		(N'Duy Minh', '02/18/2024', 281120),						--16--
-		(N'Nguyễn Thanh Cảnh', '02/19/2024', 623250),				--17--
-		(N'Soon Jin Woo', '03/24/2024', 1442200),					--18--
-		(N'Mẫn Kì', '03/26/2024', 412120),							--19--
-		(N'Thế Hưng', '10/13/2023', 519600),						--20--
-		(N'Nam Tuấn', '09/12/2023', 289000),						--21--
-		(N'Trung Phúc', '05/03/2023', 214750),						--22--
-		(N'Kim Trân', '12/03/2023', 229770),						--23--
-		(N'Phương Phương', '05/10/2023', 386740),					--24--
-		(N'Quỳnh Quỳnh', '09/02/2023', 386500),						--25--
-		(N'David', '04/11/2024', 1029700),							--26--
-		(N'Jeon Jungkook', '09/12/2023', 1391250),					--27--
-		(N'Nguyễn Thúc Thuỳ Tiên', '03/23/2024', 801760),			--28--
-		(N'Đông Mẫn', '06/13/2023', 607870)							--29--
+INSERT CUSTOMER(CUSTOMER_NAME, CUSTOMER_EMAIL, CUSTOMER_PHONE)
+VALUES  (N'Nguyễn Văn Anh', 'nvanh@gmail.com', '0938092736'),					--1--
+		(N'Trần Chí Hào', 'tccao@gmail.com', '0902846294'),						--2--
+		(N'Trần Thái Sơn', 'ttson@gmail.com', '0932735284'),					--3--
+		(N'Vương Huỳnh Phúc Tịnh', 'vhpthinh@gmail.com', '0902264926'),			--4--
+		(N'Ngô Toàn Trung', 'nttrung@gmail.com', '0932725494'),					--5--
+		(N'Đào Nguyễn Nhật Minh', 'dnnminh@gmail.com', '0902583511'),			--6--
+		(N'Nguyễn Phùng Tài', 'nptai@gmail.com', '093896243'),					--7--
+		(N'Đào Nhật Minh', 'dnminh@gmail.com', '0902936142'),					--8--
+		(N'Huỳnh Phúc Tịnh', 'hptinh@gmail.com', '0938086352'),					--9--
+		(N'Lê Quốc An', 'lqan@gmail.com', '0932872445'),						--10--
+		(N'Trần Ngọc Mến', 'tnmen@gmail.com', '0902284936'),					--11--
+		(N'Nguyễn Thank Kiều', 'ntkieu@gmail.com', '0938936243'),				--12--
+		(N'Phương Quỳnh', 'pquynh@gmail.com', '0932583846'),					--13--
+		(N'Chu Thị Hồng Thương', 'cththuong@gmail.com', '0932999625'),			--14--
+		(N'Nguyễn Thanh', 'nthanh@gmail.com', '0902134876'),					--15--
+		(N'Duy Minh', 'dminh@gmail.com', '0938983567'),							--16--
+		(N'Nguyễn Thanh Cảnh', 'ntcanh@gmail.com', '0902947254'),				--17--
+		(N'Soon Jin Woo', 'sjwoo@gmail.com', '0902873647'),						--18--
+		(N'Mẫn Kì', 'mki@gmail.com', '0938235987'),								--19--
+		(N'Thế Hưng', 'thung@gmail.com', '0902944722'),							--20--
+		(N'Nam Tuấn', 'ntuan@gmail.com', '0932855262'),							--21--
+		(N'Trung Phúc', 'tphuc@gmail.com', '0938876893'),						--22--
+		(N'Kim Trân', 'ktran@gmail.com', '0902764153'),								--23--
+		(N'Phương Phương', 'pphuong@gmail.com', '0938852573'),					--24--
+		(N'Quỳnh Quỳnh', 'qquynh@gmail.com', '0938427496'),						--25--
+		(N'David', 'david@gmail.com', '0932853888'),							--26--
+		(N'Jeon Jungkook', 'jjkook@gmail.com', '0938764245'),					--27--
+		(N'Nguyễn Thúc Thuỳ Tiên', 'ntttien@gmail.com', '090222777'),			--28--
+		(N'Đông Mẫn', 'dman@gmail.com', '0932999999')							--29--
+
+INSERT ORDER_LIST(CUSTOMER_ID, ORDER_DATE, PRICE)
+VALUES  (1, '03/05/2024', 476500),			--1--
+		(2, '03/10/2024', 235750),			--2--
+		(3, '03/03/2024', 941500),			--3--
+		(4, '03/09/2024', 966400),			--4--
+		(5, '03/10/2024', 885150),			--5--
+		(6, '04/02/2024', 685100),			--6--
+		(7, '10/20/2023', 738250),			--7--
+		(8, '04/01/2024', 685100),			--8--
+		(9, '04/05/2024', 399000),			--9--
+		(10, '04/03/2024', 453970),			--10--
+		(11, '04/02/2024', 401550),			--11--
+		(12, '03/24/2024', 555520),			--12--
+		(13, '03/09/2024', 158200),			--13--
+		(14, '04/14/2023', 4495050),		--14--
+		(15, '03/01/2024', 1359250),		--15--
+		(16, '02/18/2024', 281120),			--16--
+		(17, '02/19/2024', 623250),			--17--
+		(18, '03/24/2024', 1442200),		--18--
+		(19, '03/26/2024', 412120),			--19--
+		(20, '10/13/2023', 519600),			--20--
+		(21, '09/12/2023', 289000),			--21--
+		(22, '05/03/2023', 214750),			--22--
+		(23, '12/03/2023', 229770),			--23--
+		(24, '05/10/2023', 386740),			--24--
+		(25, '09/02/2023', 386500),			--25--
+		(26, '11/11/2024', 1029700),		--26--
+		(27, '09/12/2023', 1391250),		--27--
+		(28, '03/23/2024', 801760),			--28--
+		(29, '06/13/2023', 607870)			--29--
 
 INSERT ORDER_ITEM(ORDER_ID, BOOK_ID, QUANTITY)
 VALUES  (1, 5, 5),
@@ -364,3 +411,9 @@ VALUES  (1, 5, 5),
 		(29, 8, 10),
 		(29, 9, 5),	
 		(29, 11, 1)
+
+
+SELECT BOOK.BOOK_ID, BOOK.BOOK_NAME,SUM(ORDER_ITEM.QUANTITY) AS QUANTITY , SUM(ORDER_ITEM.QUANTITY)*BOOK.PRICE AS REVENUE
+FROM BOOK JOIN ORDER_ITEM ON BOOK.BOOK_ID = ORDER_ITEM.BOOK_ID
+GROUP BY BOOK.BOOK_ID, BOOK.BOOK_NAME, BOOK.PRICE
+ORDER BY QUANTITY

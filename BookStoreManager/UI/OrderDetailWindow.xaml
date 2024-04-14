@@ -1,0 +1,130 @@
+﻿<Window x:Class="BookStoreManager.UI.OrderDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookStoreManager"
+        mc:Ignorable="d"
+        Title="OrderDetailWindow" Height="800" Width="750">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:PriceConverter x:Key="VndConverter"/>
+            <local:OrderDateConverter x:Key="orderDateConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../ResourceDictionary/OrderResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel  Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="CHI TIẾT ĐƠN HÀNG #" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
+            <TextBlock Text="{Binding OrderId}" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Vertical" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+
+            <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350">
+                    <Grid>
+                        <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Tên khách hàng:"/>
+                        <TextBlock Width="220" x:Name="txtCustomerName" Text="{Binding Customer.CustomerName}" FontWeight="DemiBold" Margin="10,10" Style="{StaticResource InfoTextBlockStyle}">
+
+                        </TextBlock>
+
+                    </Grid>
+                </Border>
+                <Button x:Name="updateCustomerInfo" Grid.Column="3" Grid.Row="2" Style="{StaticResource WhiteButtonStyle}" 
+                        Width="100" Height="33" Click="updateCustomerInfo_Click" HorizontalAlignment="Left" Margin="5,0,0,0">
+                    <TextBlock FontSize="12" Text="Sửa thông tin khách hàng?" TextWrapping="Wrap"/>
+                </Button>
+
+            </StackPanel>
+
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350" HorizontalAlignment="Left">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Ngày đặt hàng:"/>
+                    <DatePicker x:Name="dpOrderDate" SelectedDate="{Binding OrderDate}" Style="{StaticResource InfoDatePickerStyle}" 
+                    FontWeight="DemiBold" Width="220" Margin="10,10" VerticalAlignment="Center">
+                        <DatePicker.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="30"/>
+                            </Style>
+                        </DatePicker.Resources>
+                    </DatePicker>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+       
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
+            <Button x:Name="AddBtn" Content="Add"  Style="{StaticResource OtherButtonStyle}" Background="LightGreen" FontSize="12" Width="55" Height="35" Click="AddProductBtn_Click" Margin="0,0,10,0"/>
+            <Button x:Name="UpdateBtn" Content="Update"  Style="{StaticResource OtherButtonStyle}" Background="Yellow" FontSize="12" Width="55"  Height="35"  Click="UpdateProductBtn_Click" Margin="0,0,0,0"/>
+            <Button x:Name="DeleteBtn" Content="Delete"  Style="{StaticResource OtherButtonStyle}" Background="Red" FontSize="12" Width="55"  Height="35"  Click="DeleteProductBtn_Click" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <DataGrid x:Name="productDataGrid" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Margin="5"
+        MouseRightButtonDown="productDataGrid_MouseRightButtonDown"
+        MouseDoubleClick="productDataGrid_MouseDoubleClick"
+        CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+        ColumnHeaderStyle="{StaticResource OrderDataGridColumnHeader}"
+        AutoGenerateColumns="False"
+        CanUserResizeColumns="False" 
+        BorderThickness="1"
+        
+        HorizontalScrollBarVisibility="Hidden" 
+        GridLinesVisibility="None" 
+        CanUserAddRows="False"
+        SelectionMode="Single"
+        SelectedIndex="-1"
+        CanUserDeleteRows="False"
+        IsReadOnly="True"
+        RowHeight="35" HeadersVisibility="Column">
+
+
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="BookID" Binding="{Binding Path=Book.BookID}" Width="0.7*"/>
+                <DataGridTextColumn Header="Tên Sách" Binding="{Binding Path=Book.BookName}" Width="2*"/>
+                <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="*"/>
+                <DataGridTextColumn Header="Đơn Giá" Binding="{Binding Path=Book.Price, Converter={StaticResource VndConverter}}" Width="1*"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="Giá Tổng: " FontWeight="DemiBold" FontSize="20" Margin="5"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Foreground="#006070" x:Name="TotalPriceTxtBlock" Text="{Binding Price,Converter={StaticResource VndConverter}}"  VerticalAlignment="Center"  FontWeight="Bold" FontSize="20"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="6" HorizontalAlignment="Center">
+            <Button Content="Lưu" x:Name="SaveOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
+                    Width="70" Height="40" Click="SaveOrderDetailBtn_Click" Margin="0,0 5,0"/>
+            <Button Content="Quay về" x:Name="CancelOrderDetailBtn" Style="{StaticResource GreenButtonStyle}" 
+                    Width="70" Height="40" Click="CancelOrderDetailBtn_Click"/>
+        </StackPanel>
+
+
+
+    </Grid>
+</Window>

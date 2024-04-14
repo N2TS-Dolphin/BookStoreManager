@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BookStoreManager
+namespace BookStoreManager.UI
 {
     /// <summary>
     /// Interaction logic for AddCategory.xaml
@@ -35,8 +35,6 @@ namespace BookStoreManager
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //int insertedID = _categoryDao.InsertNewCategory((CategoryModel)_newCategory.Clone());
-            //_newCategory.CategoryID = insertedID;
             DialogResult = true;
         }
     }

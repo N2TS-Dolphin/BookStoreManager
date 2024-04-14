@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace BookStoreManager.Database
     {
         private string _connectionString = DBConfig.GetConnectionString();
         private SqlConnection _connection;
+
         public BookDao()
         {
             _connection = new SqlConnection(_connectionString);
@@ -29,77 +31,64 @@ namespace BookStoreManager.Database
                 catch (Exception ex) { }
             }
         }
-        public static Tuple<BindingList<BookModel>, int, int> GetBookListFromDB(int page, int itemsPerPage, string search, string category)
+
+        public static Tuple<string, string> GetSortValue(int sort)
+        {
+            var sortList = new List<string>
+            {
+                {"B.BOOK_ID,ASC"},
+                {"B.BOOK_ID,DESC"},
+                {"B.BOOK_NAME,ASC"},
+                {"B.BOOK_NAME,DESC"},
+                {"B.AUTHOR,ASC"},
+                {"B.AUTHOR,DESC"},
+                {"B.PRICE,ASC"},
+                {"B.PRICE,DESC"},
+            };
+            var temp = sortList[sort].Split(",");
+            string orderby = temp[0];
+            string order = temp[1];
+            return new Tuple<string, string>(orderby, order);
+        }
+
+        public static Tuple<BindingList<BookModel>, int> GetBookListFromDB(int page, int itemsPerPage, 
+            string search, string category, int priceFrom, int priceTo, int sort)
         {
             var connection = DBConfig.Connection;
             BindingList<BookModel> result = new();
             int totalItems = 0; int totalPages = 0;
+            var (orderby, order) = GetSortValue(sort);
             string sql = "";
             while (connection.State != ConnectionState.Open)
             {
                 try
                 {
                     connection.Open();
-                    if (search != "" && category != "All")
-                    {
-                        sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
-                    from BOOK as B 
-                    join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
-                    join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
-                    where C.CATEGORY_NAME = @Category
-                    and B.BOOK_NAME like @Search
-                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
-                    order by B.BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-
-                    }
-                    else if (search != "" && category == "All")
-                    {
-                        sql = """
-                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
-                    from BOOK
-                    where BOOK_NAME like @Search
-                    order by BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-                    }
-                    else if (search == "" && category != "All")
-                    {
-                        sql = """
-                    select B.BOOK_ID as id, B.BOOK_NAME as name, B.IMG as image, B.AUTHOR as author, B.PRICE as price, count(*) over() as totalItems
-                    from BOOK as B 
-                    join BOOK_CATEGORY as BC on B.BOOK_ID = BC.BOOK_ID
-                    join CATEGORY as C on C.CATEGORY_ID = BC.CATEGORY_ID
-                    where C.CATEGORY_NAME = @Category
-                    group by B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
-                    order by B.BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-                    }
-                    if (search == "" && category == "All")
-                    {
-                        sql = """
-                    select BOOK_ID as id, BOOK_NAME as name, IMG as image, AUTHOR as author, PRICE as price, count(*) over() as totalItems
-                    from BOOK
-                    order by BOOK_ID
-                    offset @Skip rows
-                    fetch next @Take rows only
-                    """;
-                    }
+                    sql = @"
+                        SELECT B.BOOK_ID AS id, B.BOOK_NAME AS name, B.IMG AS image, B.AUTHOR AS author, B.PRICE AS price, COUNT(*) OVER() AS totalItems
+                        FROM BOOK AS B 
+                        JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID
+                        JOIN CATEGORY AS C ON C.CATEGORY_ID = BC.CATEGORY_ID
+                        WHERE (@Category = 'All' OR C.CATEGORY_NAME = @Category)
+                        AND (@Search = '' OR B.BOOK_NAME LIKE @Search)
+                        AND (B.PRICE BETWEEN @PriceFrom AND @PriceTo)
+                        GROUP BY B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
+                        ORDER BY " + orderby + " " + order + @"
+                        OFFSET @Skip ROWS
+                        FETCH NEXT @Take ROWS ONLY
+                        ";
 
                     int skip = (page - 1) * itemsPerPage;
                     int take = itemsPerPage;
+                    
 
                     var command = new SqlCommand(sql, connection);
                     command.Parameters.Add("@Skip", System.Data.SqlDbType.Int).Value = skip;
                     command.Parameters.Add("@Take", System.Data.SqlDbType.Int).Value = take;
                     command.Parameters.Add("@Search", System.Data.SqlDbType.NVarChar).Value = "%" + search + "%";
                     command.Parameters.Add("@Category", System.Data.SqlDbType.NVarChar).Value = category;
+                    command.Parameters.Add("@PriceFrom", System.Data.SqlDbType.Int).Value = priceFrom;
+                    command.Parameters.Add("@PriceTo", System.Data.SqlDbType.Int).Value = priceTo;
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -124,8 +113,9 @@ namespace BookStoreManager.Database
                 catch (Exception ex) { }
             }
             connection.Close();
-            return new Tuple<BindingList<BookModel>, int, int>(result, totalItems, totalPages);
+            return new Tuple<BindingList<BookModel>, int>(result, totalPages);
         }
+
         public BookModel getBookDetail(int id)
         {
             BookModel result = new();
@@ -160,6 +150,7 @@ namespace BookStoreManager.Database
             }
             return result;
         }
+
         public static BookModel GetBookDetailFromDB(int id)
         {
             var connection = DBConfig.Connection;
@@ -196,6 +187,7 @@ namespace BookStoreManager.Database
             connection.Close();
             return result;
         }
+
         public static int InsertNewBookToDB(BookModel newBook)
         {
             var connection = DBConfig.Connection;
@@ -231,6 +223,7 @@ namespace BookStoreManager.Database
             connection.Close();
             return result;
         }
+
         public static void UpdateBookToDB(BookModel book)
         {
             var connection = DBConfig.Connection;
@@ -285,51 +278,68 @@ namespace BookStoreManager.Database
         {
             var connection = DBConfig.Connection;
             BindingList<BookModel> list = new BindingList<BookModel>();
-            while (connection.State != ConnectionState.Open)
+            try
             {
-                try
-                {
-                    connection.Open();
-                    var sql = "SELECT B.* FROM BOOK AS B " +
-                            "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
-                            "WHERE BC.CATEGORY_ID = @CategoryID";
+                connection.Open();
 
+                string sql;
+                if (categoryId == 0)
+                {
+                    // If categoryId is 0, get all books
+                    sql = "SELECT * FROM BOOK";
+                }
+                else
+                {
+                    // Otherwise, get books by category
+                    sql = "SELECT B.* FROM BOOK AS B " +
+                          "JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID " +
+                          "WHERE BC.CATEGORY_ID = @CategoryID";
+                }
+
+                var command = new SqlCommand(sql, connection);
+
+                // Add parameter if categoryId is not 0
+                if (categoryId != 0)
+                {
                     var sqlParameter = new SqlParameter("@CategoryID", System.Data.SqlDbType.Int);
                     sqlParameter.Value = categoryId;
-
-
-
-                    var command = new SqlCommand(sql, connection);
-
                     command.Parameters.Add(sqlParameter);
-
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        var bookId = (int)reader["BOOK_ID"];
-                        var bookName = (string)reader["BOOK_NAME"];
-                        var author = (string)reader["AUTHOR"];
-                        var price = (int)reader["PRICE"];
-                        var image = reader.IsDBNull(reader.GetOrdinal("IMG")) ? "" : (string)reader["IMG"];
-
-                        BookModel book = new BookModel()
-                        {
-                            BookID = bookId,
-                            BookName = bookName,
-                            Author = author,
-                            Price = price,
-                            Image = image
-                        };
-
-                        list.Add(book);
-                    }
-                    reader.Close();
                 }
-                catch (Exception ex) { list.Clear(); }
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var bookId = (int)reader["BOOK_ID"];
+                    var bookName = (string)reader["BOOK_NAME"];
+                    var author = (string)reader["AUTHOR"];
+                    var price = (int)reader["PRICE"];
+                    var image = reader.IsDBNull(reader.GetOrdinal("IMG")) ? "" : (string)reader["IMG"];
+
+                    BookModel book = new BookModel()
+                    {
+                        BookID = bookId,
+                        BookName = bookName,
+                        Author = author,
+                        Price = price,
+                        Image = image
+                    };
+
+                    list.Add(book);
+                }
+                reader.Close();
             }
-            connection.Close();
+            catch (Exception ex)
+            {
+                // Handle exception
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
             return list;
         }
+
 
         public static void ImportBooksFromExcelToDB(BindingList<BookModel> books)
         {
