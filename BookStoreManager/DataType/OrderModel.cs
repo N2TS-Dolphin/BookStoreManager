@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookStoreManager.DataType;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -12,7 +13,7 @@ namespace BookStoreManager
     public class OrderModel : INotifyPropertyChanged
     {
         public int OrderId { get; set; }
-        public string CustomerName { get; set; }
+        public CustomerModel Customer { get; set; }
         public DateTime OrderDate { get; set; }
         public int Price { get; set; }
 

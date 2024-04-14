@@ -42,9 +42,9 @@ namespace BookStoreManager.Process
             orderDetailDao.InsertOrderItemToDB(orderId, orderDetail);
         }
 
-        public void UpdateOrder(int orderId, string newCustomerName, DateTime newOrderDate, int newTotalPrice)
+        public void UpdateOrder(int orderId, int newCustomerId, DateTime newOrderDate, int newTotalPrice)
         {
-            orderDao.UpdateOrderToDB(orderId, newCustomerName, newOrderDate, newTotalPrice);
+            orderDao.UpdateOrderToDB(orderId, newCustomerId, newOrderDate, newTotalPrice);
         }
 
         public OrderModel GetOrderById(int orderId)

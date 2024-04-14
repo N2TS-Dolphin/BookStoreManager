@@ -1,4 +1,6 @@
 ﻿using BookStoreManager.Database;
+using BookStoreManager.DataType;
+using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ namespace BookStoreManager.Process
     public class OrderBus
     {
         private OrderDao orderDao = new OrderDao();
+        private CustomerDao customerDao = new CustomerDao();
 
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
@@ -56,9 +59,9 @@ namespace BookStoreManager.Process
             orderDao.DeleteOrderFromDB(orderId);
         }
 
-        public void AddOrder(string customerName, DateTime orderDate)
+        public void AddOrder(int customerId, DateTime orderDate)
         {
-            orderDao.AddOrderToDB(customerName, orderDate);
+            orderDao.AddOrderToDB(customerId, orderDate);
         }
 
         public OrderModel GetOrderById(int orderId)
@@ -66,9 +69,25 @@ namespace BookStoreManager.Process
             return orderDao.GetOrderByIdFromDB(orderId);
         }
 
-        public void UpdateOrder(int orderId, string newCustomerName, DateTime newOrderDate, int newPrice)
+        public void UpdateOrder(int orderId, int newCustomerId, DateTime newOrderDate, int newPrice)
         {
-            orderDao.UpdateOrderToDB(orderId, newCustomerName, newOrderDate, newPrice);
+            orderDao.UpdateOrderToDB(orderId, newCustomerId, newOrderDate, newPrice);
+        }
+
+        public BindingList<CustomerModel> GetAllCustomers(string search)
+        {
+            return customerDao.GetAllCustomersFromDB(search);
+        }
+
+        public CustomerModel GetCustomerDetail(int customerId)
+        {
+            CustomerDao customerDao = new CustomerDao();
+            return customerDao.GetCustomerDetailFromDB(customerId);
+        }
+
+        public BindingList<CustomerModel> SearchCustomers(string search)
+        {
+            return customerDao.GetAllCustomersFromDB(search);
         }
     }
 }

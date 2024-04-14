@@ -75,5 +75,87 @@ namespace BookStoreManager.Database
             _connection.Close();
             return new Tuple<BindingList<CustomerModel>, int>(result, totalPages);
         }
+
+        public CustomerModel GetCustomerDetailFromDB(int customerId)
+        {
+            CustomerModel customer = null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_EMAIL, CUSTOMER_PHONE FROM CUSTOMER WHERE CUSTOMER_ID = @CustomerId";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    try
+                    {
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int id = reader.GetInt32(reader.GetOrdinal("CUSTOMER_ID"));
+                                string name = reader.GetString(reader.GetOrdinal("CUSTOMER_NAME"));
+                                string email = reader.IsDBNull(reader.GetOrdinal("CUSTOMER_EMAIL")) ? null : reader.GetString(reader.GetOrdinal("CUSTOMER_EMAIL"));
+                                string phone = reader.IsDBNull(reader.GetOrdinal("CUSTOMER_PHONE")) ? null : reader.GetString(reader.GetOrdinal("CUSTOMER_PHONE"));
+
+                                customer = new CustomerModel(id, name, email, phone);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions that may occur during the database operation
+                        Console.WriteLine($"An error occurred while retrieving customer details: {ex.Message}");
+                    }
+                }
+            }
+
+            return customer;
+        }
+
+        public BindingList<CustomerModel> GetAllCustomersFromDB(string search)
+        {
+            BindingList<CustomerModel> result = new BindingList<CustomerModel>();
+
+            try
+            {
+                _connection.Open();
+                string sql = @"
+                    SELECT CUSTOMER_ID AS id, CUSTOMER_NAME AS name, CUSTOMER_EMAIL AS email, CUSTOMER_PHONE AS phone
+                    FROM CUSTOMER
+                    WHERE @Search = '' OR CUSTOMER_NAME LIKE @Search COLLATE Latin1_General_CI_AI
+                    ORDER BY CUSTOMER_ID";
+
+                var command = new SqlCommand(sql, _connection);
+                command.Parameters.Add("@Search", SqlDbType.NVarChar).Value = "%" + search + "%";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = reader.IsDBNull(reader.GetOrdinal("id")) ? -1 : reader.GetInt32(reader.GetOrdinal("id"));
+                        string name = reader.IsDBNull(reader.GetOrdinal("name")) ? "N/A" : reader.GetString(reader.GetOrdinal("name"));
+                        string email = reader.IsDBNull(reader.GetOrdinal("email")) ? "N/A" : reader.GetString(reader.GetOrdinal("email"));
+                        string phone = reader.IsDBNull(reader.GetOrdinal("phone")) ? "N/A" : reader.GetString(reader.GetOrdinal("phone"));
+
+                        result.Add(new CustomerModel(id, name, email, phone));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while retrieving customers: {ex.Message}");
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            return result;
+        }
+
     }
 }

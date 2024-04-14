@@ -4,6 +4,7 @@ using BookStoreManager.Process;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -38,11 +39,9 @@ namespace BookStoreManager.UI
 
         private void LoadPage()
         {
-            var (items, totalItems, totalPages, current) = orderBus.GetAllPaging(orderBus.FromDate, orderBus.ToDate);
+            var (items, totalItems, totalPages, current) = orderBus.GetAllPaging(FromDatePicker.SelectedDate, ToDatePicker.SelectedDate);
             orders = items;
             orderBus.TotalPages = totalPages;
-
-         
 
             if (totalPages == 0)
             {
@@ -56,22 +55,18 @@ namespace BookStoreManager.UI
 
         private void PrevBtn_Click(object sender, RoutedEventArgs e)
         {
-          
             orderBus.MoveToPreviousPage();
             LoadPage();
         }
 
         private void NextBtn_Click(object sender, RoutedEventArgs e)
         {
-          
             orderBus.MoveToNextPage();
             LoadPage();
         }
 
         private void FilterBtn_Click(object sender, RoutedEventArgs e)
         {
-            orderBus.FromDate = FromDatePicker.SelectedDate;
-            orderBus.ToDate = ToDatePicker.SelectedDate;
             LoadPage();
         }
 
@@ -107,7 +102,7 @@ namespace BookStoreManager.UI
             if (OrderDataGrid.SelectedItem != null)
             {
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
-                var res = MessageBox.Show($"Bạn có chắc muốn xóa đơn hàng: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var res = MessageBox.Show($"Bạn có chắc muốn xóa đơn hàng: {selectedOrder.OrderId} - {selectedOrder.Customer.CustomerName}?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (res == MessageBoxResult.Yes)
                 {
@@ -121,23 +116,6 @@ namespace BookStoreManager.UI
                 MessageBox.Show("Vui lòng chọn đơn hàng để xóa.");
             }
         }
-
-        //private void DetailBtn_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (OrderDataGrid.SelectedItem != null)
-        //    {
-        //        OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
-        //        int orderId = selectedOrder.OrderId;
-
-        //        OrderDetailWindow orderDetailWindow = new OrderDetailWindow(orderId);
-        //        orderDetailWindow.ShowDialog();
-        //        LoadPage();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Please select an order to view details.");
-        //    }
-        //}
 
         private void OrderDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -160,7 +138,6 @@ namespace BookStoreManager.UI
                 }
             }
         }
-
 
         private void OrderDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -214,7 +191,7 @@ namespace BookStoreManager.UI
             if (OrderDataGrid.SelectedItem != null)
             {
                 OrderModel selectedOrder = (OrderModel)OrderDataGrid.SelectedItem;
-                var res = MessageBox.Show($"Bạn có chắc muốn xóa đơn hàng: {selectedOrder.OrderId} - {selectedOrder.CustomerName}?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var res = MessageBox.Show($"Bạn có chắc muốn xóa đơn hàng: {selectedOrder.OrderId} - {selectedOrder.Customer.CustomerName}?", "Xóa đơn hàng", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (res == MessageBoxResult.Yes)
                 {
@@ -229,21 +206,10 @@ namespace BookStoreManager.UI
             }
         }
 
-        //private void ReloadPage(object sender, MouseButtonEventArgs e)
-        //{
-        //    FromDatePicker.SelectedDate = null;
-        //    ToDatePicker.SelectedDate = null;
-        //    orderBus.FromDate = null;
-        //    orderBus.ToDate = null;
-        //    LoadPage();
-        //}
-
         private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
             FromDatePicker.SelectedDate = null;
             ToDatePicker.SelectedDate = null;
-            orderBus.FromDate = null;
-            orderBus.ToDate = null;
             LoadPage();
             MessageBox.Show("Tải lại trang thành công");
         }

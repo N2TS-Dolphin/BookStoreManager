@@ -136,7 +136,79 @@
         <Setter Property="Padding" Value="10,7,0,0"/>
     </Style>
 
+    <Style x:Key="CustomerBody_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Padding="5,0,0,0" Background="{TemplateBinding Background}">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
+
+    <Style x:Key="CustomerDataGridColumnHeader" TargetType="DataGridColumnHeader">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#006070"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="5,0,0,0"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}" x:Key="InfoTextBlockStyle">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Foreground" Value="#006070"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Width" Value="339"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Padding" Value="10,7,0,0"/>
+    </Style>
+
+    <Style TargetType="Border" x:Key="SearchBorder">
+        <Setter Property="Background" Value="#006070"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Grid.Column" Value="0"/>
+    </Style>
+    <Style TargetType="TextBox" x:Key="SearchTextBox">
+        <Setter Property="Foreground" Value="#006070"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Padding" Value="10,10,0,0"/>
+    </Style>
+    <Style x:Key="SearchButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="#006070"/>
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Grid.Column" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="20">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 
 </ResourceDictionary>
