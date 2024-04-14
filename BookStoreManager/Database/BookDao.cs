@@ -22,12 +22,13 @@ namespace BookStoreManager.Database
         public BookDao()
         {
             _connection = new SqlConnection(_connectionString);
-            while(_connection.State != ConnectionState.Open)
+            while (_connection.State != ConnectionState.Open)
             {
                 try
                 {
                     _connection.Open();
-                }catch (Exception ex) { }
+                }
+                catch (Exception ex) { }
             }
         }
 
