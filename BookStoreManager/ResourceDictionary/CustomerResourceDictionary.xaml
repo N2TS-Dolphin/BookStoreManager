@@ -137,4 +137,62 @@
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="Margin" Value="10,0,10,0"/>
     </Style>
+    <Style x:Key="ManageWindowTilte" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Foreground" Value="#006070"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Grid.Row" Value="0"/>
+    </Style>
+    <Style x:Key="ManageInfoBorder" TargetType="Border">
+        <Setter Property="Background" Value="#006070"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Padding" Value="10,2,2,2"/>
+    </Style>
+    <Style x:Key="ManageInfoLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Grid.Column" Value="0"/>
+    </Style>
+    <Style x:Key="ManageInfoTextBox" TargetType="TextBox">
+        <Setter Property="Foreground" Value="#006070"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Padding" Value="10,10,0,0"/>
+        <Setter Property="Grid.Column" Value="1"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+    </Style>
+    <Style x:Key="ManagrWindowButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Background" Value="#006070"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Margin" Value="5,0,5,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+        BorderBrush="{TemplateBinding BorderBrush}"
+        BorderThickness="{TemplateBinding BorderThickness}"
+        CornerRadius="20">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
