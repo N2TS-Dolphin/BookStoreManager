@@ -73,18 +73,20 @@ CREATE TABLE CUSTOMER
 
 CREATE TABLE ORDER_LIST
 (
-	ORDER_ID INT NOT NULL IDENTITY,
-	CUSTOMER_ID INT NOT NULL,
-	ORDER_DATE DATE NOT NULL,
-	PRICE INT DEFAULT(0),
+    ORDER_ID INT NOT NULL IDENTITY,
+    CUSTOMER_ID INT NOT NULL,
+    ORDER_DATE DATE NOT NULL,
+    PRICE INT DEFAULT(0),
+    ORDER_ADDRESS NVARCHAR(200),
 
-	CONSTRAINT FK_CUSTOMER_ORDER_LIST 
-	FOREIGN KEY (CUSTOMER_ID) 
-	REFERENCES CUSTOMER(CUSTOMER_ID),
+    CONSTRAINT FK_CUSTOMER_ORDER_LIST 
+    FOREIGN KEY (CUSTOMER_ID) 
+    REFERENCES CUSTOMER(CUSTOMER_ID),
 
-	CONSTRAINT PK_ORDER_LIST
-	PRIMARY KEY (ORDER_ID)
+    CONSTRAINT PK_ORDER_LIST
+    PRIMARY KEY (ORDER_ID)
 )
+
 
 CREATE TABLE ORDER_ITEM
 (
@@ -268,36 +270,40 @@ VALUES  (N'Nguyễn Văn Anh', 'nvanh@gmail.com', '0938092736'),					--1--
 		(N'Nguyễn Thúc Thuỳ Tiên', 'ntttien@gmail.com', '090222777'),			--28--
 		(N'Đông Mẫn', 'dman@gmail.com', '0932999999')							--29--
 
-INSERT ORDER_LIST(CUSTOMER_ID, ORDER_DATE, PRICE)
-VALUES  (1, '03/05/2024', 476500),			--1--
-		(2, '03/10/2024', 235750),			--2--
-		(3, '03/03/2024', 941500),			--3--
-		(4, '03/09/2024', 966400),			--4--
-		(5, '03/10/2024', 885150),			--5--
-		(6, '04/02/2024', 685100),			--6--
-		(7, '10/20/2023', 738250),			--7--
-		(8, '04/01/2024', 685100),			--8--
-		(9, '04/05/2024', 399000),			--9--
-		(10, '04/03/2024', 453970),			--10--
-		(11, '04/02/2024', 401550),			--11--
-		(12, '03/24/2024', 555520),			--12--
-		(13, '03/09/2024', 158200),			--13--
-		(14, '04/14/2023', 4495050),		--14--
-		(15, '03/01/2024', 1359250),		--15--
-		(16, '02/18/2024', 281120),			--16--
-		(17, '02/19/2024', 623250),			--17--
-		(18, '03/24/2024', 1442200),		--18--
-		(19, '03/26/2024', 412120),			--19--
-		(20, '10/13/2023', 519600),			--20--
-		(21, '09/12/2023', 289000),			--21--
-		(22, '05/03/2023', 214750),			--22--
-		(23, '12/03/2023', 229770),			--23--
-		(24, '05/10/2023', 386740),			--24--
-		(25, '09/02/2023', 386500),			--25--
-		(26, '11/11/2024', 1029700),		--26--
-		(27, '09/12/2023', 1391250),		--27--
-		(28, '03/23/2024', 801760),			--28--
-		(29, '04/15/2024', 607870)			--29--
+
+INSERT INTO ORDER_LIST (CUSTOMER_ID, ORDER_DATE, PRICE, ORDER_ADDRESS)
+VALUES  
+    (1, '03/05/2024', 476500, N'456 Đường Lê Lợi, Quận 3, TP.HCM'),	
+    (2, '03/10/2024', 235750, N'123 Đường Nguyễn Văn Linh, Quận 1, TP.HCM'),	
+    (3, '03/03/2024', 941500, N'789 Đường Hùng Vương, Quận 5, TP.HCM'),		
+    (4, '03/09/2024', 966400, N'27 Đường Lý Thường Kiệt, Quận 10, TP.HCM'),	
+    (5, '03/10/2024', 885150, N'64 Đường Bến Vân Đồn, Quận 4, TP.HCM'),		
+    (6, '04/02/2024', 685100, N'123 Đường Nguyễn Thị Minh Khai, Quận 1, TP.HCM'),	
+    (7, '10/20/2023', 738250, N'456 Đường Trần Hưng Đạo, Quận 5, TP.HCM'),	
+    (8, '04/01/2024', 685100, N'789 Đường Phan Chu Trinh, Quận 1, TP.HCM'),	
+    (9, '04/05/2024', 399000, N'123 Đường Nguyễn Thái Học, Quận 5, TP.HCM'),	
+    (10, '04/03/2024', 453970, N'456 Đường Trần Phú, Quận 10, TP.HCM'),		
+    (11, '04/02/2024', 401550, N'27 Đường Lê Duẩn, Quận 1, TP.HCM'),		
+    (12, '03/24/2024', 555520, N'789 Đường Hai Bà Trưng, Quận 3, TP.HCM'),	
+    (13, '03/09/2024', 158200, N'64 Đường Lê Văn Sỹ, Quận 3, TP.HCM'),		
+    (14, '04/14/2023', 4495050, N'27 Đường Đinh Tiên Hoàng, Quận 1, TP.HCM'),	
+    (15, '03/01/2024', 1359250, N'456 Đường Nguyễn Thị Diệu, Quận 10, TP.HCM'),	
+    (16, '02/18/2024', 281120, N'123 Đường Lê Lai, Quận 1, TP.HCM'),		
+    (17, '02/19/2024', 623250, N'789 Đường Nguyễn Huệ, Quận 1, TP.HCM'),		
+    (18, '03/24/2024', 1442200, N'64 Đường Hai Triều, Quận 5, TP.HCM'),	
+    (19, '03/26/2024', 412120, N'27 Đường Trần Quang Khải, Quận 1, TP.HCM'),	
+    (20, '10/13/2023', 519600, N'456 Đường Lê Lai, Quận 4, TP.HCM'),		
+    (21, '09/12/2023', 289000, N'123 Đường Lê Văn Thịnh, Quận 7, TP.HCM'),	
+    (22, '05/03/2023', 214750, N'789 Đường Nguyễn Hữu Thọ, Quận 4, TP.HCM'),	
+    (23, '12/03/2023', 229770, N'64 Đường Lê Quang Định, Quận Bình Thạnh, TP.HCM'),	
+    (24, '05/10/2023', 386740, N'27 Đường Lê Hồng Phong, Quận 10, TP.HCM'),	
+    (25, '09/02/2023', 386500, N'456 Đường Cách Mạng Tháng 8, Quận 3, TP.HCM'),	
+    (26, '11/11/2024', 1029700, N'123 Đường Trần Quốc Toản, Quận Bình Thạnh, TP.HCM'),	
+    (27, '09/12/2023', 1391250, N'789 Đường Nguyễn Văn Cừ, Quận 1, TP.HCM'),	
+    (28, '03/23/2024', 801760, N'64 Đường Nam Kỳ Khởi Nghĩa, Quận 1, TP.HCM'),	
+    (29, '06/13/2023', 607870, N'27 Đường Phạm Ngọc Thạch, Quận 3, TP.HCM');
+
+
 
 INSERT ORDER_ITEM(ORDER_ID, BOOK_ID, QUANTITY)
 VALUES  (1, 5, 5),

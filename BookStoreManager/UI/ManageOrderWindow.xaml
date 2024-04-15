@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="ManageOrderWindow" Height="600" Width="800">
+        Title="ManageOrderWindow" Height="600" Width="1000">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -77,10 +77,11 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="OrderID" Binding="{Binding OrderId}" Width="1.2*"/>
-                <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding Customer.CustomerName}" Width="3*"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding Customer.CustomerEmail}" Width="3*"/>
+                <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding Customer.CustomerName}" Width="2.5*"/>
+             
+                <DataGridTextColumn Header="Địa chỉ nhận hàng" Binding="{Binding OrderAddress}" Width="4*"/>
                 <DataGridTextColumn Header="Ngày đặt đơn" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
-                <DataGridTextColumn Header="Giá tổng" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
+                <DataGridTextColumn Header="Giá tổng" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="2*"/>
             </DataGrid.Columns>
         </DataGrid>
 

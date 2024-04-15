@@ -48,8 +48,18 @@ namespace BookStoreManager.UI
                 return;
             }
 
+            // Get the order address from the txtAddress TextBox
+            string orderAddress = txtAddress.Text;
+
+            // Check if orderAddress is blank or empty
+            if (string.IsNullOrWhiteSpace(orderAddress))
+            {
+                MessageBox.Show("Vui lòng nhập địa chỉ đơn hàng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             // Add the order using the OrderBus
-            _orderBus.AddOrder(selectedCustomer.CustomerID, orderDate.Value);
+            _orderBus.AddOrder(selectedCustomer.CustomerID, orderDate.Value, orderAddress);
 
             MessageBox.Show("Thêm đơn hàng thành công.", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
             this.Close();

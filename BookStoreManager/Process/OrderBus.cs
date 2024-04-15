@@ -59,9 +59,9 @@ namespace BookStoreManager.Process
             orderDao.DeleteOrderFromDB(orderId);
         }
 
-        public void AddOrder(int customerId, DateTime orderDate)
+        public void AddOrder(int customerId, DateTime orderDate, string orderAddress)
         {
-            orderDao.AddOrderToDB(customerId, orderDate);
+            orderDao.AddOrderToDB(customerId, orderDate,orderAddress);
         }
 
         public OrderModel GetOrderById(int orderId)
@@ -69,9 +69,9 @@ namespace BookStoreManager.Process
             return orderDao.GetOrderByIdFromDB(orderId);
         }
 
-        public void UpdateOrder(int orderId, int newCustomerId, DateTime newOrderDate, int newPrice)
+        public void UpdateOrder(int orderId,  DateTime newOrderDate, int newPrice, string newAddress)
         {
-            orderDao.UpdateOrderToDB(orderId, newCustomerId, newOrderDate, newPrice);
+            orderDao.UpdateOrderToDB(orderId, newOrderDate, newPrice, newAddress);
         }
 
         public BindingList<CustomerModel> GetAllCustomers(string search)
