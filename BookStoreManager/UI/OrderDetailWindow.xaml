@@ -36,7 +36,7 @@
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
-        <StackPanel  Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel  Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="CHI TIẾT ĐƠN HÀNG #" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
             <TextBlock Text="{Binding OrderId}" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
         </StackPanel>
@@ -54,11 +54,28 @@
                     </Grid>
                 </Border>
                 <Button x:Name="updateCustomerInfo" Grid.Column="3" Grid.Row="2" Style="{StaticResource WhiteButtonStyle}" 
-                        Width="100" Height="33" Click="updateCustomerInfo_Click" HorizontalAlignment="Left" Margin="5,0,0,0">
-                    <TextBlock FontSize="12" Text="Sửa thông tin khách hàng?" TextWrapping="Wrap"/>
+                        Width="80" Height="33" Click="updateCustomerInfo_Click" HorizontalAlignment="Left" Margin="5,0,0,0">
+                    <TextBlock FontSize="11" Text="Sửa thông tin khách hàng?" TextWrapping="Wrap"/>
                 </Button>
 
             </StackPanel>
+
+            <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350" HorizontalAlignment="Left">
+                <Grid>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Địa chỉ:"/>
+                    <TextBox Width="220" x:Name="txtOrderAddress" Text="{Binding OrderAddress}" FontWeight="DemiBold" Margin="10,10" >
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="30"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <StaticResource ResourceKey="InfoTextBoxStyle"/>
+                        </TextBox.Style>
+                    </TextBox>
+                </Grid>
+            </Border>
+
 
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350" HorizontalAlignment="Left">
                 <Grid>
