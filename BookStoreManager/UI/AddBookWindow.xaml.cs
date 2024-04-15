@@ -83,14 +83,14 @@ namespace BookStoreManager.UI
             int id = BookManagerBus.AddNewBook(NewBook);
             if (id == -1)
             {
-                MessageBox.Show("Thêm thấtt bại");
+                MessageBox.Show("Thêm thất bại");
             }
             else
             {
                 Categories = AllCategories;
                 NewBook.ClearBook();
             }
-            MessageBox.Show("Thêm sách thình công.");
+            MessageBox.Show("Thêm sách thành công.");
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)

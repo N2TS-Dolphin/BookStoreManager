@@ -31,7 +31,7 @@ namespace BookStoreManager
         {
             InitializeComponent();
             account.accounts = account.readAccount();
-            btnUser.Content = account.accounts[LoginState.Instance.Get()].name;
+            txtUser.Text = account.accounts[LoginState.Instance.Get()].name;
 
             // Nếu không phải là tài khoản admin thì cho đăng ký người dùng mới
             if (LoginState.Instance.Get() == 0)
@@ -64,7 +64,7 @@ namespace BookStoreManager
             // Điều kiện trên và dưới cho fontsize
             if (newSize > 20)
             {
-                btnUser.FontSize = 20;
+                txtUser.FontSize = 20;
                 Panel_01.FontSize = 20;
                 Panel_02.FontSize = 20;
                 Panel_03.FontSize = 20;
@@ -74,7 +74,7 @@ namespace BookStoreManager
             }
             else if (newSize < 15)
             {
-                btnUser.FontSize = 15;
+                txtUser.FontSize = 15;
                 Panel_01.FontSize = 15;
                 Panel_02.FontSize = 15;
                 Panel_03.FontSize = 15;
@@ -84,7 +84,7 @@ namespace BookStoreManager
             }
             else
             {
-                btnUser.FontSize = newSize;
+                txtUser.FontSize = newSize;
                 Panel_01.FontSize = newSize;
                 Panel_02.FontSize = newSize;
                 Panel_03.FontSize = newSize;

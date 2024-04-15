@@ -18,16 +18,9 @@
             <Grid>
                 <StackPanel Grid.Column="0" Background="#006070">
                     <!-- Thêm các điều khiển điều hướng ở đây -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40*"/>
-                            <ColumnDefinition Width="60*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Button x:Name="btnUser" Background="#006070" Foreground="#EAEAEA" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0"/>
-                    </Grid>
+                        <TextBlock x:Name="txtUser" Background="#006070" Foreground="#EAEAEA" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,10"/>
 
-                    <Button x:Name="Panel_01" Content="Home" BorderThickness="0" Click="btn_Click" Height="50px">
+                        <Button x:Name="Panel_01" Content="Home" BorderThickness="0" Click="btn_Click" Height="50px">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="#006070"/>
