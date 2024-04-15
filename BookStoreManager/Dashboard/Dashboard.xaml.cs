@@ -33,18 +33,6 @@ namespace BookStoreManager
             account.accounts = account.readAccount();
             txtUser.Text = account.accounts[LoginState.Instance.Get()].name;
 
-            // Nếu không phải là tài khoản admin thì cho đăng ký người dùng mới
-            if (LoginState.Instance.Get() == 0)
-            {
-                btnCreate.Visibility = Visibility.Visible;
-                btnCreate.IsEnabled = true;
-            }
-            else
-            {
-                btnCreate.IsEnabled = false;
-                btnCreate.Visibility = Visibility.Collapsed;
-            }
-
             this.SizeChanged += Window_SizeChanged;
         }
         /// <summary>
@@ -70,7 +58,6 @@ namespace BookStoreManager
                 Panel_03.FontSize = 20;
                 Panel_04.FontSize = 20;
                 txtLogout.FontSize = 20;
-                txtCreate.FontSize = 20;
             }
             else if (newSize < 15)
             {
@@ -80,7 +67,6 @@ namespace BookStoreManager
                 Panel_03.FontSize = 15;
                 Panel_04.FontSize = 15;
                 txtLogout.FontSize = 15;
-                txtCreate.FontSize = 15;
             }
             else
             {
@@ -90,7 +76,6 @@ namespace BookStoreManager
                 Panel_03.FontSize = newSize;
                 Panel_04.FontSize = newSize;
                 txtLogout.FontSize = newSize;
-                txtCreate.FontSize = newSize;
             }
         }
         private void btn_Click(object sender, RoutedEventArgs e)

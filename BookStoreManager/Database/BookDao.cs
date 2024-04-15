@@ -70,7 +70,7 @@ namespace BookStoreManager.Database
                         JOIN BOOK_CATEGORY AS BC ON B.BOOK_ID = BC.BOOK_ID
                         JOIN CATEGORY AS C ON C.CATEGORY_ID = BC.CATEGORY_ID
                         WHERE (@Category = 'All' OR C.CATEGORY_NAME = @Category)
-                        AND (@Search = '' OR B.BOOK_NAME LIKE @Search)
+                        AND (@Search = '' OR B.BOOK_NAME LIKE @Search collate Latin1_General_CI_AI)
                         AND (B.PRICE BETWEEN @PriceFrom AND @PriceTo)
                         GROUP BY B.BOOK_ID, B.BOOK_NAME, B.IMG, B.AUTHOR, B.PRICE
                         ORDER BY " + orderby + " " + order + @"

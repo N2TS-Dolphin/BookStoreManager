@@ -93,12 +93,6 @@
                     </Button>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Bottom">
-                    <Button x:Name="btnCreate" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,0" Height="50px" Click="btnCreate_Click">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="txtCreate" Text="Create new account" Foreground="#EAEAEA"/>
-                        </StackPanel>
-                    </Button>
-
                     <Button x:Name="btnLogout" Background="#006070" BorderBrush="Black" BorderThickness="0" Margin="0,0,0,10" Height="50px" Click="btnLogout_Click">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock x:Name="txtLogout" Text="Logout" Foreground="#EAEAEA"/>
