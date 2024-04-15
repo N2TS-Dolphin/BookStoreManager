@@ -90,9 +90,9 @@
         </DataGrid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center">
-            <Button x:Name="PrevBtn" Content="Sau"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
+            <Button x:Name="PrevBtn" Content="Trước"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="PrevBtn_Click"/>
             <TextBlock x:Name="txtItemPage" Text="1/1" Foreground="#006070" FontWeight="DemiBold"  FontSize="15" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button x:Name="NextBtn" Content="Trước"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
+            <Button x:Name="NextBtn" Content="Sau"  Style="{StaticResource GreenButtonStyle}" FontSize="15" Width="55" Height="25" Margin="5" Click="NextBtn_Click"/>
         </StackPanel>
 
 
