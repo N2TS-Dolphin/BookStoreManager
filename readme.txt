@@ -1,6 +1,6 @@
 -Thành viên trong nhóm:
-  +Nguyễn Thanh Sơn - 21127160 - tdhuy21@clc.fitus.edu.vn
-  +Trương Đình Huy - 21127309 - ntson21@clc.fitus.edu.vn
+  +Nguyễn Thanh Sơn - 21127160 - ntson21@clc.fitus.edu.vn
+  +Trương Đình Huy - 21127309 - tdhuy21@clc.fitus.edu.vn
   +Thành Thiện Nhân - 21127535 - ttnhan21@clc.fitus.edu.vn
 
 -Cách chạy project:
@@ -32,9 +32,9 @@
 -Điểm đánh giá: 9.75/10
 
 -Đánh giá thành viên:
-  +21127160-Nguyễn Thanh Sơn: xx%
-  +21127309-Trương Đình Huy: xx%
-  +21127535-Thành Thiện Nhân: xx%
+  +21127160 - Nguyễn Thanh Sơn: 100%
+  +21127309 - Trương Đình Huy: 100%
+  +21127535 - Thành Thiện Nhân: 100%
 
 
--Link Youtube: 
+-Link Youtube: https://youtu.be/DQ2RT9hnhIA
