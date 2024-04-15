@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager.UI"
         mc:Ignorable="d"
-        Title="AddOrderWindow" Height="600" Width="800">
+        Title="Thêm đơn hàng" Height="600" Width="800">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -112,6 +112,10 @@
             </Border>
         </StackPanel>
 
-        <Button x:Name="AddOrderBtn" Style="{StaticResource GreenButtonStyle}"  Grid.Row="5" Grid.Column="2" Width="55" Height="35" Content="Thêm" Click="AddOrderBtn_Click"/>
+        <StackPanel Orientation="Horizontal"   Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center">
+            <Button x:Name="AddOrderBtn" Style="{StaticResource GreenButtonStyle}" Width="70" Height="35" Content="Thêm" Margin="0,0,5,0" Click="AddOrderBtn_Click"/>
+            <Button x:Name="CancelBtn" Style="{StaticResource GreenButtonStyle}" Width="70" Height="35" Content="Quay về" Click="CancelBtn_Click" />
+        </StackPanel>
+       
     </Grid>
 </Window>

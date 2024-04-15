@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="AddBookOrderDetailWindow" Height="500" Width="600"
+        Title="Thêm sách cho chi tiết đơn hàng" Height="500" Width="600"
         Loaded="Window_Loaded">
 
     <Window.Resources>

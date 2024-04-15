@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="UpdateBookWindow" Height="730" Width="1000"
+        Title="Chỉnh sửa sách" Height="730" Width="1000"
         Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>

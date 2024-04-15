@@ -75,5 +75,10 @@ namespace BookStoreManager.UI
             // Update the DataGrid with the search results
             CustomerDataGrid.ItemsSource = searchResults;
         }
+
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

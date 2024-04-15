@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="OrderDetailWindow" Height="800" Width="750">
+        Title="Chi tiết đơn hàng" Height="800" Width="750">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -62,7 +62,7 @@
 
             <Border Style="{StaticResource InfoBorderStyle}" Margin="0,5,0,0" Width="350" HorizontalAlignment="Left">
                 <Grid>
-                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Địa chỉ:"/>
+                    <Label Style="{StaticResource InfoLabelStyle}" FontSize="12" Width="110" Content="Địa chỉ nhận hàng:"/>
                     <TextBox Width="220" x:Name="txtOrderAddress" Text="{Binding OrderAddress}" FontWeight="DemiBold" Margin="10,10" >
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">

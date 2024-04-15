@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager.UI"
         mc:Ignorable="d"
-        Title="CustomerWindow" Height="600" Width="800"
+        Title="Quản lý khách hàng" Height="600" Width="800"
         Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>
