@@ -17,6 +17,8 @@ namespace BookStoreManager
         public DateTime OrderDate { get; set; }
         public int Price { get; set; }
 
+        public string OrderAddress { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 

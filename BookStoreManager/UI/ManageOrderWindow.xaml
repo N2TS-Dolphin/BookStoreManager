@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStoreManager"
         mc:Ignorable="d"
-        Title="ManageOrderWindow" Height="600" Width="800">
+        Title="Quản lý đơn hàng" Height="600" Width="1000">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -34,9 +34,13 @@
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
+        <Button x:Name="refreshButton"  Grid.Row="1" Grid.Column="1"  Content="Tải lại trang" Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Left" Margin="10,0,0,0"
+        FontSize="15" Width="100" Height="30" Click="refreshButton_Click"/>
 
-        <Button x:Name="refreshButton" Content="Tải lại trang" Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Left" Margin="10,0,0,0"
-         FontSize="15" Grid.Row="1" Grid.Column="1" Width="100" Height="30" Click="refreshButton_Click"/>
+        <TextBlock Text="QUẢN LÝ ĐƠN HÀNG"  Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#006070" FontWeight="Bold" FontSize="20"/>
+     
+
+
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
             <Button x:Name="AddBtn" Content="Add"  Style="{StaticResource OtherButtonStyle}" Background="LightGreen" FontSize="12" Width="55" Height="35" Click="AddBtn_Click" Margin="0,0,10,0"/>
             <Button x:Name="UpdateBtn" Content="Update"  Style="{StaticResource OtherButtonStyle}" Background="Yellow" FontSize="12" Width="55"  Height="35"  Click="UpdateBtn_Click" Margin="0,0,0,0"/>
@@ -77,10 +81,11 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="OrderID" Binding="{Binding OrderId}" Width="1.2*"/>
-                <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding Customer.CustomerName}" Width="3*"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding Customer.CustomerEmail}" Width="3*"/>
+                <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding Customer.CustomerName}" Width="2.5*"/>
+             
+                <DataGridTextColumn Header="Địa chỉ nhận hàng" Binding="{Binding OrderAddress}" Width="4*"/>
                 <DataGridTextColumn Header="Ngày đặt đơn" Binding="{Binding OrderDate, Converter={StaticResource orderDateConverter}}" Width="3*"/>
-                <DataGridTextColumn Header="Giá tổng" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="3*"/>
+                <DataGridTextColumn Header="Giá tổng" Binding="{Binding Price, Converter={StaticResource VndConverter}}" Width="2*"/>
             </DataGrid.Columns>
         </DataGrid>
 

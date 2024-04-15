@@ -234,11 +234,11 @@ namespace BookStoreManager.UI
 
         private void SaveOrderDetailBtn_Click(object sender, RoutedEventArgs e)
         {
-            CustomerModel newCustomer = order.Customer;
             DateTime newOrderDate = order.OrderDate;
             int newTotalPrice = order.Price;
+            string newAddress = order.OrderAddress;
 
-            orderDetailBus.UpdateOrder(orderId, newCustomer.CustomerID, newOrderDate, newTotalPrice);
+            orderDetailBus.UpdateOrder(orderId, newOrderDate, newTotalPrice, newAddress);
             orderDetailBus.SaveNewOrderItems(orderId, orderDetails);
             DialogResult = true;
         }

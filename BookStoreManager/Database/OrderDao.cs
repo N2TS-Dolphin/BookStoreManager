@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using BookStoreManager.DataType;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace BookStoreManager.Database
 {
@@ -53,7 +54,8 @@ namespace BookStoreManager.Database
                                 OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
                                 Customer = GetCustomerDetailFromDB(reader.GetInt32(reader.GetOrdinal("CUSTOMER_ID"))),
                                 OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
-                                Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
+                                Price = reader.GetInt32(reader.GetOrdinal("PRICE")),
+                                OrderAddress = reader.GetString(reader.GetOrdinal("ORDER_ADDRESS"))
                             };
                             orders.Add(order);
                         }
@@ -64,16 +66,17 @@ namespace BookStoreManager.Database
             return orders;
         }
 
-        public void AddOrderToDB(CustomerModel customer, DateTime orderDate)
+        public void AddOrderToDB(int customerId, DateTime orderDate, string orderAddress)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO ORDER_LIST (CUSTOMER_ID, ORDER_DATE) VALUES (@CustomerId, @OrderDate)";
+                string query = "INSERT INTO ORDER_LIST (CUSTOMER_ID, ORDER_DATE, ORDER_ADDRESS) VALUES (@CustomerId, @OrderDate, @OrderAddress)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@CustomerId", customer.CustomerID);
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
                     command.Parameters.AddWithValue("@OrderDate", orderDate);
+                    command.Parameters.AddWithValue("@OrderAddress", orderAddress);
 
                     try
                     {
@@ -111,7 +114,7 @@ namespace BookStoreManager.Database
 
                     // SQL query for retrieving orders with pagination and optional filtering
                     string query = $@"
-                    SELECT ORDER_ID, CUSTOMER_ID, ORDER_DATE, PRICE, 
+                    SELECT ORDER_ID, CUSTOMER_ID, ORDER_DATE, PRICE,ORDER_ADDRESS ,
                            COUNT(*) OVER() AS TotalItems
                     FROM ORDER_LIST
                     {where}
@@ -150,7 +153,8 @@ namespace BookStoreManager.Database
                                     OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
                                     Customer = GetCustomerDetailFromDB(reader.GetInt32(reader.GetOrdinal("CUSTOMER_ID"))),
                                     OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
-                                    Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
+                                    Price = reader.GetInt32(reader.GetOrdinal("PRICE")),
+                                    OrderAddress=reader.GetString(reader.GetOrdinal("ORDER_ADDRESS")),
                                 };
                                 orders.Add(order);
                             }
@@ -273,7 +277,7 @@ namespace BookStoreManager.Database
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = "SELECT ORDER_ID, CUSTOMER_ID, ORDER_DATE, PRICE FROM ORDER_LIST WHERE ORDER_ID = @OrderId";
+                    string query = "SELECT ORDER_ID, CUSTOMER_ID, ORDER_DATE, PRICE,ORDER_ADDRESS FROM ORDER_LIST WHERE ORDER_ID = @OrderId";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -290,7 +294,8 @@ namespace BookStoreManager.Database
                                     OrderId = reader.GetInt32(reader.GetOrdinal("ORDER_ID")),
                                     Customer = GetCustomerDetailFromDB(reader.GetInt32(reader.GetOrdinal("CUSTOMER_ID"))),
                                     OrderDate = reader.GetDateTime(reader.GetOrdinal("ORDER_DATE")),
-                                    Price = reader.GetInt32(reader.GetOrdinal("PRICE"))
+                                    Price = reader.GetInt32(reader.GetOrdinal("PRICE")),
+                                    OrderAddress = reader.GetString(reader.GetOrdinal("ORDER_ADDRESS"))
                                 };
                             }
                         }
@@ -305,30 +310,30 @@ namespace BookStoreManager.Database
             return order;
         }
 
-        public void UpdateOrderToDB(int orderId, int newCustomerId, DateTime newOrderDate, int newPrice)
-{
-    try
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
+        public void UpdateOrderToDB(int orderId, DateTime newOrderDate, int newPrice,string newAddress)
         {
-            connection.Open();
-            string query = "UPDATE ORDER_LIST SET CUSTOMER_ID = @CustomerId, ORDER_DATE = @OrderDate, PRICE = @Price WHERE ORDER_ID = @OrderId";
-            using (SqlCommand command = new SqlCommand(query, connection))
+            try
             {
-                command.Parameters.AddWithValue("@CustomerId", newCustomerId);
-                command.Parameters.AddWithValue("@OrderDate", newOrderDate);
-                command.Parameters.AddWithValue("@Price", newPrice);
-                command.Parameters.AddWithValue("@OrderId", orderId);
-                command.ExecuteNonQuery();
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE ORDER_LIST SET ORDER_DATE = @OrderDate, PRICE = @Price, ORDER_ADDRESS=@OrderAddress WHERE ORDER_ID = @OrderId";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OrderDate", newOrderDate);
+                        command.Parameters.AddWithValue("@Price", newPrice);
+                        command.Parameters.AddWithValue("@OrderId", orderId);
+                        command.Parameters.AddWithValue("@OrderAddress", newAddress);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while updating the order: {ex.Message}");
+                // Handle or log the exception as needed
             }
         }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"An error occurred while updating the order: {ex.Message}");
-        // Handle or log the exception as needed
-    }
-}
 
 
 
