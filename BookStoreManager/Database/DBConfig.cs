@@ -9,7 +9,7 @@ namespace BookStoreManager.Database
 {
     public class DBConfig
     {
-        public static string ConnectionString = "Server=DESKTOP-FNHTGP5;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
+        public static string ConnectionString = "Server=.\\SQLEXPRESS;Database=MYSHOP;Trusted_Connection=yes;TrustServerCertificate=True;Connection Timeout=100;";
         public static SqlConnection Connection = InitializeConnection();
         public static SqlConnection InitializeConnection()
         {
